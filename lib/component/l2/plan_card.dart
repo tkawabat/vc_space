@@ -33,7 +33,7 @@ class PlanCard extends StatelessWidget {
                     height: 48,
                     child: Center(
                       child: Text(
-                        plan.title.substring(0, 1),
+                        plan.id.substring(0, 1),
                         style:
                             const TextStyle(color: Colors.white, fontSize: 24),
                       ),

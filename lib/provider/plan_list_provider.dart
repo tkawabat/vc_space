@@ -7,8 +7,8 @@ final planListProvider =
         (ref) => PlanListNotifer());
 
 class PlanListNotifer extends StateNotifier<List<PlanEntity>> {
-  PlanListNotifer() : super([const PlanEntity('a', 'b')]);
+  PlanListNotifer() : super([]);
 
   void set(List<PlanEntity> list) => state = list;
-  void add() => state.add(const PlanEntity('hoge', 'fuga'));
+  void add(PlanEntity plan) => state = [...state, plan];
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../entity/plan_entity.dart';
 import '../../provider/plan_list_provider.dart';
 import '../l3/plan_list.dart';
 
@@ -20,7 +21,9 @@ class MyHomePage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: () => ref.read(planListProvider.notifier).add(),
+              onPressed: () => ref
+                  .read(planListProvider.notifier)
+                  .add(const PlanEntity('hoge', 'fuga')),
               child: const Text("タップ"),
             ),
             const PlanList(),
