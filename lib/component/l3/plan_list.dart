@@ -11,11 +11,15 @@ class PlanList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final planList = ref.watch(planListProvider);
 
+    final scrollController = ScrollController();
+
     final list = planList.map((plan) => PlanCard(plan: plan)).toList();
 
     return Flexible(
       child: Scrollbar(
+        controller: scrollController,
         child: ListView(
+          controller: scrollController,
           children: list,
         ),
       ),
