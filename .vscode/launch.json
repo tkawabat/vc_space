@@ -12,9 +12,26 @@
             "args": [
                 "-d",
                 "web-server",
+                "--dart-define",
+                "FLAVOR=develop",
                 "--web-port",
                 "51001",
                 "--debug",
+            ]
+        },
+        {
+            "name": "Flutter Release",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main.dart",
+            "args": [
+                "-d",
+                "web-server",
+                "--dart-define",
+                "FLAVOR=production",
+                "--web-port",
+                "51002",
+                "--release",
             ]
         },
     ]
