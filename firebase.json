@@ -1,0 +1,16 @@
+{
+  "hosting": {
+    "public": "/Users/tkawabat/git/vc_space/build/web",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
