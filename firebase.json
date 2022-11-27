@@ -1,6 +1,6 @@
 {
   "hosting": {
-    "public": "/Users/tkawabat/git/vc_space/build/web",
+    "public": "build/web",
     "ignore": [
       "firebase.json",
       "**/.*",

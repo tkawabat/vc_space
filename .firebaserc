@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "vc-space-dev"
-  }
+    "default": "vc-space-dev",
+    "production": "vc-space"
+  },
+  "targets": {},
+  "etags": {}
 }
