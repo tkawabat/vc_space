@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../entity/plan_entity.dart';
 import '../../entity/user_entity.dart';
@@ -31,7 +32,7 @@ class MyHomePage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(dotenv.get('TITLE')),
       ),
       body: Center(
         child: Column(

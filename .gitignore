@@ -43,7 +43,7 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-assets/.env.*
-!assets/.env.sample
+assets/env.*
+!assets/env.sample
 
 .firebase

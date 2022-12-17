@@ -6,7 +6,7 @@ import 'component/l5/my_home_page.dart';
 
 Future main() async {
   const flavor = String.fromEnvironment('FLAVOR');
-  await dotenv.load(fileName: '.env.$flavor');
+  await dotenv.load(fileName: 'assets/env.$flavor');
 
   runApp(const ProviderScope(child: MyApp()));
 }
