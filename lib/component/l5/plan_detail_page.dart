@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/plan_entity.dart';
-import '../../entity/user_entity.dart';
-import '../../provider/plan_list_provider.dart';
-import '../l3/plan_list.dart';
 
 class PlanDetailPage extends HookConsumerWidget {
   const PlanDetailPage({Key? key, required this.plan}) : super(key: key);
