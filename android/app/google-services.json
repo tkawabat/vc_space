@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "180668270503",
+    "project_id": "vc-space-dev",
+    "storage_bucket": "vc-space-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:180668270503:android:aa7e4f25188772ea2f1882",
+        "android_client_info": {
+          "package_name": "com.example.vc_space"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "180668270503-v9gr1bjl7l7obflaaf111niq5qpti6ce.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDHOocjyKCqI-1mGu_IFknz7yQ8BKiTnhc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "180668270503-v9gr1bjl7l7obflaaf111niq5qpti6ce.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "180668270503-mmv3djum5orcsnr3dqbcni6ips1nt5m1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.vcSpace"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
