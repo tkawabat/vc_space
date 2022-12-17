@@ -6,4 +6,12 @@ class UserEntity {
   final String name;
 
   const UserEntity(this.id, this.name);
+
+  @override
+  String toString() {
+    return """{
+      id: $id,
+      name: $name,
+    }""";
+  }
 }

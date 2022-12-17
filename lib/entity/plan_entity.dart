@@ -16,4 +16,12 @@ class PlanEntity {
       this.maxNumber) {
     titleController.text = title;
   }
+
+  @override
+  String toString() {
+    return """{
+      id: $id,
+      title: $title,
+    }""";
+  }
 }
