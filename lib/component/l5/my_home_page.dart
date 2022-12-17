@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vc_space/service/twitter_service.dart';
 
 import '../../entity/plan_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../provider/plan_list_provider.dart';
 import '../l3/plan_list.dart';
 import '../l4/create_plan_dialog.dart';
 
@@ -38,6 +38,12 @@ class MyHomePage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            ElevatedButton(
+              onPressed: () {
+                twitterLogin();
+              },
+              child: const Text("ログイン"),
+            ),
             ElevatedButton(
               onPressed: () {
                 showCreatePlanDialog(context);
