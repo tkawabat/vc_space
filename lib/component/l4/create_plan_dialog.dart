@@ -57,7 +57,7 @@ class CreatePlanDialog extends ConsumerWidget {
       maxLengthEnforcement: MaxLengthEnforcement.none, enabled: true,
       // 入力数
       maxLength: 10,
-      style: TextStyle(color: Colors.red),
+      style: const TextStyle(color: Colors.red),
       maxLines: 1,
     );
   }

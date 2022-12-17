@@ -9,7 +9,7 @@ final createPlanProvider = StateNotifierProvider<CreatePlanNotifer, PlanEntity>(
 PlanEntity createPlan() {
   DateTime start = DateTime.now().add(const Duration(days: 1));
   UserEntity owner = const UserEntity('user01', '太郎');
-  return PlanEntity('id_test', owner, 'title_test', 'desc_test', start, 4);
+  return PlanEntity('id_test', owner, '', 'desc_test', start, 4);
 }
 
 class CreatePlanNotifer extends StateNotifier<PlanEntity> {
