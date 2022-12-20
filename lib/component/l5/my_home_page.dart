@@ -31,7 +31,12 @@ class MyHomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final uid = ref.watch(loginProvider) ?? '';
+    final loginUserStream = ref.watch(loginUserStreamProvider);
+    final uid = loginUserStream.when(
+      data: (UserEntity? users) => users?.id ?? 'no login',
+      error: (error, stack) => Text('Error: $error'),
+      loading: () => 'loading...',
+    );
 
     return Scaffold(
       appBar: AppBar(

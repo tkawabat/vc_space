@@ -3,12 +3,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../entity/plan_entity.dart';
 import '../entity/user_entity.dart';
 
-final createPlanProvider = StateNotifierProvider<CreatePlanNotifer, PlanEntity>(
-    (ref) => CreatePlanNotifer());
+final createPlanProvider =
+    StateNotifierProvider.autoDispose<CreatePlanNotifer, PlanEntity>(
+        (ref) => CreatePlanNotifer());
 
 PlanEntity createPlan() {
   DateTime start = DateTime.now().add(const Duration(days: 1));
-  UserEntity owner = const UserEntity('user01', '太郎', '', '', []);
+  UserEntity owner = createSampleUser();
   return PlanEntity('id_test', owner, '', 'desc_test', start, 4);
 }
 
