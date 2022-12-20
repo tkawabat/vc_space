@@ -37,7 +37,7 @@ class CreatePlanDialog extends ConsumerWidget {
             child: const Text('作成'),
             onPressed: () {
               DateTime start = DateTime.now().add(const Duration(days: 1));
-              UserEntity owner = const UserEntity('user01', '太郎', '', '', []);
+              UserEntity owner = createSampleUser();
               PlanEntity newPlan = PlanEntity('aaa', owner,
                   createPlan.titleController.text, 'desc', start, 5);
 

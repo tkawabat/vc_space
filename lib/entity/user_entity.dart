@@ -1,20 +1,26 @@
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+part 'user_entity.freezed.dart';
+part 'user_entity.g.dart';
 
-@immutable
-class UserEntity {
-  final String id;
-  final String name;
-  final String photo;
-  final String twitterId;
-  final List<String> tags;
+@freezed
+class UserEntity with _$UserEntity {
+  const factory UserEntity(
+      {required String id,
+      required String name,
+      required String photo,
+      required List<String> tags,
+      required String twitterId}) = _UserEntity;
 
-  const UserEntity(this.id, this.name, this.photo, this.twitterId, this.tags);
+  factory UserEntity.fromJson(Map<String, dynamic> json) =>
+      _$UserEntityFromJson(json);
+}
 
-  @override
-  String toString() {
-    return """{
-      id: $id,
-      name: $name,
-    }""";
-  }
+UserEntity createSampleUser() {
+  return UserEntity.fromJson({
+    'id': 'user01',
+    'name': 'taro',
+    'photo': '',
+    'tags': ['a'],
+    'twitterId': '',
+  });
 }
