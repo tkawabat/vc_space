@@ -8,6 +8,11 @@ $ cp asset/.env.{sample,production}
 # 各ファイルに必要な情報を書き込む
 ```
 
+## Freezedビルド
+```
+$ flutter pub run build_runner build --delete-conflicting-outputs
+```
+
 ## リリース
 * 開発
 
