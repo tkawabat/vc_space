@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:vc_space/service/twitter_service.dart';
 
+import '../../service/twitter_service.dart';
 import '../../entity/plan_entity.dart';
 import '../../entity/user_entity.dart';
+import '../../provider/login_provider.dart';
 import '../l3/plan_list.dart';
 import '../l4/create_plan_dialog.dart';
 
@@ -30,6 +31,8 @@ class MyHomePage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final uid = ref.watch(loginProvider) ?? '';
+
     return Scaffold(
       appBar: AppBar(
         title: Text(dotenv.get('TITLE')),
@@ -38,6 +41,7 @@ class MyHomePage extends HookConsumerWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text("uid=$uid"),
             ElevatedButton(
               onPressed: () {
                 twitterLogin();
