@@ -9,8 +9,8 @@ import '../../provider/login_provider.dart';
 import '../l3/plan_list.dart';
 import '../l4/create_plan_dialog.dart';
 
-class MyHomePage extends HookConsumerWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
+class MainPage extends HookConsumerWidget {
+  const MainPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 

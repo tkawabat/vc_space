@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:vc_space/service/login_service.dart';
 
 import 'firebase_options.dart';
-import 'component/l5/my_home_page.dart';
+import 'component/l5/main_page.dart';
 
 Future main() async {
   const flavor = String.fromEnvironment('FLAVOR');
@@ -32,7 +32,7 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MainPage(title: 'Flutter Demo Home Page'),
     );
   }
 }
