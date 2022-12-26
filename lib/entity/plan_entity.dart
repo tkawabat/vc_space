@@ -17,3 +17,16 @@ class PlanEntity with _$PlanEntity {
   factory PlanEntity.fromJson(Map<String, dynamic> json) =>
       _$PlanEntityFromJson(json);
 }
+
+// TODO
+PlanEntity createSamplePlan(String title) {
+  DateTime start = DateTime.now().add(const Duration(days: 1));
+  return PlanEntity(
+    id: 'id_test',
+    owner: createSampleUser(),
+    title: title,
+    description: 'test_desc',
+    start: start,
+    maxNumber: 4,
+  );
+}

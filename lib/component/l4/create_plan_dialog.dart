@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/plan_entity.dart';
-import '../../entity/user_entity.dart';
 import '../../provider/create_plan_provider.dart';
 import '../../provider/plan_list_provider.dart';
 
@@ -34,10 +33,7 @@ class CreatePlanDialog extends ConsumerWidget {
           TextButton(
             child: const Text('作成'),
             onPressed: () {
-              DateTime start = DateTime.now().add(const Duration(days: 1));
-              UserEntity owner = createSampleUser();
-              PlanEntity newPlan = PlanEntity(
-                  'aaa', owner, titleController.text, 'desc', start, 5);
+              PlanEntity newPlan = createSamplePlan(titleController.text);
 
               ref.read(planListProvider.notifier).add(newPlan);
               ref.read(createPlanProvider.notifier).reset();

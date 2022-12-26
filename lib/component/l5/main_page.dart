@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../service/twitter_service.dart';
-import '../../entity/plan_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../l3/plan_list.dart';
@@ -13,12 +12,6 @@ class MainPage extends HookConsumerWidget {
   const MainPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  PlanEntity createPlan() {
-    DateTime start = DateTime.now().add(const Duration(days: 1));
-    UserEntity owner = createSampleUser();
-    return PlanEntity('id_test', owner, 'title_test', 'desc_test', start, 4);
-  }
 
   Future<void> showCreatePlanDialog(context) async {
     return showDialog(

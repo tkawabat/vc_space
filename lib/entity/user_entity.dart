@@ -16,12 +16,13 @@ class UserEntity with _$UserEntity {
       _$UserEntityFromJson(json);
 }
 
+// TODO
 UserEntity createSampleUser() {
-  return UserEntity.fromJson({
-    'id': 'user01',
-    'name': 'taro',
-    'photo': '',
-    'tags': ['a'],
-    'twitterId': '',
-  });
+  return const UserEntity(
+    id: 'user01',
+    name: 'taro',
+    photo: '',
+    tags: ['a'],
+    twitterId: '',
+  );
 }
