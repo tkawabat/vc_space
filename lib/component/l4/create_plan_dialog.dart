@@ -12,9 +12,7 @@ class CreatePlanDialog extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final createPlan = ref.watch(createPlanProvider);
-
-    // final TextEditingController titleController = TextEditingController();
+    final TextEditingController titleController = TextEditingController();
     // titleController.text = createPlan.title;
 
     return AlertDialog(
@@ -23,7 +21,7 @@ class CreatePlanDialog extends ConsumerWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            titleField(createPlan.titleController),
+            titleField(titleController),
           ],
         ),
         actions: <Widget>[
@@ -38,8 +36,8 @@ class CreatePlanDialog extends ConsumerWidget {
             onPressed: () {
               DateTime start = DateTime.now().add(const Duration(days: 1));
               UserEntity owner = createSampleUser();
-              PlanEntity newPlan = PlanEntity('aaa', owner,
-                  createPlan.titleController.text, 'desc', start, 5);
+              PlanEntity newPlan = PlanEntity(
+                  'aaa', owner, titleController.text, 'desc', start, 5);
 
               ref.read(planListProvider.notifier).add(newPlan);
               ref.read(createPlanProvider.notifier).reset();

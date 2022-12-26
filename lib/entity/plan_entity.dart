@@ -10,12 +10,8 @@ class PlanEntity {
   final DateTime start;
   final int maxNumber;
 
-  final TextEditingController titleController = TextEditingController();
-
-  PlanEntity(this.id, this.owner, this.title, this.description, this.start,
-      this.maxNumber) {
-    titleController.text = title;
-  }
+  const PlanEntity(this.id, this.owner, this.title, this.description,
+      this.start, this.maxNumber);
 
   @override
   String toString() {
