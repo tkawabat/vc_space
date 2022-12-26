@@ -47,3 +47,7 @@ assets/env.*
 !assets/env.sample
 
 .firebase
+
+# freezed
+*.freezed.dart
+*.g.dart

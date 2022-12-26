@@ -1,23 +1,19 @@
-import 'package:flutter/material.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vc_space/entity/user_entity.dart';
 
-@immutable
-class PlanEntity {
-  final String id;
-  final UserEntity owner;
-  final String title;
-  final String description;
-  final DateTime start;
-  final int maxNumber;
+part 'plan_entity.freezed.dart';
+part 'plan_entity.g.dart';
 
-  const PlanEntity(this.id, this.owner, this.title, this.description,
-      this.start, this.maxNumber);
+@freezed
+class PlanEntity with _$PlanEntity {
+  const factory PlanEntity(
+      {required String id,
+      required UserEntity owner,
+      required String title,
+      required String description,
+      required DateTime start,
+      required int maxNumber}) = _PlanEntity;
 
-  @override
-  String toString() {
-    return """{
-      id: $id,
-      title: $title,
-    }""";
-  }
+  factory PlanEntity.fromJson(Map<String, dynamic> json) =>
+      _$PlanEntityFromJson(json);
 }
