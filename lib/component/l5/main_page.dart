@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vc_space/service/analytics_service.dart';
 
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
@@ -9,7 +10,9 @@ import '../l3/plan_list.dart';
 import '../l4/create_plan_dialog.dart';
 
 class MainPage extends HookConsumerWidget {
-  const MainPage({Key? key, required this.title}) : super(key: key);
+  MainPage({Key? key, required this.title}) : super(key: key) {
+    screenView('main');
+  }
 
   final String title;
 

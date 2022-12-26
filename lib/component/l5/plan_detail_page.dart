@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/plan_entity.dart';
+import '../../service/analytics_service.dart';
 
 class PlanDetailPage extends HookConsumerWidget {
-  const PlanDetailPage({Key? key, required this.plan}) : super(key: key);
+  PlanDetailPage({Key? key, required this.plan}) : super(key: key) {
+    screenView('plan_detail');
+  }
 
   final PlanEntity plan;
 
