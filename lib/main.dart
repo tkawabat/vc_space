@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:vc_space/service/login_service.dart';
 
 import 'firebase_options.dart';
+import 'route.dart';
+import 'service/login_service.dart';
+
 import 'component/l5/main_page.dart';
 
 Future main() async {
@@ -32,7 +34,8 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(title: 'Flutter Demo Home Page'),
+      home: const MainPage(title: 'Flutter Demo Home Page'),
+      onGenerateRoute: generateRoute,
     );
   }
 }
