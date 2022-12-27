@@ -31,9 +31,8 @@ class MyApp extends ConsumerWidget {
 
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData.light(),
+      darkTheme: ThemeData.dark(),
       home: const MainPage(title: 'Flutter Demo Home Page'),
       onGenerateRoute: generateRoute,
     );
