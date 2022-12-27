@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../entity/plan_entity.dart';
 import '../l3/header.dart';
 
-class PlanDetailPage extends HookConsumerWidget {
-  const PlanDetailPage({Key? key, required this.plan}) : super(key: key);
-
-  final PlanEntity plan;
+class UserPage extends HookConsumerWidget {
+  const UserPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: Header(
-        title: plan.title,
+        title: "user",
       ),
       body: Center(
         child: Column(

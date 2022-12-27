@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
+import '../l3/header.dart';
 import '../l3/plan_list.dart';
 import '../l4/create_plan_dialog.dart';
 
@@ -32,8 +33,8 @@ class MainPage extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(dotenv.get('TITLE')),
+      appBar: Header(
+        title: dotenv.get('TITLE'),
       ),
       body: Center(
         child: Column(
