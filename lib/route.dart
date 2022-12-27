@@ -51,7 +51,7 @@ Widget _planPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
     return _homePageTransaction();
   }
-  if (!queryParameters!.containsKey('id')) {
+  if (!queryParameters.containsKey('id')) {
     return _homePageTransaction();
   }
 
