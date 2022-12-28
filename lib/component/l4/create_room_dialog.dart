@@ -15,7 +15,7 @@ class CreateRoomDialog extends ConsumerWidget {
     // titleController.text = createRoom.title;
 
     return AlertDialog(
-        title: const Text('予定を作る'),
+        title: const Text('部屋を作る'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
