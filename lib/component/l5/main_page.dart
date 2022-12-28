@@ -7,21 +7,11 @@ import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../l3/header.dart';
 import '../l3/plan_list.dart';
-import '../l4/create_plan_dialog.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({Key? key, required this.title}) : super(key: key);
 
   final String title;
-
-  Future<void> showCreatePlanDialog(context) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) {
-          return const CreatePlanDialog();
-        });
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -46,12 +36,6 @@ class MainPage extends HookConsumerWidget {
                 twitterLogin();
               },
               child: const Text("ログイン"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                showCreatePlanDialog(context);
-              },
-              child: const Text("タップ"),
             ),
             const PlanList(),
           ],
