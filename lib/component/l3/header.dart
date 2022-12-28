@@ -1,22 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class Header extends StatelessWidget implements PreferredSizeWidget {
+import '../../route.dart';
+import '../../entity/user_entity.dart';
+
+import '../l2/create_plan_button.dart';
+import '../l2/user_icon.dart';
+
+class Header extends HookConsumerWidget implements PreferredSizeWidget {
   final String title;
 
-  const Header({super.key, required this.title});
+  const Header({Key? key, required this.title}) : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = createSampleUser();
+
     return AppBar(
-      leading: IconButton(icon: Icon(Icons.menu), onPressed: () {}),
+      leading: IconButton(
+          icon: const Icon(Icons.home),
+          onPressed: () => Navigator.pushNamed(context, PageNames.home.path)),
       title: Text(title),
       centerTitle: true,
       actions: [
-        IconButton(icon: Icon(Icons.search), onPressed: () {}),
-        IconButton(icon: Icon(Icons.more_vert), onPressed: () {}),
+        IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        const CreatePlanButton(),
+        UserIcon(
+          user: user,
+        ),
       ],
       elevation: 0,
       // backgroundColor: Colors.transparent,

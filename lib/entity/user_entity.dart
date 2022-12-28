@@ -21,7 +21,8 @@ UserEntity createSampleUser() {
   return const UserEntity(
     id: 'user01',
     name: 'taro',
-    photo: '',
+    photo:
+        'https://pbs.twimg.com/profile_images/1245965644094246912/rOuCIpPu_normal.jpg',
     tags: ['a'],
     twitterId: '',
   );
