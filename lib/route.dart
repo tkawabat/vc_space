@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'component/l5/main_page.dart';
-import 'component/l5/plan_detail_page.dart';
-import 'entity/plan_entity.dart';
+import 'component/l5/room_detail_page.dart';
+import 'entity/room_entity.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
   home('/'),
-  plan('/plan'),
+  room('/room'),
   ;
 
   const PageNames(this.path);
@@ -18,7 +18,7 @@ Route<dynamic> generateRoute(RouteSettings setting) {
   String? name = setting.name;
 
   if (name == null) {
-    _transactionPage(PageNames.plan.path, null);
+    _transactionPage(PageNames.room.path, null);
   }
 
   final uri = Uri.parse(name!);
@@ -31,8 +31,8 @@ Route<dynamic> _transactionPage(
 
   if (path == PageNames.home.path) {
     builder = (_) => _homePageTransaction();
-  } else if (path == PageNames.plan.path) {
-    builder = (_) => _planPageTransaction(queryParameters);
+  } else if (path == PageNames.room.path) {
+    builder = (_) => _roomPageTransaction(queryParameters);
   } else {
     builder = (_) => _homePageTransaction();
   }
@@ -47,7 +47,7 @@ Route<dynamic> _transactionPage(
 Widget _homePageTransaction() =>
     const MainPage(title: 'Flutter Demo Home Page');
 
-Widget _planPageTransaction(Map<String, String>? queryParameters) {
+Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
     return _homePageTransaction();
   }
@@ -55,5 +55,5 @@ Widget _planPageTransaction(Map<String, String>? queryParameters) {
     return _homePageTransaction();
   }
 
-  return PlanDetailPage(plan: createSamplePlan(queryParameters['id']!));
+  return RoomDetailPage(room: createSampleRoom(queryParameters['id']!));
 }

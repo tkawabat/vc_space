@@ -4,8 +4,8 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
 enum LogEventName {
-  create_plan,
-  search_plan,
+  create_room,
+  search_room,
   login,
   sign_up,
   modify_user,

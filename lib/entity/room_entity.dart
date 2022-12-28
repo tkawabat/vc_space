@@ -1,27 +1,27 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:vc_space/entity/user_entity.dart';
 
-part 'plan_entity.freezed.dart';
-part 'plan_entity.g.dart';
+part 'room_entity.freezed.dart';
+part 'room_entity.g.dart';
 
 @freezed
-class PlanEntity with _$PlanEntity {
-  const factory PlanEntity(
+class RoomEntity with _$RoomEntity {
+  const factory RoomEntity(
       {required String id,
       required UserEntity owner,
       required String title,
       required String description,
       required DateTime start,
-      required int maxNumber}) = _PlanEntity;
+      required int maxNumber}) = _RoomEntity;
 
-  factory PlanEntity.fromJson(Map<String, dynamic> json) =>
-      _$PlanEntityFromJson(json);
+  factory RoomEntity.fromJson(Map<String, dynamic> json) =>
+      _$RoomEntityFromJson(json);
 }
 
 // TODO
-PlanEntity createSamplePlan(String title) {
+RoomEntity createSampleRoom(String title) {
   DateTime start = DateTime.now().add(const Duration(days: 1));
-  return PlanEntity(
+  return RoomEntity(
     id: 'id_test',
     owner: createSampleUser(),
     title: title,

@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../route.dart';
 import '../../entity/user_entity.dart';
 
-import '../l2/create_plan_button.dart';
+import '../l2/create_room_button.dart';
 import '../l2/user_icon.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
@@ -27,7 +27,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       centerTitle: true,
       actions: [
         IconButton(icon: const Icon(Icons.search), onPressed: () {}),
-        const CreatePlanButton(),
+        const CreateRoomButton(),
         UserIcon(
           user: user,
         ),

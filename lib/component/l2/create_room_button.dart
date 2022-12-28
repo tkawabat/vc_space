@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../l4/create_plan_dialog.dart';
+import '../l4/create_room_dialog.dart';
 
-class CreatePlanButton extends StatelessWidget {
-  const CreatePlanButton({super.key});
+class CreateRoomButton extends StatelessWidget {
+  const CreateRoomButton({super.key});
 
-  Future<void> showCreatePlanDialog(context) async {
+  Future<void> showCreateRoomDialog(context) async {
     return showDialog(
         context: context,
         barrierDismissible: true,
         builder: (_) {
-          return const CreatePlanDialog();
+          return const CreateRoomDialog();
         });
   }
 
@@ -21,7 +21,7 @@ class CreatePlanButton extends StatelessWidget {
       child: IconButton(
           icon: const Icon(Icons.add_circle_outline),
           onPressed: () {
-            showCreatePlanDialog(context);
+            showCreateRoomDialog(context);
           }),
     );
   }

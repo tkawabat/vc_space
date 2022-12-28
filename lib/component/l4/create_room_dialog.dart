@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../entity/plan_entity.dart';
-import '../../provider/create_plan_provider.dart';
-import '../../provider/plan_list_provider.dart';
+import '../../entity/room_entity.dart';
+import '../../provider/create_room_provider.dart';
+import '../../provider/room_list_provider.dart';
 
-class CreatePlanDialog extends ConsumerWidget {
-  const CreatePlanDialog({super.key});
+class CreateRoomDialog extends ConsumerWidget {
+  const CreateRoomDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final TextEditingController titleController = TextEditingController();
-    // titleController.text = createPlan.title;
+    // titleController.text = createRoom.title;
 
     return AlertDialog(
         title: const Text('予定を作る'),
@@ -33,10 +33,10 @@ class CreatePlanDialog extends ConsumerWidget {
           TextButton(
             child: const Text('作成'),
             onPressed: () {
-              PlanEntity newPlan = createSamplePlan(titleController.text);
+              RoomEntity newRoom = createSampleRoom(titleController.text);
 
-              ref.read(planListProvider.notifier).add(newPlan);
-              ref.read(createPlanProvider.notifier).reset();
+              ref.read(roomListProvider.notifier).add(newRoom);
+              ref.read(createRoomProvider.notifier).reset();
 
               Navigator.pop(context);
             },

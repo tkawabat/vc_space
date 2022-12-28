@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-import '../../entity/plan_entity.dart';
-import '../l5/plan_detail_page.dart';
+import '../../entity/room_entity.dart';
+import '../l5/room_detail_page.dart';
 
-class PlanCard extends StatelessWidget {
-  final PlanEntity plan;
+class RoomCard extends StatelessWidget {
+  final RoomEntity room;
 
-  const PlanCard({super.key, required this.plan});
+  const RoomCard({super.key, required this.room});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +19,7 @@ class PlanCard extends StatelessWidget {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => PlanDetailPage(plan: plan)));
+                  builder: (context) => RoomDetailPage(room: room)));
         },
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
@@ -39,14 +39,14 @@ class PlanCard extends StatelessWidget {
                         height: 48,
                         child: Center(
                           child: Text(
-                            plan.id.substring(0, 1),
+                            room.id.substring(0, 1),
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 24),
                           ),
                         ),
                       ),
                     ),
-                    title: Text(plan.title),
+                    title: Text(room.title),
                     subtitle: const Text('2 min ago'),
                   ),
                   Container(
@@ -91,7 +91,7 @@ class PlanCard extends StatelessWidget {
                                 // primary: colorNegative,
                                 ),
                             onPressed: () {},
-                            child: const Text('negavie aaaaaaaaaa'),
+                            child: const Text('negative aaaaaaaaaa'),
                           ),
                         ),
                         const SizedBox(width: 8),

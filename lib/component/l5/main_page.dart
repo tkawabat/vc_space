@@ -6,7 +6,7 @@ import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../l3/header.dart';
-import '../l3/plan_list.dart';
+import '../l3/room_list.dart';
 
 class MainPage extends HookConsumerWidget {
   const MainPage({Key? key, required this.title}) : super(key: key);
@@ -37,7 +37,7 @@ class MainPage extends HookConsumerWidget {
               },
               child: const Text("ログイン"),
             ),
-            const PlanList(),
+            const RoomList(),
           ],
         ),
       ),

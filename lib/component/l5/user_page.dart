@@ -9,7 +9,7 @@ class UserPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: Header(
+      appBar: const Header(
         title: "user",
       ),
       body: Center(
