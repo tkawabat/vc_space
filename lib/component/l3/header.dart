@@ -24,13 +24,14 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.home),
           onPressed: () => Navigator.pushNamed(context, PageNames.home.path)),
       title: Text(title),
-      centerTitle: true,
       actions: [
         IconButton(icon: const Icon(Icons.search), onPressed: () {}),
         const CreateRoomButton(),
+        const Padding(padding: EdgeInsets.only(left: 8)),
         UserIcon(
           user: user,
         ),
+        const Padding(padding: EdgeInsets.only(right: 16)),
       ],
       elevation: 0,
       // backgroundColor: Colors.transparent,

@@ -16,8 +16,8 @@ class UserIcon extends StatelessWidget {
               MaterialPageRoute(builder: (context) => const UserPage()));
         },
         child: Container(
-          width: 40,
-          height: 40,
+          width: 32,
+          height: 32,
           decoration: BoxDecoration(
               shape: BoxShape.circle,
               image: DecorationImage(

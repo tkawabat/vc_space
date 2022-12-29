@@ -32,9 +32,7 @@ class MainPage extends HookConsumerWidget {
           children: <Widget>[
             Text("uid=$uid"),
             ElevatedButton(
-              onPressed: () {
-                twitterLogin();
-              },
+              onPressed: () => twitterLogin(),
               child: const Text("ログイン"),
             ),
             const RoomList(),
