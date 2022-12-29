@@ -10,7 +10,7 @@ class CreateRoomButton extends StatelessWidget {
         context: context,
         barrierDismissible: true,
         builder: (_) {
-          return const CreateRoomDialog();
+          return CreateRoomDialog();
         });
   }
 
