@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vc_space/component/l2/tag_field.dart';
 
+import '../../service/const_service.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
@@ -23,9 +25,7 @@ class MainPage extends HookConsumerWidget {
     );
 
     return Scaffold(
-      appBar: Header(
-        title: dotenv.get('TITLE'),
-      ),
+      appBar: Header(title: dotenv.get('TITLE')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -35,6 +35,7 @@ class MainPage extends HookConsumerWidget {
               onPressed: () => twitterLogin(),
               child: const Text("ログイン"),
             ),
+            TagField(samples: ConstService.sampleRoomTags),
             const RoomList(),
           ],
         ),
