@@ -44,8 +44,7 @@ Route<dynamic> _transactionPage(
   );
 }
 
-Widget _homePageTransaction() =>
-    const MainPage(title: 'Flutter Demo Home Page');
+Widget _homePageTransaction() => const MainPage();
 
 Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {

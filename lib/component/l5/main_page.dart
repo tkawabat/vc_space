@@ -11,9 +11,7 @@ import '../l3/header.dart';
 import '../l3/room_list.dart';
 
 class MainPage extends HookConsumerWidget {
-  const MainPage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
+  const MainPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

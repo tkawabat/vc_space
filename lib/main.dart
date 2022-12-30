@@ -33,11 +33,11 @@ class MyApp extends ConsumerWidget {
     listenFirebaseAuth(ref);
 
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: dotenv.get('TITLE'),
       debugShowCheckedModeBanner: false,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: const MainPage(title: 'Flutter Demo Home Page'),
+      home: const MainPage(),
       onGenerateRoute: generateRoute,
     );
   }
