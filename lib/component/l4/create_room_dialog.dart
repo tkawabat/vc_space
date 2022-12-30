@@ -23,25 +23,27 @@ class CreateRoomDialog extends ConsumerWidget {
         key: formKey,
         child: AlertDialog(
             title: const Text('部屋を作る'),
-            content: Scrollbar(
-                controller: scrollController,
-                child: ListView(
-                  controller: scrollController,
-                  children: <Widget>[
-                    titleField(),
-                    space,
-                    descriptionField(),
-                    space,
-                    startTimeField(),
-                    space,
-                    maxNumberField(),
-                    space,
-                    space,
-                    enterTypeField(),
-                    space,
-                    tagField(),
-                  ],
-                )),
+            content: SizedBox(
+                width: double.maxFinite,
+                child: Scrollbar(
+                    controller: scrollController,
+                    child: ListView(
+                      controller: scrollController,
+                      children: <Widget>[
+                        titleField(),
+                        space,
+                        descriptionField(),
+                        space,
+                        startTimeField(),
+                        space,
+                        maxNumberField(),
+                        space,
+                        space,
+                        enterTypeField(),
+                        space,
+                        tagField(),
+                      ],
+                    ))),
             actions: <Widget>[
               TextButton(
                 child: const Text('キャンセル'),
