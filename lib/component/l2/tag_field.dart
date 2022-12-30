@@ -35,7 +35,7 @@ class _TagField extends State<TagField> {
 
   String? validator(String tag) {
     if (_controller.getTags!.contains(tag)) {
-      return '追加済みです。';
+      return '追加済みです';
     }
     return null;
   }
@@ -52,13 +52,13 @@ class _TagField extends State<TagField> {
           validator: validator,
           inputfieldBuilder: builder,
         ),
-        Row(
+        Wrap(
+            spacing: 2.0,
             children: (widget.samples
                 .map(
                   (text) => Tag(
                     text: text,
                     onTap: () => {_controller.addTag = text},
-                    tagColor: Colors.lightGreen,
                   ),
                 )
                 .toList())),
@@ -84,21 +84,6 @@ class _TagField extends State<TagField> {
           focusNode: fn,
           decoration: InputDecoration(
             isDense: true,
-            border: const OutlineInputBorder(
-              borderSide: BorderSide(
-                // color: Color.fromARGB(255, 74, 137, 92),
-                width: 3.0,
-              ),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderSide: BorderSide(
-                // color: Color.fromARGB(255, 74, 137, 92),
-                width: 3.0,
-              ),
-            ),
-            helperStyle: const TextStyle(
-                // color: Color.fromARGB(255, 74, 137, 92),
-                ),
             hintText: _controller.hasTags ? '' : "タグを入力...",
             errorText: error,
             prefixIconConstraints:
@@ -111,8 +96,8 @@ class _TagField extends State<TagField> {
                         children: tags
                             .map((String text) => Tag(
                                   text: text,
-                                  onTap: () => {},
-                                  onTagDelete: onTagDelete,
+                                  onTap: () => onTagDelete(text),
+                                  tagColor: Colors.lightGreen,
                                 ))
                             .toList()))
                 : null,
