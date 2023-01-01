@@ -7,11 +7,12 @@ part 'room_entity.g.dart';
 @freezed
 class RoomEntity with _$RoomEntity {
   const factory RoomEntity(
-      {required String id,
+      {String? id,
       required UserEntity owner,
       required String title,
       required String description,
-      required DateTime start,
+      required DateTime startTime,
+      required List<String> tags,
       required int maxNumber}) = _RoomEntity;
 
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>
@@ -20,13 +21,13 @@ class RoomEntity with _$RoomEntity {
 
 // TODO
 RoomEntity createSampleRoom(String title) {
-  DateTime start = DateTime.now().add(const Duration(days: 1));
+  DateTime startTime = DateTime.now().add(const Duration(days: 1));
   return RoomEntity(
-    id: 'id_test',
     owner: createSampleUser(),
     title: title,
     description: 'test_desc',
-    start: start,
+    startTime: startTime,
+    tags: ["hoge"],
     maxNumber: 4,
   );
 }

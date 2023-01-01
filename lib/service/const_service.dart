@@ -3,6 +3,7 @@ class ConstService {
   static const roomDescriptionMax = 140;
   static const roomMaxNumber = 15;
 
+  // TODO 見直し
   static const sampleRoomTags = [
     '雑談',
     '麻雀',
