@@ -10,6 +10,7 @@ enum LogEventName {
   sign_up,
   modify_user,
   search_user,
+  firestore_error,
 }
 
 Future screenView(String screenName) async {
@@ -25,7 +26,10 @@ Future screenView(String screenName) async {
   );
 }
 
-Future logEvent(LogEventName logName, String contentType, String itemId) async {
+Future logEvent(LogEventName logName, String contentType,
+    [String? itemId]) async {
+  itemId = itemId ?? '';
+
   if (kDebugMode) {
     print(
         "logName: ${logName.name}, contentType: $contentType, itemId: $itemId");
