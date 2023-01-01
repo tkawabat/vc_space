@@ -8,15 +8,21 @@ final loginProvider = StateNotifierProvider.autoDispose<LoginNotifer, String?>(
 class LoginNotifer extends StateNotifier<String?> {
   LoginNotifer() : super(null);
 
-  void set(String? id) => state = id;
+  void set(String? id, WidgetRef ref) {
+    state = id;
+    if (id != null) {
+      ref.read(loginUserProvider.notifier).get(id);
+    }
+  }
 }
 
-final AutoDisposeStreamProvider<UserEntity?> loginUserStreamProvider =
-    StreamProvider.autoDispose<UserEntity?>((ref) {
-  final id = ref.watch(loginProvider);
+final loginUserProvider = StateNotifierProvider<LoginUserNotifer, UserEntity?>(
+    (ref) => LoginUserNotifer());
 
-  if (id == null) {
-    return Stream.value(null);
+class LoginUserNotifer extends StateNotifier<UserEntity?> {
+  LoginUserNotifer() : super(null);
+
+  Future<void> get(String id) async {
+    state = await UserModel.getUser(id);
   }
-  return UserModel.getUserSnapshots(id);
-});
+}

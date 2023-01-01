@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../provider/login_provider.dart';
 import '../../route.dart';
 import '../../entity/user_entity.dart';
 
@@ -17,7 +18,9 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = createSampleUser();
+    final loginUser = ref.watch(loginUserProvider);
+
+    UserEntity user = loginUser ?? createSampleUser(); // TODO
 
     return AppBar(
       leading: IconButton(
