@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:vc_space/entity/user_entity.dart';
+
+import 'datetime_converter.dart';
 
 part 'room_entity.freezed.dart';
 part 'room_entity.g.dart';
@@ -21,11 +23,11 @@ class RoomEntity with _$RoomEntity {
     required String ownerImage,
     required String title,
     required String description,
-    required DateTime startTime,
+    @DateTimeConverter() required DateTime startTime,
     required List<String> tags,
     required int maxNumber,
     required String enterType,
-    required DateTime updatedAt,
+    @DateTimeConverter() required DateTime updatedAt,
   }) = _RoomEntity;
 
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>

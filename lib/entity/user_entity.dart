@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import 'datetime_converter.dart';
 
 part 'user_entity.freezed.dart';
 part 'user_entity.g.dart';
@@ -11,7 +14,7 @@ class UserEntity with _$UserEntity {
     required String photo,
     required List<String> tags,
     required String twitterId,
-    required DateTime updatedAt,
+    @DateTimeConverter() required DateTime updatedAt,
   }) = _UserEntity;
 
   factory UserEntity.fromJson(Map<String, dynamic> json) =>
