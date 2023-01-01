@@ -25,7 +25,8 @@ class CreateRoomDialog extends StatelessWidget {
       description: fields['description'],
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
-      tags: ['hoge'],
+      tags: ['hoge'], // TODO
+      enterType: fields['enterType'],
     );
 
     RoomModel.createRoom(newRoom);
@@ -135,18 +136,16 @@ class CreateRoomDialog extends StatelessWidget {
   }
 
   FormBuilderField enterTypeField() {
-    List<String> items = ['制限なし', 'フォローのみ', 'パスワード'];
-
     return FormBuilderDropdown<String>(
       name: 'enterType',
       autovalidateMode: AutovalidateMode.always,
-      initialValue: items[0],
+      initialValue: EnterType.noLimit.name,
       decoration: const InputDecoration(labelText: '入室制限'),
-      items: items
-          .map((value) => DropdownMenuItem(
+      items: EnterType.values
+          .map((enterType) => DropdownMenuItem(
                 alignment: AlignmentDirectional.centerStart,
-                value: value,
-                child: Text(value),
+                value: enterType.name,
+                child: Text(enterType.displayName),
               ))
           .toList(),
     );
