@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:vc_space/entity/room_entity.dart';
+import 'package:vc_space/model/model_base.dart';
 
 class RoomModel {
+  // TODO snapshot使わない
   static Future<Stream<RoomEntity>> createRoom(RoomEntity room) {
     return FirebaseFirestore.instance
         .collection('room')
@@ -19,10 +21,7 @@ class RoomModel {
         .then((results) => results.docs
             .map((snapshot) => RoomEntity.fromJson(snapshot.data()))
             .toList())
-        .catchError((error) {
-      debugPrint(error);
-      return [] as List<RoomEntity>;
-    });
+        .catchError(ModelBase.onError([] as List<RoomEntity>, 'getRoomList'));
   }
 
   static Future<RoomEntity?> getRoom(String id) {
@@ -35,9 +34,6 @@ class RoomModel {
         return null;
       }
       return RoomEntity.fromJson(result.data()!);
-    }).catchError((error) {
-      debugPrint(error);
-      return null;
-    });
+    }).catchError(ModelBase.onError(null, 'getRoom'));
   }
 }
