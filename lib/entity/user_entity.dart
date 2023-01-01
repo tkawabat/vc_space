@@ -5,12 +5,14 @@ part 'user_entity.g.dart';
 
 @freezed
 class UserEntity with _$UserEntity {
-  const factory UserEntity(
-      {required String id,
-      required String name,
-      required String photo,
-      required List<String> tags,
-      required String twitterId}) = _UserEntity;
+  const factory UserEntity({
+    required String id,
+    required String name,
+    required String photo,
+    required List<String> tags,
+    required String twitterId,
+    required DateTime updatedAt,
+  }) = _UserEntity;
 
   factory UserEntity.fromJson(Map<String, dynamic> json) =>
       _$UserEntityFromJson(json);
@@ -18,12 +20,13 @@ class UserEntity with _$UserEntity {
 
 // TODO
 UserEntity createSampleUser() {
-  return const UserEntity(
+  return UserEntity(
     id: 'user01',
     name: 'taro',
     photo:
         'https://pbs.twimg.com/profile_images/1245965644094246912/rOuCIpPu_normal.jpg',
     tags: ['a'],
     twitterId: '',
+    updatedAt: DateTime.now(),
   );
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/entity/user_entity.dart';
 
 import '../../entity/room_entity.dart';
 import '../../model/room_model.dart';
@@ -20,13 +19,16 @@ class CreateRoomDialog extends StatelessWidget {
     var fields = formKey.currentState!.value;
 
     RoomEntity newRoom = RoomEntity(
-      owner: createSampleUser(), // TODO
+      ownerId: 'xxxx', // TODO
+      ownerImage:
+          'https://pbs.twimg.com/profile_images/1245965644094246912/rOuCIpPu_normal.jpg', // TODO
       title: fields['title'],
       description: fields['description'],
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
       tags: ['hoge'], // TODO
       enterType: fields['enterType'],
+      updatedAt: DateTime.now(),
     );
 
     RoomModel.createRoom(newRoom);
