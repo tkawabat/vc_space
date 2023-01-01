@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:vc_space/component/l2/tag_field.dart';
+import 'package:vc_space/model/room_model.dart';
 
+import '../../provider/room_list_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
@@ -33,7 +35,20 @@ class MainPage extends HookConsumerWidget {
               onPressed: () => twitterLogin(),
               child: const Text("ログイン"),
             ),
-            TagField(samples: ConstService.sampleRoomTags),
+            ElevatedButton(
+              onPressed: () {
+                ref.read(roomListProvider.notifier).get();
+              },
+              child: const Text("更新"),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                var room = await RoomModel.getRoom('77QJOC4qmmphog5vLyc3');
+                debugPrint(room?.toString());
+              },
+              child: const Text("test"),
+            ),
+            const TagField(samples: ConstService.sampleRoomTags),
             const RoomList(),
           ],
         ),

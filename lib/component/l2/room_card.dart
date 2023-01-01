@@ -39,7 +39,7 @@ class RoomCard extends StatelessWidget {
                         height: 48,
                         child: Center(
                           child: Text(
-                            room.id!.substring(0, 1),
+                            room.title.substring(0, 1),
                             style: const TextStyle(
                                 color: Colors.white, fontSize: 24),
                           ),
