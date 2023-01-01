@@ -18,5 +18,5 @@ final AutoDisposeStreamProvider<UserEntity?> loginUserStreamProvider =
   if (id == null) {
     return Stream.value(null);
   }
-  return getUserSnapshots(id);
+  return UserModel.getUserSnapshots(id);
 });
