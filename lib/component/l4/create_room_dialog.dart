@@ -1,21 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
+import 'package:vc_space/entity/user_entity.dart';
 
 import '../../entity/room_entity.dart';
-import '../../provider/create_room_provider.dart';
-import '../../provider/room_list_provider.dart';
+import '../../model/room_model.dart';
 import '../../service/const_service.dart';
 
-class CreateRoomDialog extends ConsumerWidget {
+class CreateRoomDialog extends StatelessWidget {
   CreateRoomDialog({super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
 
+  void createRoom(context) {
+    if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      return;
+    }
+    var fields = formKey.currentState!.value;
+
+    RoomEntity newRoom = RoomEntity(
+      owner: createSampleUser(), // TODO
+      title: fields['title'],
+      description: fields['description'],
+      maxNumber: fields['maxNumber'],
+      startTime: fields['startTime'],
+      tags: ['hoge'],
+    );
+
+    RoomModel.createRoom(newRoom);
+    Navigator.pop(context);
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final scrollController = ScrollController();
     const space = SizedBox(height: 12);
 
@@ -53,21 +71,8 @@ class CreateRoomDialog extends ConsumerWidget {
                 },
               ),
               TextButton(
-                child: const Text('作成'),
-                onPressed: () {
-                  if (!(formKey.currentState?.saveAndValidate() ?? false)) {
-                    return;
-                  }
-                  var fields = formKey.currentState!.value;
-
-                  RoomEntity newRoom = createSampleRoom(fields["title"]);
-
-                  ref.read(roomListProvider.notifier).add(newRoom);
-                  ref.read(createRoomProvider.notifier).reset();
-
-                  Navigator.pop(context);
-                },
-              ),
+                  child: const Text('作成'),
+                  onPressed: () => createRoom(context)),
             ]));
   }
 
