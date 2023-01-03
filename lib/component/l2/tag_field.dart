@@ -105,7 +105,8 @@ class TagFieldState extends State<TagField> {
                           .map((String text) => Tag(
                                 text: text,
                                 onTap: () => onTagDelete(text),
-                                tagColor: Colors.lightGreen,
+                                tagColor:
+                                    const Color.fromARGB(255, 189, 233, 139),
                               ))
                           .toList()))
               : null,
