@@ -17,7 +17,7 @@ class CreateRoomDialog extends HookConsumerWidget {
   final formKey = GlobalKey<FormBuilderState>();
   final tagKey = GlobalKey<TagFieldState>();
 
-  void createRoom(BuildContext context, WidgetRef ref) {
+  Future<void> createRoom(BuildContext context, WidgetRef ref) async {
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
       return;
     }
@@ -41,8 +41,10 @@ class CreateRoomDialog extends HookConsumerWidget {
       updatedAt: DateTime.now(),
     );
 
-    RoomModel.createRoom(newRoom);
     Navigator.pop(context);
+
+    RoomEntity? createdRoom = await RoomModel.createRoom(newRoom);
+    // TODO 入室処理
   }
 
   @override

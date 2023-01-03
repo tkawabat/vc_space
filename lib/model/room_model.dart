@@ -1,16 +1,14 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:vc_space/entity/room_entity.dart';
 import 'package:vc_space/model/model_base.dart';
 
 class RoomModel {
-  // TODO snapshot使わない
-  static Future<Stream<RoomEntity>> createRoom(RoomEntity room) {
-    return FirebaseFirestore.instance
-        .collection('room')
-        .add(room.toJson())
-        .then((result) => result
-            .snapshots()
-            .map((snapshot) => RoomEntity.fromJson(snapshot.data()!)));
+  static RoomEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
+    return RoomEntity.fromJson(snapshot.data()!);
   }
 
   static Future<List<RoomEntity>> getRoomList() {
@@ -20,7 +18,7 @@ class RoomModel {
         .then((results) => results.docs
             .map((snapshot) => RoomEntity.fromJson(snapshot.data()))
             .toList())
-        .catchError(ModelBase.onError([] as List<RoomEntity>, 'getRoomList'));
+        .catchError(ModelBase.onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
   static Future<RoomEntity?> getRoom(String id) {
@@ -28,11 +26,17 @@ class RoomModel {
         .collection('room')
         .doc(id)
         .get()
-        .then((result) {
-      if (!result.exists) {
-        return null;
-      }
-      return RoomEntity.fromJson(result.data()!);
-    }).catchError(ModelBase.onError(null, 'getRoom'));
+        .then(_get)
+        .catchError(ModelBase.onError(null, 'getRoom'));
+  }
+
+  static Future<RoomEntity?> createRoom(RoomEntity room) {
+    return FirebaseFirestore.instance
+        .collection('room')
+        .add(room.toJson())
+        .then((result) => result
+            .get()
+            .then(_get)
+            .catchError(ModelBase.onError(null, 'createRoom')));
   }
 }
