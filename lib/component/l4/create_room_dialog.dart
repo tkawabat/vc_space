@@ -1,32 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
+import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
+import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
+import '../l2/tag_field.dart';
 
-class CreateRoomDialog extends StatelessWidget {
+class CreateRoomDialog extends HookConsumerWidget {
   CreateRoomDialog({super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
+  final tagKey = GlobalKey<TagFieldState>();
 
-  void createRoom(context) {
+  void createRoom(BuildContext context, WidgetRef ref) {
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
       return;
     }
     var fields = formKey.currentState!.value;
+    var tags = tagKey.currentState!.tagsController.getTags ?? [];
+
+    final UserEntity? loginUser = ref.watch(loginUserProvider);
+    if (loginUser == null) {
+      return;
+    }
 
     RoomEntity newRoom = RoomEntity(
-      ownerId: 'xxxx', // TODO
-      ownerImage:
-          'https://pbs.twimg.com/profile_images/1245965644094246912/rOuCIpPu_normal.jpg', // TODO
+      ownerId: loginUser.id,
+      ownerImage: loginUser.photo,
       title: fields['title'],
-      description: fields['description'],
+      description: fields['description'] ?? '',
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
-      tags: ['hoge'], // TODO
+      tags: tags,
       enterType: fields['enterType'],
       updatedAt: DateTime.now(),
     );
@@ -36,9 +46,17 @@ class CreateRoomDialog extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ScrollController();
-    const space = SizedBox(height: 12);
+
+    List<Widget> list = [
+      titleField(),
+      startTimeField(),
+      maxNumberField(),
+      enterTypeField(),
+      TagField(samples: ConstService.sampleRoomTags, key: tagKey),
+      descriptionField(),
+    ];
 
     return FormBuilder(
         key: formKey,
@@ -49,33 +67,21 @@ class CreateRoomDialog extends StatelessWidget {
                 height: 600,
                 child: Scrollbar(
                     controller: scrollController,
-                    child: ListView(
+                    child: ListView.separated(
                       controller: scrollController,
-                      children: <Widget>[
-                        titleField(),
-                        space,
-                        descriptionField(),
-                        space,
-                        startTimeField(),
-                        space,
-                        maxNumberField(),
-                        space,
-                        space,
-                        enterTypeField(),
-                        space,
-                        // tagField(),
-                      ],
+                      itemCount: list.length,
+                      itemBuilder: (context, i) => list[i],
+                      separatorBuilder: (context, i) =>
+                          const SizedBox(height: 16),
                     ))),
-            actions: <Widget>[
+            actions: [
               TextButton(
                 child: const Text('キャンセル'),
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+                onPressed: () => Navigator.pop(context),
               ),
               TextButton(
                   child: const Text('作成'),
-                  onPressed: () => createRoom(context)),
+                  onPressed: () => createRoom(context, ref)),
             ]));
   }
 
@@ -84,9 +90,10 @@ class CreateRoomDialog extends StatelessWidget {
 
     return FormBuilderTextField(
       name: 'title',
-      autovalidateMode: AutovalidateMode.always,
+      initialValue: '遊び部屋',
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
+        FormBuilderValidators.required(errorText: '入力してください'),
         FormBuilderValidators.maxLength(ConstService.roomTitleMax),
       ]),
       decoration: const InputDecoration(labelText: labelText),
@@ -98,12 +105,14 @@ class CreateRoomDialog extends StatelessWidget {
 
     return FormBuilderTextField(
       name: 'description',
-      autovalidateMode: AutovalidateMode.always,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        FormBuilderValidators.required(),
+        // FormBuilderValidators.required(errorText: '入力してください'),
         FormBuilderValidators.maxLength(ConstService.roomDescriptionMax),
       ]),
       decoration: const InputDecoration(labelText: labelText),
+      minLines: 2,
+      maxLines: 2,
     );
   }
 
@@ -118,7 +127,7 @@ class CreateRoomDialog extends StatelessWidget {
   }
 
   FormBuilderField maxNumberField() {
-    const labelText = '最大人数 (最大${ConstService.roomMaxNumber}人)';
+    const labelText = '最大人数';
 
     return FormBuilderSlider(
       name: 'maxNumber',
@@ -132,8 +141,7 @@ class CreateRoomDialog extends StatelessWidget {
       min: 2,
       max: ConstService.roomMaxNumber.toDouble(),
       divisions: ConstService.roomMaxNumber - 2,
-      maxTextStyle: const TextStyle(fontSize: 12),
-      minTextStyle: const TextStyle(fontSize: 12),
+      displayValues: DisplayValues.current,
     );
   }
 
@@ -150,21 +158,6 @@ class CreateRoomDialog extends StatelessWidget {
                 child: Text(enterType.displayName),
               ))
           .toList(),
-    );
-  }
-
-  FormBuilderField tagField() {
-    // TODO
-
-    return FormBuilderChoiceChip<String>(
-      name: 'tag',
-      autovalidateMode: AutovalidateMode.always,
-      // initialValue: ,
-      decoration: const InputDecoration(labelText: 'タグ'),
-      options: const [
-        FormBuilderChipOption<String>(value: 'a'),
-        FormBuilderChipOption<String>(value: 'b'),
-      ],
     );
   }
 }

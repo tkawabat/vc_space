@@ -37,8 +37,6 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           });
     }
 
-    UserEntity user = loginUser ?? createSampleUser(); // TODO
-
     return AppBar(
       leading: IconButton(
           icon: const Icon(Icons.home),

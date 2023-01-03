@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import '../l2/tag_field.dart';
 
 import '../../provider/room_list_provider.dart';
-import '../../service/const_service.dart';
 import '../../service/twitter_service.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
@@ -30,7 +28,6 @@ class MainPage extends HookConsumerWidget {
               },
               child: const Text("更新"),
             ),
-            const TagField(samples: ConstService.sampleRoomTags),
             const RoomList(),
           ],
         ),
