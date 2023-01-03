@@ -8,12 +8,12 @@ class TagField extends StatefulWidget {
   const TagField({super.key, required this.samples});
 
   @override
-  State<TagField> createState() => _TagField();
+  State<TagField> createState() => TagFieldState();
 }
 
-class _TagField extends State<TagField> {
+class TagFieldState extends State<TagField> {
   late double _distanceToField;
-  late TextfieldTagsController _controller;
+  late TextfieldTagsController tagsController;
 
   @override
   void didChangeDependencies() {
@@ -24,17 +24,17 @@ class _TagField extends State<TagField> {
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
+    tagsController.dispose();
   }
 
   @override
   void initState() {
     super.initState();
-    _controller = TextfieldTagsController();
+    tagsController = TextfieldTagsController();
   }
 
   String? validator(String tag) {
-    if (_controller.getTags!.contains(tag)) {
+    if (tagsController.getTags!.contains(tag)) {
       return '追加済みです';
     }
     return null;
@@ -43,25 +43,35 @@ class _TagField extends State<TagField> {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const Text(
+          'タグ',
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
         TextFieldTags(
-          textfieldTagsController: _controller,
+          textfieldTagsController: tagsController,
           initialTags: const [],
           textSeparators: const [' ', ','],
           letterCase: LetterCase.normal,
           validator: validator,
           inputfieldBuilder: builder,
         ),
-        Wrap(
-            spacing: 2.0,
-            children: (widget.samples
-                .map(
-                  (text) => Tag(
-                    text: text,
-                    onTap: () => {_controller.addTag = text},
-                  ),
-                )
-                .toList())),
+        Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Wrap(
+              spacing: 2,
+              children: (widget.samples
+                  .map(
+                    (text) => Tag(
+                      text: text,
+                      onTap: () => tagsController.addTag = text,
+                    ),
+                  )
+                  .toList())),
+        )
       ],
     );
   }
@@ -77,34 +87,31 @@ class _TagField extends State<TagField> {
           void Function(String)? onSubmitted) {
     return ((BuildContext context, dynamic sc, List<String> tags,
         void Function(String) onTagDelete) {
-      return Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: TextField(
-          controller: tec,
-          focusNode: fn,
-          decoration: InputDecoration(
-            isDense: true,
-            hintText: _controller.hasTags ? '' : "タグを入力...",
-            errorText: error,
-            prefixIconConstraints:
-                BoxConstraints(maxWidth: _distanceToField * 0.74),
-            prefixIcon: tags.isNotEmpty
-                ? SingleChildScrollView(
-                    controller: sc,
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                        children: tags
-                            .map((String text) => Tag(
-                                  text: text,
-                                  onTap: () => onTagDelete(text),
-                                  tagColor: Colors.lightGreen,
-                                ))
-                            .toList()))
-                : null,
-          ),
-          onChanged: onChanged,
-          onSubmitted: onSubmitted,
+      return TextField(
+        controller: tec,
+        focusNode: fn,
+        decoration: InputDecoration(
+          isDense: true,
+          hintText: tagsController.hasTags ? '' : "タグを入力...",
+          errorText: error,
+          prefixIconConstraints:
+              BoxConstraints(maxWidth: _distanceToField * 0.74),
+          prefixIcon: tags.isNotEmpty
+              ? SingleChildScrollView(
+                  controller: sc,
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                      children: tags
+                          .map((String text) => Tag(
+                                text: text,
+                                onTap: () => onTagDelete(text),
+                                tagColor: Colors.lightGreen,
+                              ))
+                          .toList()))
+              : null,
         ),
+        onChanged: onChanged,
+        onSubmitted: onSubmitted,
       );
     });
   }

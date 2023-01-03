@@ -6,11 +6,15 @@ class ConstService {
   // TODO 見直し
   static const sampleRoomTags = [
     '雑談',
+    '声劇',
     '麻雀',
     'マダミス',
-    '声劇',
+    'Apex',
+    'マリカ',
     '1hくらい',
     '2hくらい',
-    '初見歓迎'
+    '初見歓迎',
+    '10代',
+    '20才以上',
   ];
 }
