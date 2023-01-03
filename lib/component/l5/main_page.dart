@@ -19,10 +19,6 @@ class MainPage extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
-              onPressed: () => twitterLogin(),
-              child: const Text("ログイン"),
-            ),
-            ElevatedButton(
               onPressed: () {
                 ref.read(roomListProvider.notifier).get();
               },

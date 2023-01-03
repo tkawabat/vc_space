@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vc_space/service/twitter_service.dart';
 
 import '../l3/header.dart';
 
@@ -18,9 +19,13 @@ class UserPage extends HookConsumerWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
+                twitterLogout(ref);
                 Navigator.pop(context);
               },
-              child: const Text('戻る'),
+              style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.red)),
+              child: const Text('ログアウト'), //TODO confirm
             ),
           ],
         ),

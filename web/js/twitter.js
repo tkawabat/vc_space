@@ -28,3 +28,12 @@ async function twitterLogin() {
         })
     })
 }
+
+async function twitterLogout() {
+    import(FIREBASE_URL_BASE+'/firebase-auth.js').then((module) => {
+        const auth = module.getAuth();
+        return auth.signOut().catch((error) => {
+            alert('ログアウトエラー. エラー: ' + error)
+        })
+    })
+}

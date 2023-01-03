@@ -9,9 +9,13 @@ class LoginNotifer extends StateNotifier<String?> {
   LoginNotifer() : super(null);
 
   void set(String? id, WidgetRef ref) {
+    var loginUser = ref.read(loginUserProvider.notifier);
+
     state = id;
     if (id != null) {
-      ref.read(loginUserProvider.notifier).get(id);
+      loginUser.get(id);
+    } else {
+      loginUser.reset();
     }
   }
 }
@@ -25,4 +29,6 @@ class LoginUserNotifer extends StateNotifier<UserEntity?> {
   Future<void> get(String id) async {
     state = await UserModel.getUser(id);
   }
+
+  void reset() => state = null;
 }
