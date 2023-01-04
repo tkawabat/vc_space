@@ -29,11 +29,7 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback(
-      (_) {
-        listenFirebaseAuth(ref);
-      },
-    );
+    listenFirebaseAuth(ref);
 
     return MaterialApp(
       title: dotenv.get('TITLE'),
