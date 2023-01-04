@@ -9,6 +9,7 @@ import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
+import '../../service/snackbar_service.dart';
 import '../l2/tag_field.dart';
 
 class CreateRoomDialog extends HookConsumerWidget {
@@ -42,6 +43,8 @@ class CreateRoomDialog extends HookConsumerWidget {
     );
 
     Navigator.pop(context);
+
+    showSnackBar(context, '部屋を作成しました', SnackBarType.info);
 
     RoomEntity? createdRoom = await RoomModel.createRoom(newRoom);
     // TODO 入室処理

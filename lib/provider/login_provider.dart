@@ -1,6 +1,8 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vc_space/entity/user_entity.dart';
-import 'package:vc_space/model/user_model.dart';
+
+import '../entity/user_entity.dart';
+import '../model/user_model.dart';
+import '../service/snackbar_service.dart';
 
 final loginProvider = StateNotifierProvider.autoDispose<LoginNotifer, String?>(
     (ref) => LoginNotifer());
@@ -9,13 +11,14 @@ class LoginNotifer extends StateNotifier<String?> {
   LoginNotifer() : super(null);
 
   void set(String? id, WidgetRef ref) {
-    var loginUser = ref.read(loginUserProvider.notifier);
+    LoginUserNotifer loginUserNotifer = ref.read(loginUserProvider.notifier);
 
     state = id;
     if (id != null) {
-      loginUser.get(id);
+      loginUserNotifer.get(id, ref);
     } else {
-      loginUser.reset();
+      loginUserNotifer.reset();
+      showSnackBar(ref.context, 'ログアウトしました', SnackBarType.info);
     }
   }
 }
@@ -26,7 +29,8 @@ final loginUserProvider = StateNotifierProvider<LoginUserNotifer, UserEntity?>(
 class LoginUserNotifer extends StateNotifier<UserEntity?> {
   LoginUserNotifer() : super(null);
 
-  Future<void> get(String id) async {
+  Future<void> get(String id, WidgetRef ref) async {
+    showSnackBar(ref.context, 'ログインしました', SnackBarType.info);
     state = await UserModel.getUser(id);
   }
 
