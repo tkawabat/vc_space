@@ -5,8 +5,6 @@ import 'package:vc_space/provider/login_provider.dart';
 
 void listenFirebaseAuth(WidgetRef ref) {
   FirebaseAuth.instance.authStateChanges().listen((User? user) {
-    if (user != null) {
-      ref.read(loginProvider.notifier).set(user.uid, ref);
-    }
+    ref.read(loginProvider.notifier).set(user?.uid, ref);
   });
 }

@@ -26,7 +26,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
         barrierDismissible: true,
         builder: (_) {
           return const ConfirmDialog(
-            text: 'Twitter連携します',
+            text: 'Twitterでログインする',
             onSubmit: twitterLogin,
           );
         });

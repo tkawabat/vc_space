@@ -15,6 +15,8 @@ class LoginNotifer extends StateNotifier<String?> {
 
     state = id;
     if (id != null) {
+      // Bug; navigatorが存在しないエラーが発生する
+      // showSnackBar(ref.context, 'ログインしました', SnackBarType.info);
       loginUserNotifer.get(id, ref);
     } else {
       loginUserNotifer.reset();
@@ -30,7 +32,6 @@ class LoginUserNotifer extends StateNotifier<UserEntity?> {
   LoginUserNotifer() : super(null);
 
   Future<void> get(String id, WidgetRef ref) async {
-    showSnackBar(ref.context, 'ログインしました', SnackBarType.info);
     state = await UserModel.getUser(id);
   }
 

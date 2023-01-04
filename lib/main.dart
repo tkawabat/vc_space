@@ -6,9 +6,9 @@ import 'package:intl/date_symbol_data_local.dart';
 
 import 'firebase_options.dart';
 import 'route.dart';
-import 'service/login_service.dart';
 
 import 'component/l5/main_page.dart';
+import 'service/login_service.dart';
 
 Future main() async {
   const flavor = String.fromEnvironment('FLAVOR');
@@ -27,10 +27,13 @@ Future main() async {
 class MyApp extends ConsumerWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    listenFirebaseAuth(ref);
+    WidgetsBinding.instance.addPostFrameCallback(
+      (_) {
+        listenFirebaseAuth(ref);
+      },
+    );
 
     return MaterialApp(
       title: dotenv.get('TITLE'),
