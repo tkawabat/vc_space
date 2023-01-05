@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'package:vc_space/component/l1/tag.dart';
+import 'package:vc_space/service/const_service.dart';
 
 import '../../service/const_design.dart';
 
 class TagField extends StatefulWidget {
   final List<String> samples;
+  final int maxTagNumber;
+  final int maxTagLength;
 
-  const TagField({super.key, required this.samples});
+  const TagField(
+      {super.key,
+      required this.samples,
+      required this.maxTagNumber,
+      this.maxTagLength = 10});
 
   @override
   State<TagField> createState() => TagFieldState();
@@ -36,6 +43,12 @@ class TagFieldState extends State<TagField> {
   }
 
   String? validator(String tag) {
+    if (tagsController.getTags!.length > widget.maxTagNumber - 1) {
+      return 'タグは最大${widget.maxTagNumber}個です';
+    }
+    if (tag.length > widget.maxTagLength) {
+      return 'タグは最大${widget.maxTagLength}文字です';
+    }
     if (tagsController.getTags!.contains(tag)) {
       return '追加済みです';
     }

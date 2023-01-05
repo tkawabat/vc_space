@@ -63,7 +63,11 @@ class CreateRoomDialog extends HookConsumerWidget {
       startTimeField(),
       maxNumberField(),
       enterTypeField(),
-      TagField(samples: ConstService.sampleRoomTags, key: tagKey),
+      TagField(
+        key: tagKey,
+        samples: ConstService.sampleRoomTags,
+        maxTagNumber: ConstService.maxTagLength,
+      ),
       descriptionField(),
     ];
 
