@@ -16,6 +16,7 @@ async function twitterLogin() {
             photo: result._tokenResponse.photoUrl,
             tags: [],
             twitterId: result._tokenResponse.screenName,
+            blocks: [],
             // twitter_token: result._tokenResponse.oauthAccessToken,
             // twitter_secret: result._tokenResponse.oauthTokenSecret,
         }

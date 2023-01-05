@@ -21,7 +21,6 @@ class MainPage extends HookConsumerWidget {
             ElevatedButton(
               onPressed: () {
                 ref.read(roomListProvider.notifier).get();
-                ;
                 showSnackBar(context, '部屋を取得しました', SnackBarType.info);
               },
               child: const Text("更新"),

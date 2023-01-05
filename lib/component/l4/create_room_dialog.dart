@@ -34,11 +34,14 @@ class CreateRoomDialog extends HookConsumerWidget {
       ownerId: loginUser.id,
       ownerImage: loginUser.photo,
       title: fields['title'],
+      place: fields['placeType'],
       description: fields['description'] ?? '',
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
       tags: tags,
       enterType: fields['enterType'],
+      // pass:
+      users: [loginUser.id],
       updatedAt: DateTime.now(),
     );
 
@@ -56,6 +59,7 @@ class CreateRoomDialog extends HookConsumerWidget {
 
     List<Widget> list = [
       titleField(),
+      placeTypeField(),
       startTimeField(),
       maxNumberField(),
       enterTypeField(),
@@ -150,16 +154,32 @@ class CreateRoomDialog extends HookConsumerWidget {
     );
   }
 
+  FormBuilderField placeTypeField() {
+    return FormBuilderDropdown<PlaceType>(
+      name: 'placeType',
+      autovalidateMode: AutovalidateMode.always,
+      initialValue: PlaceType.discord,
+      decoration: const InputDecoration(labelText: '遊ぶ場所'),
+      items: PlaceType.values
+          .map((placeType) => DropdownMenuItem(
+                alignment: AlignmentDirectional.centerStart,
+                value: placeType,
+                child: Text(placeType.displayName),
+              ))
+          .toList(),
+    );
+  }
+
   FormBuilderField enterTypeField() {
-    return FormBuilderDropdown<String>(
+    return FormBuilderDropdown<EnterType>(
       name: 'enterType',
       autovalidateMode: AutovalidateMode.always,
-      initialValue: EnterType.noLimit.name,
+      initialValue: EnterType.noLimit,
       decoration: const InputDecoration(labelText: '入室制限'),
       items: EnterType.values
           .map((enterType) => DropdownMenuItem(
                 alignment: AlignmentDirectional.centerStart,
-                value: enterType.name,
+                value: enterType,
                 child: Text(enterType.displayName),
               ))
           .toList(),
