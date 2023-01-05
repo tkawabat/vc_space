@@ -44,7 +44,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     );
     if (loginUser != null) {
       userIcon = UserIcon(
-          user: loginUser,
+          photo: loginUser.photo,
           tooltip: 'マイページ',
           onTap: () {
             Navigator.push(context,

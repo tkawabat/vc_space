@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 
-import '../../entity/user_entity.dart';
-
 class UserIcon extends StatelessWidget {
   final Function() onTap;
   final String tooltip;
-  final UserEntity user;
+  final String photo;
 
   const UserIcon(
       {super.key,
-      required this.user,
+      required this.photo,
       required this.onTap,
       required this.tooltip});
 
@@ -25,7 +23,7 @@ class UserIcon extends StatelessWidget {
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   image: DecorationImage(
-                    image: NetworkImage(user.photo),
+                    image: NetworkImage(photo),
                   )),
             )));
   }
