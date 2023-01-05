@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../service/twitter_service.dart';
 
 import '../l3/header.dart';
-import '../l4/confirm_dialog.dart';
+import '../dialog/confirm_dialog.dart';
 
 class UserPage extends HookConsumerWidget {
   const UserPage({Key? key}) : super(key: key);

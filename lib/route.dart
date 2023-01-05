@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'component/l5/main_page.dart';
-import 'component/l5/room_detail_page.dart';
+import 'component/page/main_page.dart';
+import 'component/page/room_detail_page.dart';
 import 'entity/room_entity.dart';
 import 'service/analytics_service.dart';
 

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vc_space/component/l4/confirm_dialog.dart';
+import 'package:vc_space/component/dialog/confirm_dialog.dart';
 
 import '../../provider/login_provider.dart';
 import '../../route.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 
-import '../l5/user_page.dart';
+import '../page/user_page.dart';
 import '../l1/user_no_login_icon.dart';
 import '../l1/create_room_button.dart';
 import '../l1/user_icon.dart';

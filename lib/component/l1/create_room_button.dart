@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../l4/create_room_dialog.dart';
+import '../dialog/create_room_dialog.dart';
 
 class CreateRoomButton extends StatelessWidget {
   const CreateRoomButton({super.key});

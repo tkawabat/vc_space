@@ -5,7 +5,7 @@ import 'package:vc_space/service/const_design.dart';
 
 import '../../entity/room_entity.dart';
 import '../l1/tag.dart';
-import '../l5/room_detail_page.dart';
+import '../page/room_detail_page.dart';
 
 class RoomCard extends StatelessWidget {
   final RoomEntity room;

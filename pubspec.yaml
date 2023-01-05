@@ -50,6 +50,7 @@ dependencies:
   form_builder_validators: ^8.4.0
   textfield_tags: ^2.0.2
   animated_snack_bar: ^0.3.0
+  flutter_chat_ui: ^1.6.6
 
 dev_dependencies:
   flutter_test:

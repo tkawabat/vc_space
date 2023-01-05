@@ -7,7 +7,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'firebase_options.dart';
 import 'route.dart';
 
-import 'component/l5/main_page.dart';
+import 'component/page/main_page.dart';
 import 'service/login_service.dart';
 
 Future main() async {
