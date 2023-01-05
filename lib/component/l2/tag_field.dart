@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:textfield_tags/textfield_tags.dart';
 import 'package:vc_space/component/l1/tag.dart';
 
+import '../../service/const_design.dart';
+
 class TagField extends StatefulWidget {
   final List<String> samples;
 
@@ -105,8 +107,7 @@ class TagFieldState extends State<TagField> {
                           .map((String text) => Tag(
                                 text: text,
                                 onTap: () => onTagDelete(text),
-                                tagColor:
-                                    const Color.fromARGB(255, 189, 233, 139),
+                                tagColor: ConstDesign.validTagColor,
                               ))
                           .toList()))
               : null,
