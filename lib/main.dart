@@ -5,6 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
 import 'firebase_options.dart';
+import 'provider/room_list_provider.dart';
 import 'route.dart';
 
 import 'component/page/main_page.dart';
@@ -30,6 +31,7 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     listenFirebaseAuth(ref);
+    ref.read(roomListProvider.notifier).get();
 
     return MaterialApp(
       title: dotenv.get('TITLE'),
