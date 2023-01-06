@@ -14,11 +14,13 @@ import '../l1/user_icon.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
   final String title;
+  final PreferredSizeWidget? bottom;
 
-  const Header({Key? key, required this.title}) : super(key: key);
+  const Header({Key? key, required this.title, this.bottom}) : super(key: key);
 
   @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+  Size get preferredSize =>
+      Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0.0));
 
   Future<void> showConfirmDialog(context) async {
     return showDialog(
@@ -64,6 +66,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
         userIcon,
         const Padding(padding: EdgeInsets.only(right: 16)),
       ],
+      bottom: bottom,
       elevation: 0,
       // backgroundColor: Colors.transparent,
     );
