@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
@@ -18,6 +20,18 @@ class VCChat extends HookConsumerWidget {
       messages: _messages,
       onSendPressed: (types.PartialText text) {},
       user: chatUser,
+      l10n: const _ChatL10nJa(),
     );
   }
+}
+
+class _ChatL10nJa extends ChatL10n {
+  const _ChatL10nJa(
+      {super.attachmentButtonAccessibilityLabel = '画像アップロード',
+      super.emptyChatPlaceholder = 'メッセージがありません',
+      super.fileButtonAccessibilityLabel = 'ファイル',
+      super.inputPlaceholder = 'メッセージを入力してください',
+      super.sendButtonAccessibilityLabel = '送信',
+      super.unreadMessagesLabel = '未読'})
+      : super();
 }
