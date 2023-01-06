@@ -10,5 +10,6 @@ targets:
           include:
             - lib/entity/*.dart
         options:
-          any_map: true
+          any_map: false
+          checked: true
           explicit_to_json: true
