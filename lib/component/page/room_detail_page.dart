@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/room_entity.dart';
 import '../l3/header.dart';
+import '../l3/vc_chat.dart';
 
 class RoomDetailPage extends HookConsumerWidget {
   const RoomDetailPage({Key? key, required this.room}) : super(key: key);
@@ -11,23 +12,49 @@ class RoomDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: Header(
-        title: room.title,
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('戻る'),
+    final tabList = ['チャット', '部屋情報', '参加者'];
+
+    return DefaultTabController(
+        length: tabList.length,
+        child: Scaffold(
+          appBar: Header(
+            title: room.title,
+            bottom:
+                TabBar(tabs: tabList.map((text) => Tab(text: text)).toList()),
+          ),
+          body: TabBarView(children: [
+            Column(children: const [Expanded(child: VCChat())]),
+            // Column(
+            //   children: [
+            //     ElevatedButton(
+            //       onPressed: () {
+            //         Navigator.pop(context);
+            //       },
+            //       child: const Text('戻る'),
+            //     ),
+            //   ],
+            // ),
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('戻る'),
+                ),
+              ],
             ),
-          ],
-        ),
-      ),
-    );
+            Column(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('戻る'),
+                ),
+              ],
+            ),
+          ]),
+        ));
   }
 }
