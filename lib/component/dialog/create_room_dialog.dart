@@ -49,7 +49,7 @@ class CreateRoomDialog extends HookConsumerWidget {
 
     showSnackBar(context, '部屋を作成しました', SnackBarType.info);
 
-    RoomEntity? createdRoom = await RoomModel.createRoom(newRoom);
+    RoomEntity? createdRoom = await RoomModel().createRoom(newRoom);
     // TODO 入室処理
   }
 

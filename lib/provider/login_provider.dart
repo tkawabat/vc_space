@@ -32,7 +32,7 @@ class LoginUserNotifer extends StateNotifier<UserEntity?> {
   LoginUserNotifer() : super(null);
 
   Future<void> get(String id, WidgetRef ref) async {
-    state = await UserModel.getUser(id);
+    state = await UserModel().getUser(id);
   }
 
   void reset() => state = null;

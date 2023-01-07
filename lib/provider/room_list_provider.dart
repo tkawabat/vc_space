@@ -13,7 +13,7 @@ class RoomListNotifer extends StateNotifier<List<RoomEntity>> {
 
   void set(List<RoomEntity> list) => state = list;
   Future<void> get() async {
-    var list = await RoomModel.getRoomList();
+    var list = await RoomModel().getRoomList();
     state = list;
   }
 
