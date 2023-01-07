@@ -11,15 +11,11 @@ class UserModel extends ModelBase {
   }
 
   UserModel._internal() {
-    collectionRef = FirebaseFirestore.instance.collection('room');
+    collectionRef = FirebaseFirestore.instance.collection('User');
   }
 
   Future<UserEntity?> getUser(String id) {
-    return FirebaseFirestore.instance
-        .collection('user')
-        .doc(id)
-        .get()
-        .then((ref) {
+    return collectionRef.doc(id).get().then((ref) {
       if (!ref.exists) {
         return null;
       }

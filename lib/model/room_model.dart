@@ -11,7 +11,7 @@ class RoomModel extends ModelBase {
   }
 
   RoomModel._internal() {
-    collectionRef = FirebaseFirestore.instance.collection('room');
+    collectionRef = FirebaseFirestore.instance.collection('Room');
   }
 
   static RoomEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {

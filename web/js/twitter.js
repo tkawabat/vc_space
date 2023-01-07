@@ -23,7 +23,7 @@ async function twitterLogin() {
         return import(FIREBASE_URL_BASE+'/firebase-firestore.js')
     }).then((module) => {
         userData.updatedAt = module.serverTimestamp()
-        userRef = module.doc(module.getFirestore(), 'user', userData.id)
+        userRef = module.doc(module.getFirestore(), 'User', userData.id)
         module.setDoc(userRef, userData, { merge: true}).catch((error) => {
             alert('ユーザーデータ登録エラー.' + error)
         })
