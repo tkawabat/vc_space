@@ -2,6 +2,7 @@ class ConstService {
   static const roomTitleMax = 20;
   static const roomDescriptionMax = 140;
   static const roomMaxNumber = 15;
+  static const roomPasswordMax = 8;
   static const roomTagMax = 10;
 
   static const maxTagLength = 10;

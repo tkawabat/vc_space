@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
@@ -30,6 +31,9 @@ class CreateRoomDialog extends HookConsumerWidget {
       return;
     }
 
+    final String? password =
+        fields['enterType'] == EnterType.password ? fields['password'] : null;
+
     RoomEntity newRoom = RoomEntity(
       ownerId: loginUser.id,
       ownerImage: loginUser.photo,
@@ -40,7 +44,7 @@ class CreateRoomDialog extends HookConsumerWidget {
       startTime: fields['startTime'],
       tags: tags,
       enterType: fields['enterType'],
-      // pass:
+      password: password,
       users: [loginUser.id],
       updatedAt: DateTime.now(),
     );
@@ -56,13 +60,15 @@ class CreateRoomDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ScrollController();
+    final ValueNotifier<bool> enabledPassword = useState<bool>(false);
 
     List<Widget> list = [
       titleField(),
       placeTypeField(),
       startTimeField(),
       maxNumberField(),
-      enterTypeField(),
+      enterTypeField(enabledPassword),
+      passwordField(enabledPassword),
       TagField(
         key: tagKey,
         samples: ConstService.sampleRoomTags,
@@ -174,7 +180,7 @@ class CreateRoomDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField enterTypeField() {
+  FormBuilderField enterTypeField(ValueNotifier<bool> enabledPassword) {
     return FormBuilderDropdown<EnterType>(
       name: 'enterType',
       autovalidateMode: AutovalidateMode.always,
@@ -187,6 +193,29 @@ class CreateRoomDialog extends HookConsumerWidget {
                 child: Text(enterType.displayName),
               ))
           .toList(),
+      onChanged: (EnterType? enterType) => enabledPassword.value =
+          enterType != null && enterType == EnterType.password,
+    );
+  }
+
+  Widget passwordField(enabledPassword) {
+    const labelText = 'パスワード (最大${ConstService.roomPasswordMax}文字)';
+
+    return Visibility(
+      visible: enabledPassword.value,
+      maintainState: true,
+      maintainAnimation: true,
+      child: FormBuilderTextField(
+        name: 'password',
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        validator: FormBuilderValidators.compose([
+          FormBuilderValidators.required(errorText: '入力してください'),
+          FormBuilderValidators.maxLength(ConstService.roomPasswordMax),
+        ]),
+        decoration: const InputDecoration(labelText: labelText),
+        enabled: enabledPassword.value,
+        maxLength: ConstService.roomPasswordMax,
+      ),
     );
   }
 }
