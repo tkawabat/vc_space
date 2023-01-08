@@ -44,7 +44,7 @@ class RoomEntity with _$RoomEntity {
     required List<String> tags,
     required int maxNumber,
     @EnterTypeConverter() required EnterType enterType,
-    String? pass,
+    String? password,
     required List<String> users,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _RoomEntity;
