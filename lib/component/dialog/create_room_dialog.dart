@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -11,6 +13,7 @@ import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/snackbar_service.dart';
+import '../../service/time_service.dart';
 import '../l2/tag_field.dart';
 
 class CreateRoomDialog extends HookConsumerWidget {
@@ -126,7 +129,6 @@ class CreateRoomDialog extends HookConsumerWidget {
       name: 'description',
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
-        // FormBuilderValidators.required(errorText: '入力してください'),
         FormBuilderValidators.maxLength(ConstService.roomDescriptionMax),
       ]),
       decoration: const InputDecoration(labelText: labelText),
@@ -136,12 +138,37 @@ class CreateRoomDialog extends HookConsumerWidget {
   }
 
   FormBuilderField startTimeField() {
+    final formatter = DateFormat('MM/dd(E) HH:mm', 'ja');
+    final controller = TextEditingController();
+    final focusNode = FocusNode();
+
     return FormBuilderDateTimePicker(
       name: 'startTime',
+      focusNode: focusNode,
       autovalidateMode: AutovalidateMode.always,
-      initialValue: DateTime.now(),
+      initialValue: TimeService().getStepNow(ConstService.stepTime),
       decoration: const InputDecoration(labelText: '開始時間'),
-      format: DateFormat('MM/dd(E) HH:mm', 'ja'),
+      format: formatter,
+      firstDate: DateTime.now(),
+      lastDate: DateTime.now().add(const Duration(days: 60)),
+      showCursor: true,
+      controller: controller,
+      onChanged: (value) {
+        final DateTime time = value ?? DateTime.now();
+        final newValue =
+            TimeService().getStepDateTime(time, ConstService.stepTime);
+
+        if (time == newValue) return;
+
+        formKey.currentState?.fields['startTime']?.didChange(newValue);
+        formKey.currentState?.fields['startTime']
+            ?.invalidate('${ConstService.stepTime}分区切りに変更しました');
+        focusNode.unfocus();
+
+        Timer(const Duration(microseconds: 1), () {
+          controller.text = formatter.format(newValue);
+        });
+      },
     );
   }
 
@@ -209,7 +236,6 @@ class CreateRoomDialog extends HookConsumerWidget {
         name: 'password',
         autovalidateMode: AutovalidateMode.onUserInteraction,
         validator: FormBuilderValidators.compose([
-          FormBuilderValidators.required(errorText: '入力してください'),
           FormBuilderValidators.maxLength(ConstService.roomPasswordMax),
         ]),
         decoration: const InputDecoration(labelText: labelText),

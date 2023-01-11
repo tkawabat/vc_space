@@ -1,4 +1,6 @@
 class ConstService {
+  static const stepTime = 15;
+
   static const roomTitleMax = 20;
   static const roomDescriptionMax = 140;
   static const roomMaxNumber = 15;
