@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/room_entity.dart';
+import '../../service/initial_service.dart';
 import '../l3/header.dart';
 import '../l3/vc_chat.dart';
 
@@ -12,6 +13,8 @@ class RoomDetailPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    InitialService().init(ref);
+
     final tabList = ['チャット', '部屋情報', '参加者'];
 
     return DefaultTabController(
