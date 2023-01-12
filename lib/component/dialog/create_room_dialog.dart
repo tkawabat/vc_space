@@ -38,6 +38,7 @@ class CreateRoomDialog extends HookConsumerWidget {
         fields['enterType'] == EnterType.password ? fields['password'] : null;
 
     RoomEntity newRoom = RoomEntity(
+      id: RoomModel().getNewId(),
       ownerId: loginUser.id,
       ownerImage: loginUser.photo,
       title: fields['title'],
@@ -56,7 +57,7 @@ class CreateRoomDialog extends HookConsumerWidget {
 
     showSnackBar(context, '部屋を作成しました', SnackBarType.info);
 
-    RoomEntity? createdRoom = await RoomModel().createRoom(newRoom);
+    RoomModel().setRoom(newRoom);
     // TODO 入室処理
   }
 

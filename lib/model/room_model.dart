@@ -18,15 +18,21 @@ class RoomModel extends ModelBase {
     if (!snapshot.exists) {
       return null;
     }
-    return RoomEntity.fromJson(snapshot.data()!);
+
+    var json = snapshot.data()!;
+    json['id'] = snapshot.id;
+    return RoomEntity.fromJson(json);
+  }
+
+  String getNewId() {
+    return collectionRef.doc().id;
   }
 
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
         .get()
-        .then((results) => results.docs
-            .map((snapshot) => RoomEntity.fromJson(snapshot.data()))
-            .toList())
+        .then((results) =>
+            results.docs.map(_get).toList().whereType<RoomEntity>().toList())
         .catchError(onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
@@ -38,8 +44,12 @@ class RoomModel extends ModelBase {
         .catchError(onError(null, 'getRoom'));
   }
 
-  Future<RoomEntity?> createRoom(RoomEntity room) {
-    return collectionRef.add(room.toJson()).then((result) =>
-        result.get().then(_get).catchError(onError(null, 'createRoom')));
+  Future<void> setRoom(RoomEntity room) {
+    final json = room.toJson();
+    final id = json['id'];
+    return collectionRef
+        .doc(id)
+        .set(json.remove('id'))
+        .catchError(onError(null, 'setRoom'));
   }
 }

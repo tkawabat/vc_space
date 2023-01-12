@@ -34,6 +34,7 @@ enum EnterType {
 @freezed
 class RoomEntity with _$RoomEntity {
   const factory RoomEntity({
+    required String id,
     required String ownerId,
     required String ownerImage,
     required String title,
@@ -51,24 +52,4 @@ class RoomEntity with _$RoomEntity {
 
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>
       _$RoomEntityFromJson(json);
-}
-
-// TODO
-RoomEntity createSampleRoom(String title) {
-  DateTime startTime = DateTime.now().add(const Duration(days: 1));
-  return RoomEntity(
-    ownerId: 'xxxx',
-    ownerImage:
-        'https://pbs.twimg.com/profile_images/1245965644094246912/rOuCIpPu_normal.jpg',
-    title: title,
-    description: 'test_desc',
-    place: PlaceType.discord,
-    placeUrl: 'https://hogehoge',
-    startTime: startTime,
-    tags: ["hoge"],
-    maxNumber: 4,
-    enterType: EnterType.noLimit,
-    users: ['xxx'],
-    updatedAt: DateTime.now(),
-  );
 }

@@ -54,5 +54,7 @@ Widget _roomPageTransaction(Map<String, String>? queryParameters) {
     return _homePageTransaction();
   }
 
-  return RoomDetailPage(room: createSampleRoom(queryParameters['id']!));
+  // TODO
+  // return RoomDetailPage(room: createSampleRoom(queryParameters['id']!));
+  return _homePageTransaction();
 }
