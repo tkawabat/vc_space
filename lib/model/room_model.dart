@@ -14,18 +14,10 @@ class RoomModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('Room');
   }
 
-  static RoomEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    if (!snapshot.exists) {
-      return null;
-    }
-
-    var json = snapshot.data()!;
-    json['id'] = snapshot.id;
+  RoomEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final json = getJsonWithId(snapshot);
+    if (json == null) return null;
     return RoomEntity.fromJson(json);
-  }
-
-  String getNewId() {
-    return collectionRef.doc().id;
   }
 
   Future<List<RoomEntity>> getRoomList() {
@@ -52,4 +44,8 @@ class RoomModel extends ModelBase {
         .set(json.remove('id'))
         .catchError(onError(null, 'setRoom'));
   }
+
+  // Future updateRoom(RoomEntity room) {
+  //   return collectionRef.doc(room.id)
+  // }
 }

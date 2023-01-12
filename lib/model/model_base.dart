@@ -13,4 +13,19 @@ class ModelBase {
       return returnValue;
     };
   }
+
+  Map<String, dynamic>? getJsonWithId(
+      DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    if (!snapshot.exists) {
+      return null;
+    }
+
+    final json = snapshot.data()!;
+    json['id'] = snapshot.id;
+    return json;
+  }
+
+  String getNewId() {
+    return collectionRef.doc().id;
+  }
 }

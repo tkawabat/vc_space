@@ -14,12 +14,17 @@ class UserModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('User');
   }
 
+  UserEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+    final json = getJsonWithId(snapshot);
+    if (json == null) return null;
+    return UserEntity.fromJson(json);
+  }
+
   Future<UserEntity?> getUser(String id) {
-    return collectionRef.doc(id).get().then((ref) {
-      if (!ref.exists) {
-        return null;
-      }
-      return UserEntity.fromJson(ref.data()!);
-    }).catchError(onError(null, 'getUser'));
+    return collectionRef
+        .doc(id)
+        .get()
+        .then(_get)
+        .catchError(onError(null, 'getUser'));
   }
 }

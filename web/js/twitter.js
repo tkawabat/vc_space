@@ -2,6 +2,7 @@ FIREBASE_URL_BASE = 'https://www.gstatic.com/firebasejs/9.14.0'
 
 async function twitterLogin() {
     var userData = {};
+    var userId;
 
     import(FIREBASE_URL_BASE+'/firebase-auth.js').then((module) => {
         const provider = new module.TwitterAuthProvider();
@@ -10,8 +11,8 @@ async function twitterLogin() {
             alert('twitter認証エラー. エラーコード' + error.code)
         })
     }).then((result) => {
+        userId = result.user.uid;
         userData = {
-            id: result.user.uid,
             name: result._tokenResponse.fullName,
             photo: result._tokenResponse.photoUrl,
             tags: [],
@@ -23,7 +24,7 @@ async function twitterLogin() {
         return import(FIREBASE_URL_BASE+'/firebase-firestore.js')
     }).then((module) => {
         userData.updatedAt = module.serverTimestamp()
-        userRef = module.doc(module.getFirestore(), 'User', userData.id)
+        userRef = module.doc(module.getFirestore(), 'User', userId)
         module.setDoc(userRef, userData, { merge: true}).catch((error) => {
             alert('ユーザーデータ登録エラー.' + error)
         })
