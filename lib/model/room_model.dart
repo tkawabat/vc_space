@@ -50,5 +50,24 @@ class RoomModel extends ModelBase {
         .set(json)
         .catchError(ErrorService().onError(null, 'setRoom'));
   }
+
+  Future<bool> enter(String roomId, String userId) async {
+    final documentReference = collectionRef.doc(roomId);
+
+    return FirebaseFirestore.instance
+        .runTransaction<bool>((Transaction transaction) async {
+      final RoomEntity? room =
+          await transaction.get(documentReference).then(_getEntity);
+
+      if (room == null) return false;
+      if (room.users.length >= room.maxNumber) return false;
+      if (room.users.contains(userId)) return false;
+
+      var list = [...room.users];
+      list.add(userId);
+      transaction.update(documentReference, {'users': list});
+
+      return true;
+    }).catchError(ErrorService().onError(false, 'enterRoom'));
   }
 }
