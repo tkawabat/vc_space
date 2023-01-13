@@ -3,8 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../provider/room_list_provider.dart';
-import '../../service/initial_service.dart';
-import '../../service/snackbar_service.dart';
+import '../../service/page_service.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
@@ -13,7 +12,7 @@ class MainPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    InitialService().init(ref);
+    PageService().init(context, ref);
     ref.read(roomListProvider.notifier).get();
 
     return Scaffold(
@@ -25,7 +24,7 @@ class MainPage extends HookConsumerWidget {
             ElevatedButton(
               onPressed: () {
                 ref.read(roomListProvider.notifier).get();
-                showSnackBar(context, '部屋を取得しました', SnackBarType.info);
+                PageService().snackbar('部屋を取得しました', SnackBarType.info);
               },
               child: const Text("更新"),
             ),

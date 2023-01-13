@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../service/initial_service.dart';
+import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 
 import '../l3/header.dart';
@@ -27,7 +27,7 @@ class UserPage extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    InitialService().init(ref);
+    PageService().init(context, ref);
 
     return Scaffold(
       appBar: const Header(

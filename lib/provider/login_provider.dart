@@ -2,7 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/user_entity.dart';
 import '../model/user_model.dart';
-import '../service/snackbar_service.dart';
+import '../service/page_service.dart';
 
 final loginProvider = StateNotifierProvider.autoDispose<LoginNotifer, String?>(
     (ref) => LoginNotifer());
@@ -23,7 +23,7 @@ class LoginNotifer extends StateNotifier<String?> {
       message = 'ログアウトしました';
     }
 
-    showSnackBar(ref.context, message, SnackBarType.info);
+    PageService().snackbar(message, SnackBarType.info);
   }
 }
 
