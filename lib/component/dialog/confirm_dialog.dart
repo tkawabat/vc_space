@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-class ConfirmDialog extends HookConsumerWidget {
+class ConfirmDialog extends StatelessWidget {
   final String text;
   final String submitText;
   final Function() onSubmit;
@@ -16,23 +15,20 @@ class ConfirmDialog extends HookConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return AlertDialog(
-        // title: const Text('部屋を作る'),
-        content: Text(text),
-        actions: [
-          TextButton(
-              child: const Text('キャンセル'),
-              onPressed: () {
-                if (onCancel != null) onCancel!();
-                Navigator.pop(context);
-              }),
-          TextButton(
-              child: Text(submitText),
-              onPressed: () {
-                onSubmit();
-                Navigator.pop(context);
-              }),
-        ]);
+  Widget build(BuildContext context) {
+    return AlertDialog(content: Text(text), actions: [
+      TextButton(
+          child: const Text('キャンセル'),
+          onPressed: () {
+            if (onCancel != null) onCancel!();
+            Navigator.pop(context);
+          }),
+      TextButton(
+          child: Text(submitText),
+          onPressed: () {
+            onSubmit();
+            Navigator.pop(context);
+          }),
+    ]);
   }
 }
