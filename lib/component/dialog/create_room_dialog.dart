@@ -13,7 +13,9 @@ import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
+import '../../service/room_service.dart';
 import '../../service/time_service.dart';
+import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
 
 class CreateRoomDialog extends HookConsumerWidget {
@@ -55,10 +57,10 @@ class CreateRoomDialog extends HookConsumerWidget {
 
     Navigator.pop(context);
 
-    showSnackBar(context, '部屋を作成しました', SnackBarType.info);
+    await RoomModel().setRoom(newRoom);
+    PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
-    RoomModel().setRoom(newRoom);
-    // TODO 入室処理
+    // RoomService().enter(newRoom.id, loginUser.id);
   }
 
   @override
@@ -98,10 +100,7 @@ class CreateRoomDialog extends HookConsumerWidget {
                           const SizedBox(height: 16),
                     ))),
             actions: [
-              TextButton(
-                child: const Text('キャンセル'),
-                onPressed: () => Navigator.pop(context),
-              ),
+              const CancelButton(),
               TextButton(
                   child: const Text('作成'),
                   onPressed: () => createRoom(context, ref)),
