@@ -13,6 +13,7 @@ class LoginNotifer extends StateNotifier<String?> {
   void set(String? id, WidgetRef ref) {
     LoginUserNotifer loginUserNotifer = ref.read(loginUserProvider.notifier);
 
+    bool isShowSnackbar = state != id;
     state = id;
 
     var message = 'ログインしました';
@@ -23,7 +24,7 @@ class LoginNotifer extends StateNotifier<String?> {
       message = 'ログアウトしました';
     }
 
-    PageService().snackbar(message, SnackBarType.info);
+    if (isShowSnackbar) PageService().snackbar(message, SnackBarType.info);
   }
 }
 
