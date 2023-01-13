@@ -19,12 +19,10 @@ class PageService {
   PageService._internal();
 
   void init(BuildContext context, WidgetRef ref) {
-    // 毎回だけ行う処理
-    _context = context;
-
     if (initialized) return;
 
     // 一回だけ行う処理
+    _context = context;
     listenFirebaseAuth(ref);
 
     initialized = true;
@@ -32,6 +30,9 @@ class PageService {
 
   void back() {
     if (_context == null) return;
+    if (!Navigator.canPop(_context!)) return;
+    Navigator.pop(_context!);
+  }
     Navigator.pop(_context!);
   }
 

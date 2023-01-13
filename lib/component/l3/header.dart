@@ -30,7 +30,6 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       onTap: () {
         PageService().showConfirmDialog('Twitterでログインする', () {
           twitterLogin();
-          PageService().back();
         });
       },
       tooltip: 'Twitterログイン',
