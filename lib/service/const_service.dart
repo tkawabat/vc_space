@@ -9,7 +9,6 @@ class ConstService {
 
   static const maxTagLength = 10;
 
-  // TODO 見直し
   static const sampleRoomTags = [
     '雑談',
     '声劇',

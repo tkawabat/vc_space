@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../entity/user_entity.dart';
+import '../../provider/login_provider.dart';
 import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 
@@ -12,6 +14,11 @@ class UserPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
+
+    final UserEntity? loginUser = ref.watch(loginUserProvider);
+    if (loginUser == null) {
+      // 未ログイン表示をする
+    }
 
     return Scaffold(
       appBar: const Header(
