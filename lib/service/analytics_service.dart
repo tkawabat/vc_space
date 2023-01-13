@@ -11,12 +11,11 @@ enum LogEventName {
   modify_user,
   search_user,
   firestore_error,
+  view_error,
 }
 
 Future screenView(String screenName) async {
-  if (kDebugMode) {
-    print("screenView: $screenName");
-  }
+  debugPrint("screenView: $screenName");
 
   return await FirebaseAnalytics.instance.logEvent(
     name: 'screen_view',
@@ -30,10 +29,8 @@ Future logEvent(LogEventName logName, String contentType,
     [String? itemId]) async {
   itemId = itemId ?? '';
 
-  if (kDebugMode) {
-    print(
-        "logName: ${logName.name}, contentType: $contentType, itemId: $itemId");
-  }
+  debugPrint(
+      "logName: ${logName.name}, contentType: $contentType, itemId: $itemId");
 
   return await FirebaseAnalytics.instance.logEvent(
     name: logName.name,

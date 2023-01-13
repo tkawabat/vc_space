@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vc_space/component/dialog/confirm_dialog.dart';
 
 import '../../provider/login_provider.dart';
 import '../../route.dart';
+import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 
@@ -22,25 +22,16 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
   Size get preferredSize =>
       Size.fromHeight(kToolbarHeight + (bottom?.preferredSize.height ?? 0.0));
 
-  Future<void> showConfirmDialog(context) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) {
-          return const ConfirmDialog(
-            text: 'Twitterでログインする',
-            onSubmit: twitterLogin,
-          );
-        });
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
 
     Widget userIcon = UserNoLoginIcon(
       onTap: () {
-        showConfirmDialog(context);
+        PageService().showConfirmDialog('Twitterでログインする', () {
+          twitterLogin();
+          PageService().back();
+        });
       },
       tooltip: 'Twitterログイン',
     );

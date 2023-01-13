@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
+import 'analytics_service.dart';
 import 'login_service.dart';
 
 typedef SnackBarType = AnimatedSnackBarType;
@@ -29,6 +30,11 @@ class PageService {
     initialized = true;
   }
 
+  void back() {
+    if (_context == null) return;
+    Navigator.pop(_context!);
+  }
+
   void snackbar(
     String text,
     SnackBarType type,
@@ -42,5 +48,37 @@ class PageService {
       desktopSnackBarPosition: DesktopSnackBarPosition.bottomLeft,
       duration: const Duration(seconds: 2),
     ).show(_context!);
+  }
+
+  Future<void> showConfirmDialog(
+    String text,
+    Function() onSubmit, [
+    submitText = '決定',
+    Function()? onCancel,
+  ]) async {
+    if (_context == null) {
+      logEvent(LogEventName.view_error, 'confirmDialog');
+      return;
+    }
+
+    return showDialog(
+        context: _context!,
+        barrierDismissible: true,
+        builder: (_) {
+          return AlertDialog(content: Text(text), actions: [
+            TextButton(
+                child: const Text('キャンセル'),
+                onPressed: () {
+                  if (onCancel != null) onCancel();
+                  back();
+                }),
+            TextButton(
+                child: Text(submitText),
+                onPressed: () {
+                  onSubmit();
+                  back();
+                }),
+          ]);
+        });
   }
 }

@@ -5,25 +5,9 @@ import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 
 import '../l3/header.dart';
-import '../dialog/confirm_dialog.dart';
 
 class UserPage extends HookConsumerWidget {
   const UserPage({Key? key}) : super(key: key);
-
-  Future<void> showConfirmDialog(BuildContext context, WidgetRef ref) async {
-    return showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (_) {
-          return ConfirmDialog(
-            text: 'ログアウトします',
-            onSubmit: () {
-              twitterLogout(ref);
-              Navigator.pop(context);
-            },
-          );
-        });
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -39,7 +23,10 @@ class UserPage extends HookConsumerWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                showConfirmDialog(context, ref);
+                PageService().showConfirmDialog('ログアウトする', () {
+                  twitterLogout(ref);
+                  PageService().back();
+                });
               },
               style: ButtonStyle(
                   backgroundColor:
