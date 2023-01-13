@@ -12,12 +12,12 @@ class VCChat extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<types.Message> _messages = [];
+    final List<types.Message> messages = [];
     final user = createSampleUser();
 
     final chatUser = types.User(id: user.id);
     return Chat(
-      messages: _messages,
+      messages: messages,
       onSendPressed: (types.PartialText text) {},
       user: chatUser,
       l10n: const _ChatL10nJa(),
