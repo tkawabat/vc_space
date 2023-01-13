@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:vc_space/entity/room_entity.dart';
-import 'package:vc_space/model/model_base.dart';
+
+import 'model_base.dart';
+import '../entity/room_entity.dart';
 
 class RoomModel extends ModelBase {
   static final RoomModel _instance = RoomModel._internal();
@@ -14,7 +15,7 @@ class RoomModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('Room');
   }
 
-  RoomEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  RoomEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final json = getJsonWithId(snapshot);
     if (json == null) return null;
     return RoomEntity.fromJson(json);
@@ -23,8 +24,11 @@ class RoomModel extends ModelBase {
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
         .get()
-        .then((results) =>
-            results.docs.map(_get).toList().whereType<RoomEntity>().toList())
+        .then((results) => results.docs
+            .map(_getEntity)
+            .toList()
+            .whereType<RoomEntity>()
+            .toList())
         .catchError(onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
@@ -32,7 +36,7 @@ class RoomModel extends ModelBase {
     return collectionRef
         .doc(id)
         .get()
-        .then(_get)
+        .then(_getEntity)
         .catchError(onError(null, 'getRoom'));
   }
 
@@ -44,8 +48,4 @@ class RoomModel extends ModelBase {
         .set(json.remove('id'))
         .catchError(onError(null, 'setRoom'));
   }
-
-  // Future updateRoom(RoomEntity room) {
-  //   return collectionRef.doc(room.id)
-  // }
 }

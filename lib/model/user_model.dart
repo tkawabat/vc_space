@@ -14,7 +14,7 @@ class UserModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('User');
   }
 
-  UserEntity? _get(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  UserEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final json = getJsonWithId(snapshot);
     if (json == null) return null;
     return UserEntity.fromJson(json);
@@ -24,7 +24,7 @@ class UserModel extends ModelBase {
     return collectionRef
         .doc(id)
         .get()
-        .then(_get)
+        .then(_getEntity)
         .catchError(onError(null, 'getUser'));
   }
 }
