@@ -44,10 +44,10 @@ class RoomModel extends ModelBase {
 
   Future<void> setRoom(RoomEntity room) {
     final json = room.toJson();
-    final id = json['id'];
+    json.remove('id');
     return collectionRef
-        .doc(id)
-        .set(json.remove('id'))
+        .doc(room.id)
+        .set(json)
         .catchError(ErrorService().onError(null, 'setRoom'));
   }
   }
