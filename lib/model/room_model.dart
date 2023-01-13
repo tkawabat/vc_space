@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model_base.dart';
+import '../service/error_service.dart';
 import '../entity/room_entity.dart';
 
 class RoomModel extends ModelBase {
@@ -21,6 +22,14 @@ class RoomModel extends ModelBase {
     return RoomEntity.fromJson(json);
   }
 
+  Future<RoomEntity?> getRoom(String id) {
+    return collectionRef
+        .doc(id)
+        .get()
+        .then(_getEntity)
+        .catchError(ErrorService().onError(null, 'getRoom'));
+  }
+
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
         .get()
@@ -29,15 +38,8 @@ class RoomModel extends ModelBase {
             .toList()
             .whereType<RoomEntity>()
             .toList())
-        .catchError(onError<List<RoomEntity>>([], 'getRoomList'));
-  }
-
-  Future<RoomEntity?> getRoom(String id) {
-    return collectionRef
-        .doc(id)
-        .get()
-        .then(_getEntity)
-        .catchError(onError(null, 'getRoom'));
+        .catchError(
+            ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
   Future<void> setRoom(RoomEntity room) {
@@ -46,6 +48,7 @@ class RoomModel extends ModelBase {
     return collectionRef
         .doc(id)
         .set(json.remove('id'))
-        .catchError(onError(null, 'setRoom'));
+        .catchError(ErrorService().onError(null, 'setRoom'));
+  }
   }
 }

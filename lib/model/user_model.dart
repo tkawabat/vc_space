@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model_base.dart';
+import '../service/error_service.dart';
 import '../entity/user_entity.dart';
 
 class UserModel extends ModelBase {
@@ -25,6 +26,6 @@ class UserModel extends ModelBase {
         .doc(id)
         .get()
         .then(_getEntity)
-        .catchError(onError(null, 'getUser'));
+        .catchError(ErrorService().onError(null, 'getUser'));
   }
 }
