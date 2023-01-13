@@ -7,7 +7,6 @@ import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 
-import '../page/user_page.dart';
 import '../l1/user_no_login_icon.dart';
 import '../l1/create_room_button.dart';
 import '../l1/user_icon.dart';
@@ -39,15 +38,14 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           photo: loginUser.photo,
           tooltip: 'マイページ',
           onTap: () {
-            Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const UserPage()));
+            PageService().transition(PageNames.user);
           });
     }
 
     return AppBar(
       leading: IconButton(
           icon: const Icon(Icons.home),
-          onPressed: () => Navigator.pushNamed(context, PageNames.home.path)),
+          onPressed: () => PageService().transition(PageNames.home)),
       title: Text(title),
       actions: [
         IconButton(icon: const Icon(Icons.search), onPressed: () {}),

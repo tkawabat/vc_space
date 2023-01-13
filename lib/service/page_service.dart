@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
+import '../route.dart';
 import 'analytics_service.dart';
 import 'login_service.dart';
 
@@ -33,7 +34,10 @@ class PageService {
     if (!Navigator.canPop(_context!)) return;
     Navigator.pop(_context!);
   }
-    Navigator.pop(_context!);
+
+  void transition(PageNames page, [Map<String, String>? arguments]) {
+    if (_context == null) return;
+    Navigator.pushNamed(_context!, page.path, arguments: arguments);
   }
 
   void snackbar(

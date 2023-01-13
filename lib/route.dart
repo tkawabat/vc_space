@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'component/page/main_page.dart';
 import 'component/page/room_detail_page.dart';
+import 'component/page/user_page.dart';
 import 'entity/room_entity.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
   home('/'),
   room('/room'),
+  user('/user'),
   ;
 
   const PageNames(this.path);
@@ -31,6 +33,8 @@ Route<dynamic> _transactionPage(
 
   if (path == PageNames.home.path) {
     builder = (_) => _homePageTransaction();
+  } else if (path == PageNames.user.path) {
+    builder = (_) => _userPageTransaction();
   } else if (path == PageNames.room.path) {
     builder = (_) => _roomPageTransaction(queryParameters);
   } else {
@@ -45,6 +49,8 @@ Route<dynamic> _transactionPage(
 }
 
 Widget _homePageTransaction() => const MainPage();
+
+Widget _userPageTransaction() => const UserPage();
 
 Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
