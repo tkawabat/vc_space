@@ -28,4 +28,8 @@ class UserModel extends ModelBase {
         .then(_getEntity)
         .catchError(ErrorService().onError(null, 'getUser'));
   }
+
+  Future<List<UserEntity>> getUserList(List<String> idList) {
+    return getListById<UserEntity>(idList, _getEntity, 'getUserList');
+  }
 }
