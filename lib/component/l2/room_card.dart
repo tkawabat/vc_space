@@ -1,26 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/component/l1/user_icon.dart';
-import 'package:vc_space/service/const_design.dart';
+import 'package:vc_space/component/l1/room_user.dart';
 
 import '../../entity/room_entity.dart';
-import '../l1/tag.dart';
-import '../page/room_detail_page.dart';
+
+import '../dialog/room_dialog.dart';
+import '../dialog/user_dialog.dart';
+import '../l1/user_icon.dart';
+import 'room_tag_list.dart';
 
 class RoomCard extends StatelessWidget {
   final RoomEntity room;
+  final String? userId;
 
-  const RoomCard({super.key, required this.room});
-
-  void onTap(BuildContext context) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => RoomDetailPage(room: room)));
-  }
+  const RoomCard({super.key, required this.room, required this.userId});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => onTap(context),
+        onTap: () => showDialog(
+            context: context,
+            barrierDismissible: true,
+            builder: (_) {
+              return RoomDialog(
+                room: room,
+                userId: userId,
+              );
+            }),
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Card(
@@ -34,8 +40,13 @@ class RoomCard extends StatelessWidget {
                   ListTile(
                     leading: UserIcon(
                       photo: room.ownerImage,
-                      tooltip: 'ユーザー情報を見る',
-                      onTap: () {},
+                      tooltip: '主催者を見る',
+                      onTap: () => showDialog(
+                          context: context,
+                          barrierDismissible: true,
+                          builder: (_) {
+                            return UserDialog(userId: room.ownerId);
+                          }),
                     ),
                     title: Text(room.title),
                     trailing: buildTrailing(room),
@@ -43,10 +54,7 @@ class RoomCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
                     alignment: Alignment.topLeft,
-                    child: Wrap(
-                      spacing: 2,
-                      children: buildTag(room),
-                    ),
+                    child: RoomTagList(room: room),
                   )
                 ],
               ),
@@ -56,42 +64,13 @@ class RoomCard extends StatelessWidget {
   Widget buildTrailing(room) {
     DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
     String start = formatter.format(room.startTime);
-    String numberText = '${room.users.length}/${room.maxNumber}';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text('$start~'),
-        SizedBox(
-            width: 40,
-            height: 14,
-            child: Row(
-              children: [
-                const Icon(Icons.person, size: 18),
-                Text(numberText),
-              ],
-            )),
+        RoomUser(room: room),
       ],
     );
-  }
-
-  List<Widget> buildTag(RoomEntity room) {
-    List<Widget> widgets = room.tags
-        .map((text) => Tag(
-              text: text,
-              tagColor: ConstDesign.validTagColor,
-              onTap: () {},
-            ))
-        .toList();
-
-    widgets.insert(
-        0,
-        Tag(
-          text: room.place.displayName,
-          tagColor: Colors.cyan.shade100,
-          onTap: () {},
-        ));
-
-    return widgets;
   }
 }
