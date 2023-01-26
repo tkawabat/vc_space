@@ -15,6 +15,7 @@ async function twitterLogin() {
         userData = {
             name: result._tokenResponse.fullName,
             photo: result._tokenResponse.photoUrl,
+            greeting: 'よろしくお願いします。',
             tags: [],
             twitterId: result._tokenResponse.screenName,
             blocks: [],
