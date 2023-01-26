@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/component/l1/room_user.dart';
 
 import '../../entity/room_entity.dart';
-
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
+import '../l1/room_user_number.dart';
 import '../l1/user_icon.dart';
 import 'room_tag_list.dart';
 
@@ -69,7 +68,7 @@ class RoomCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text('$start~'),
-        RoomUser(room: room),
+        RoomUserNumber(room: room),
       ],
     );
   }

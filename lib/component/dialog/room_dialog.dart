@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../entity/room_entity.dart';
 import '../../service/room_service.dart';
 import '../l1/cancel_button.dart';
-import '../l1/room_user.dart';
+import '../l1/room_user_number.dart';
 import '../l2/room_tag_list.dart';
 
 class RoomDialog extends StatelessWidget {
@@ -16,7 +16,7 @@ class RoomDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
-    String start = formatter.format(room.startTime);
+    String start = '${formatter.format(room.startTime)}〜';
 
     final description = room.description.isNotEmpty
         ? Text(room.description)
@@ -31,7 +31,7 @@ class RoomDialog extends StatelessWidget {
             start,
             textAlign: TextAlign.start,
           ),
-          RoomUser(room: room),
+          RoomUserNumber(room: room),
         ],
       ),
       const Text('部屋説明', style: TextStyle(fontWeight: FontWeight.w700)),

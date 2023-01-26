@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../entity/room_entity.dart';
 
-class RoomUser extends StatelessWidget {
+class RoomUserNumber extends StatelessWidget {
   final RoomEntity room;
 
-  const RoomUser({
+  const RoomUserNumber({
     super.key,
     required this.room,
   });
