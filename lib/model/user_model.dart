@@ -32,4 +32,11 @@ class UserModel extends ModelBase {
   Future<List<UserEntity>> getUserList(List<String> idList) {
     return getListById<UserEntity>(idList, _getEntity, 'getUserList');
   }
+
+  Future<void> updateUser(UserEntity user) async {
+    final documentReference = collectionRef.doc(user.id);
+    return documentReference
+        .set(user.toJson())
+        .catchError(ErrorService().onError(false, 'updateUser'));
+  }
 }

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'component/page/main_page.dart';
 import 'component/page/room_detail_page.dart';
 import 'component/page/user_page.dart';
-import 'entity/room_entity.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
@@ -50,7 +49,7 @@ Route<dynamic> _transactionPage(
 
 Widget _homePageTransaction() => const MainPage();
 
-Widget _userPageTransaction() => const UserPage();
+Widget _userPageTransaction() => UserPage();
 
 Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {

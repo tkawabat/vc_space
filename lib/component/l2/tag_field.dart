@@ -6,14 +6,17 @@ import '../l1/tag.dart';
 
 class TagField extends StatefulWidget {
   final List<String> samples;
+  final List<String> initialTags;
   final int maxTagNumber;
   final int maxTagLength;
 
-  const TagField(
-      {super.key,
-      required this.samples,
-      required this.maxTagNumber,
-      this.maxTagLength = 10});
+  const TagField({
+    super.key,
+    required this.samples,
+    required this.maxTagNumber,
+    this.initialTags = const [],
+    this.maxTagLength = 10,
+  });
 
   @override
   State<TagField> createState() => TagFieldState();
@@ -67,7 +70,7 @@ class TagFieldState extends State<TagField> {
         ),
         TextFieldTags(
           textfieldTagsController: tagsController,
-          initialTags: const [],
+          initialTags: widget.initialTags,
           textSeparators: const [' ', ','],
           letterCase: LetterCase.normal,
           validator: validator,

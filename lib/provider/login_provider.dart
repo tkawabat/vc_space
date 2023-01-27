@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/user_entity.dart';
@@ -37,6 +38,8 @@ class LoginUserNotifer extends StateNotifier<UserEntity?> {
   Future<void> get(String id) async {
     state = await UserModel().getUser(id);
   }
+
+  void set(UserEntity user) => state = user;
 
   void reset() => state = null;
 }

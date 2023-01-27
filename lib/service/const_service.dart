@@ -1,6 +1,8 @@
 class ConstService {
   static const stepTime = 15;
 
+  static const userGreetingMax = 140;
+
   static const roomTitleMax = 20;
   static const roomDescriptionMax = 140;
   static const roomMaxNumber = 15;
@@ -24,7 +26,7 @@ class ConstService {
     '20才以上',
   ];
 
-  static const sampleTimeTags = [
+  static const sampleUserTags = [
     '雑談',
     '声劇',
     '麻雀',
