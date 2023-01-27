@@ -62,12 +62,7 @@ class TagFieldState extends State<TagField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          'タグ',
-          style: TextStyle(
-            fontSize: 12,
-          ),
-        ),
+        const Text('タグ', style: TextStyle(fontSize: 12)),
         TextFieldTags(
           textfieldTagsController: tagsController,
           initialTags: widget.initialTags,
