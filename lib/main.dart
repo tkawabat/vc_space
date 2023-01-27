@@ -32,8 +32,8 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       title: dotenv.get('TITLE'),
       debugShowCheckedModeBanner: false,
-      theme: FlexThemeData.light(scheme: FlexScheme.amber),
-      darkTheme: FlexThemeData.dark(scheme: FlexScheme.amber),
+      theme: FlexThemeData.light(scheme: FlexScheme.mango),
+      darkTheme: FlexThemeData.dark(scheme: FlexScheme.mango),
       themeMode: ThemeMode.system,
       home: const MainPage(),
       onGenerateRoute: generateRoute,
