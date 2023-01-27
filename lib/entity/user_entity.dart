@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,11 +15,13 @@ class UserEntity with _$UserEntity {
     required String id,
     required String name,
     required String photo,
-    required String greeting,
-    required List<String> tags,
     required String twitterId,
-    required List<String> blocks,
-    @DateTimeConverter() required List<DateTime> times,
+    @JsonKey(defaultValue: 'よろしくお願いします。') required String greeting,
+    @JsonKey(defaultValue: []) required List<String> tags,
+    @JsonKey(defaultValue: []) required List<String> blocks,
+    @JsonKey(defaultValue: [])
+    @DateTimeConverter()
+        required List<DateTime> times,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _UserEntity;
 
@@ -29,9 +33,9 @@ final userOnLoad = UserEntity(
   id: ConstSystem.userOnLoad,
   name: 'ロード中です',
   photo: '',
-  greeting: '',
-  tags: [''],
   twitterId: '',
+  greeting: '',
+  tags: [],
   blocks: [],
   times: [],
   updatedAt: DateTime.now(),
@@ -42,7 +46,7 @@ final userNotFound = UserEntity(
   name: '存在しないユーザーです',
   photo: '',
   greeting: '',
-  tags: [''],
+  tags: [],
   twitterId: '',
   blocks: [],
   times: [],

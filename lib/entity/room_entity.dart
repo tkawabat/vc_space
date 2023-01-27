@@ -1,3 +1,5 @@
+// ignore_for_file: invalid_annotation_target
+
 // json_serialize内で使っているので消しちゃだめ
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -38,7 +40,7 @@ class RoomEntity with _$RoomEntity {
     required String ownerId,
     required String ownerImage,
     required String title,
-    required String description,
+    @JsonKey(defaultValue: '') required String description,
     @PlaceTypeConverter() required PlaceType place,
     String? placeUrl,
     @DateTimeConverter() required DateTime startTime,
