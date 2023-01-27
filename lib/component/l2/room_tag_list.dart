@@ -24,7 +24,6 @@ class RoomTagList extends StatelessWidget {
         Tag(
           text: room.place.displayName,
           tagColor: Colors.cyan.shade100,
-          onTap: () {},
         ));
 
     return Wrap(spacing: 2, children: widgets);

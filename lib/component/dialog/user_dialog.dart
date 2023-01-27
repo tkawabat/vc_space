@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../entity/user_entity.dart';
 import '../../provider/user_list_provider.dart';
 import '../../service/const_design.dart';
+import '../../service/time_service.dart';
+import '../l1/loading.dart';
 import '../l1/tag.dart';
 import '../l1/user_icon.dart';
+import '../l1/twitter_link.dart';
 
 class UserDialog extends HookConsumerWidget {
   final String userId;
@@ -20,66 +21,67 @@ class UserDialog extends HookConsumerWidget {
     final Map<String, UserEntity> userList = ref.watch(userListProvider);
 
     UserEntity user = userList[userId] ?? userOnLoad;
+    const double width = 400;
+    const double height = 300;
 
-    // TODO
-    // onloadはくるくるを返す
+    if (userList[userId] == null) {
+      return const AlertDialog(
+          content: SizedBox(
+        width: width,
+        height: height,
+        child: Loading(),
+      ));
+    }
+
+    final List<Widget> list = [
+      TwitterLink(user: user),
+      const Text('自己紹介', style: TextStyle(fontWeight: FontWeight.bold)),
+      Text(user.greeting),
+      // const SizedBox(height: 20),
+      const Text('タグ', style: TextStyle(fontWeight: FontWeight.bold)),
+      Container(
+        padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
+        alignment: Alignment.topLeft,
+        child: Wrap(
+          spacing: 2,
+          children: buildTag(user),
+        ),
+      )
+    ];
 
     return AlertDialog(
-      title: SizedBox(
-        width: 300,
-        height: 100,
-        child: Column(
-          children: [
-            Row(children: [
-              UserIcon(photo: user.photo),
-              Text(user.name),
-            ]),
-            buildTrailing(user),
-            Container(
-              padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
-              alignment: Alignment.topLeft,
-              child: Wrap(
-                spacing: 2,
-                children: buildTag(user),
-              ),
-            )
-          ],
+      title: ListTile(
+        leading: UserIcon(photo: user.photo),
+        title: Text(user.name),
+        subtitle: Text('最終ログイン: ${TimeService().getAgoString(user.updatedAt)}'),
+      ),
+      content: SizedBox(
+        width: width,
+        height: height,
+        child: ListView.separated(
+          itemCount: list.length,
+          itemBuilder: (context, i) => list[i],
+          separatorBuilder: (context, i) => const SizedBox(height: 8),
         ),
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: [
+
+        //   ],
+        // ),
       ),
     );
   }
 
-  Widget buildTrailing(UserEntity user) {
-    DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
-    String time = formatter.format(user.updatedAt); // N秒前表現
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Text('最終ログイン: $time'),
-        InkWell(
-            child: SizedBox(
-              width: 40,
-              height: 14,
-              child: Row(
-                children: [
-                  const FaIcon(FontAwesomeIcons.twitter,
-                      color: Colors.grey, size: 18),
-                  Text(user.twitterId),
-                ],
-              ),
-            ),
-            onTap: () => {}),
-      ],
-    );
-  }
-
   List<Widget> buildTag(UserEntity user) {
+    if (user.tags.isEmpty) {
+      return [const Tag(text: 'なし')];
+    }
+
     List<Widget> widgets = user.tags
         .map((text) => Tag(
               text: text,
               tagColor: ConstDesign.validTagColor,
-              onTap: () {},
             ))
         .toList();
 

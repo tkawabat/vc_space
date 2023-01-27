@@ -20,4 +20,12 @@ class TimeService {
   DateTime getStepNow(int step) {
     return getStepDateTime(DateTime.now(), step);
   }
+
+  String getAgoString(DateTime time) {
+    final Duration diff = DateTime.now().difference(time);
+    if (diff.inDays > 0) return '${diff.inDays}日前';
+    if (diff.inHours > 0) return '${diff.inHours}時間前';
+    if (diff.inMinutes > 0) return '${diff.inMinutes}分前';
+    return '${diff.inSeconds}秒前';
+  }
 }

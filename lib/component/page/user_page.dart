@@ -12,6 +12,7 @@ import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 
+import '../dialog/user_dialog.dart';
 import '../l1/loading.dart';
 import '../l1/logout_button.dart';
 import '../l1/twitter_link.dart';
@@ -49,7 +50,16 @@ class UserPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             ListTile(
-              leading: UserIcon(photo: user.photo),
+              leading: UserIcon(
+                photo: user.photo,
+                tooltip: 'ユーザー情報を見る',
+                onTap: () => showDialog(
+                    context: context,
+                    barrierDismissible: true,
+                    builder: (_) {
+                      return UserDialog(userId: user.id);
+                    }),
+              ),
               title: Text(user.name),
               trailing: IconButton(
                 tooltip: 'Twitter情報を再読み込み',
