@@ -22,7 +22,7 @@ class UserDialog extends HookConsumerWidget {
 
     UserEntity user = userList[userId] ?? userOnLoad;
     const double width = 400;
-    const double height = 300;
+    const double height = 350;
 
     if (userList[userId] == null) {
       return const AlertDialog(
