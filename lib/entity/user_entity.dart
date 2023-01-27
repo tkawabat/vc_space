@@ -17,6 +17,7 @@ class UserEntity with _$UserEntity {
     required List<String> tags,
     required String twitterId,
     required List<String> blocks,
+    @DateTimeConverter() required List<DateTime> times,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _UserEntity;
 
@@ -32,6 +33,7 @@ final userOnLoad = UserEntity(
   tags: [''],
   twitterId: '',
   blocks: [],
+  times: [],
   updatedAt: DateTime.now(),
 );
 
@@ -43,5 +45,6 @@ final userNotFound = UserEntity(
   tags: [''],
   twitterId: '',
   blocks: [],
+  times: [],
   updatedAt: DateTime.now(),
 );

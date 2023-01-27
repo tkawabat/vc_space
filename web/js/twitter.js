@@ -19,6 +19,7 @@ async function twitterLogin() {
             tags: [],
             twitterId: result._tokenResponse.screenName,
             blocks: [],
+            times: [],
             // twitter_token: result._tokenResponse.oauthAccessToken,
             // twitter_secret: result._tokenResponse.oauthTokenSecret,
         }
