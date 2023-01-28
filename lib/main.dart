@@ -19,7 +19,7 @@ Future main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  initializeDateFormatting('ja');
+  await initializeDateFormatting('ja');
 
   runApp(const ProviderScope(child: MyApp()));
 }
