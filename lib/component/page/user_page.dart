@@ -4,17 +4,17 @@ import 'package:flutter/material.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-import 'package:vc_space/service/twitter_service.dart';
 
 import '../../route.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
+import '../../service/twitter_service.dart';
 import '../../service/page_service.dart';
 
 import '../dialog/user_dialog.dart';
+import '../l1/button.dart';
 import '../l1/loading.dart';
-import '../l1/logout_button.dart';
 import '../l1/twitter_link.dart';
 import '../l1/user_icon.dart';
 import '../l2/tag_field.dart';
@@ -76,9 +76,17 @@ class UserPage extends HookConsumerWidget {
             TwitterLink(user: user),
             const SizedBox(height: 40),
             UserPageBasic(user: user),
-            // const Text('基本情報', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 80),
-            const Center(child: LogoutButton()),
+            Button(
+              color: Theme.of(context).colorScheme.error,
+              onTap: () {
+                PageService().showConfirmDialog('ログアウトする', () {
+                  twitterLogout(ref);
+                  PageService().back();
+                });
+              },
+              text: 'ログアウト',
+            ),
           ],
         ),
       ),

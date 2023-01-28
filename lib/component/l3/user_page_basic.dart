@@ -11,6 +11,7 @@ import '../../provider/user_list_provider.dart';
 import '../../service/const_service.dart';
 
 import '../../service/page_service.dart';
+import '../l1/button.dart';
 import '../l2/tag_field.dart';
 
 class UserPageBasic extends HookConsumerWidget {
@@ -69,16 +70,11 @@ class UserPageBasic extends HookConsumerWidget {
                 maxTagNumber: ConstService.maxTagLength,
               ),
               const Spacer(),
-              Align(
+              Button(
                 alignment: Alignment.centerRight,
-                child: ElevatedButton(
-                  style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          Theme.of(context).colorScheme.secondary)),
-                  onPressed: () => submit(ref),
-                  child: const Text('保存'),
-                ),
-              )
+                onTap: () => submit(ref),
+                text: '保存',
+              ),
             ],
           )),
     );

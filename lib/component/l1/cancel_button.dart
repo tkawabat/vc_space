@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:vc_space/service/page_service.dart';
+import '../../service/page_service.dart';
 
 class CancelButton extends StatelessWidget {
   const CancelButton({super.key});
