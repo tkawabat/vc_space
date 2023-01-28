@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
 import 'component/page/room_detail_page.dart';
 import 'component/page/user_page.dart';
@@ -9,6 +10,7 @@ enum PageNames {
   home('/'),
   room('/room'),
   user('/user'),
+  calendar('/calendar'),
   ;
 
   const PageNames(this.path);
@@ -23,7 +25,13 @@ Route<dynamic> generateRoute(RouteSettings setting) {
   }
 
   final uri = Uri.parse(name!);
-  return _transactionPage(uri.path, uri.queryParameters);
+
+  Map<String, String> queryParameters = uri.queryParameters;
+  if (queryParameters.isEmpty && setting.arguments is Map<String, String>) {
+    queryParameters = setting.arguments as Map<String, String>;
+  }
+
+  return _transactionPage(uri.path, queryParameters);
 }
 
 Route<dynamic> _transactionPage(
@@ -36,6 +44,8 @@ Route<dynamic> _transactionPage(
     builder = (_) => _userPageTransaction();
   } else if (path == PageNames.room.path) {
     builder = (_) => _roomPageTransaction(queryParameters);
+  } else if (path == PageNames.calendar.path) {
+    builder = (_) => _calendarPageTransaction(queryParameters);
   } else {
     builder = (_) => _homePageTransaction();
   }
@@ -62,4 +72,15 @@ Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   // TODO
   // return RoomDetailPage(room: createSampleRoom(queryParameters['id']!));
   return _homePageTransaction();
+}
+
+Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
+  if (queryParameters == null) {
+    return _homePageTransaction();
+  }
+  if (!queryParameters.containsKey('userId')) {
+    return _homePageTransaction();
+  }
+
+  return CalendarPage(userId: queryParameters['userId']!);
 }

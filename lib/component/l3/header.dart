@@ -48,7 +48,15 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           onPressed: () => PageService().transition(PageNames.home)),
       title: Text(title),
       actions: [
-        IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+        IconButton(
+            tooltip: 'カレンダーを表示',
+            icon: const Icon(Icons.calendar_month),
+            onPressed: loginUser == null
+                ? null
+                : () {
+                    PageService().transition(
+                        PageNames.calendar, {'userId': loginUser.id});
+                  }),
         const CreateRoomButton(),
         const Padding(padding: EdgeInsets.only(left: 8)),
         userIcon,
