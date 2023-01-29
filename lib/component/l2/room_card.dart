@@ -57,7 +57,7 @@ class RoomCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
                     alignment: Alignment.topLeft,
-                    child: RoomTagList(room: room),
+                    child: RoomTagList(room: room, user: user),
                   )
                 ],
               ),

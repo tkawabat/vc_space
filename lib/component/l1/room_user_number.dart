@@ -11,12 +11,18 @@ class RoomUserNumber extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Widget enterTypeIcon = const SizedBox();
+    if (room.enterType == EnterType.password) {
+      enterTypeIcon = const Icon(Icons.lock_outline, size: 18);
+    }
+
     return SizedBox(
-        width: 60,
+        width: 80,
         height: 18,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
+            enterTypeIcon,
             const Icon(Icons.person, size: 18),
             Text('${room.users.length}/${room.maxNumber}'),
           ],

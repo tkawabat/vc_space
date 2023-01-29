@@ -28,18 +28,14 @@ class RoomDialog extends StatelessWidget {
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
-            start,
-            textAlign: TextAlign.start,
-          ),
+          Text(start, textAlign: TextAlign.start),
           RoomUserNumber(room: room),
         ],
       ),
       const Text('部屋説明', style: TextStyle(fontWeight: FontWeight.w700)),
       description,
       const Text('タグ', style: TextStyle(fontWeight: FontWeight.w700)),
-      RoomTagList(room: room),
-      // RoomCard(room: room, userId: userId),
+      RoomTagList(room: room, user: user),
     ];
 
     String buttonText =

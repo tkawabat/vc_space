@@ -4,18 +4,23 @@ class Tag extends StatelessWidget {
   final String text;
   final void Function()? onTap;
   final Color tagColor;
+  final bool bold;
 
   const Tag({
     super.key,
     required this.text,
     this.tagColor = Colors.black12,
     this.onTap,
+    this.bold = false,
   });
 
   @override
   Widget build(BuildContext context) {
     Widget widget = Chip(
-      label: Text(text),
+      label: Text(
+        text,
+        style: TextStyle(fontWeight: bold ? FontWeight.bold : null),
+      ),
       backgroundColor: tagColor,
     );
 
