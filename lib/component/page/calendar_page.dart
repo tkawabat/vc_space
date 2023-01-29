@@ -44,7 +44,7 @@ class CalendarPage extends HookConsumerWidget {
       return const Loading();
     }
 
-    final focusedDayState = useState<DateTime>(DateTime.now());
+    final selectedDayState = useState<DateTime>(DateTime.now());
     final ValueNotifier<List> eventsState = useState<List>([]);
 
     final sampleMap = {
@@ -65,14 +65,12 @@ class CalendarPage extends HookConsumerWidget {
                 headerStyle: const HeaderStyle(formatButtonVisible: false),
                 firstDay: DateTime.now().add(const Duration(days: -1)),
                 lastDay: DateTime.now().add(const Duration(days: 90)),
-                focusedDay: focusedDayState.value,
-                currentDay: DateTime.now(),
+                focusedDay: selectedDayState.value,
                 locale: 'ja_JP',
-                selectedDayPredicate: (day) {
-                  return isSameDay(focusedDayState.value, day);
-                },
+                selectedDayPredicate: (day) =>
+                    isSameDay(selectedDayState.value, day),
                 onDaySelected: (selectedDay, _) {
-                  focusedDayState.value = selectedDay;
+                  selectedDayState.value = selectedDay;
                   eventsState.value = sampleMap[selectedDay] ?? [];
                 },
                 eventLoader: (date) {
