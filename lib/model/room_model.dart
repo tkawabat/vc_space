@@ -2,6 +2,8 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model_base.dart';
+import '../entity/room_user_entity.dart';
+import '../entity/user_entity.dart';
 import '../service/error_service.dart';
 import '../entity/room_entity.dart';
 
@@ -51,7 +53,7 @@ class RoomModel extends ModelBase {
         .catchError(ErrorService().onError(null, 'setRoom'));
   }
 
-  Future<bool> enter(String roomId, String userId) async {
+  Future<bool> join(String roomId, UserEntity user) async {
     final documentReference = collectionRef.doc(roomId);
 
     return FirebaseFirestore.instance
@@ -61,10 +63,14 @@ class RoomModel extends ModelBase {
 
       if (room == null) return false;
       if (room.users.length >= room.maxNumber) return false;
-      if (room.users.contains(userId)) return false;
+      if (room.users.every((e) => e.id != user.id)) return false;
 
       var list = [...room.users];
-      list.add(userId);
+      list.add(RoomUserEntity(
+          id: user.id,
+          image: user.id,
+          roomUserType: RoomUserType.member,
+          updatedAt: DateTime.now()));
       transaction.update(documentReference, {'users': list});
 
       return true;

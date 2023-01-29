@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:intl/intl.dart';
 
+import '../../entity/room_user_entity.dart';
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
@@ -37,11 +38,18 @@ class CreateRoomDialog extends HookConsumerWidget {
 
     final String? password =
         fields['enterType'] == EnterType.password ? fields['password'] : null;
+    final now = DateTime.now();
+
+    final roomUserList = [
+      RoomUserEntity(
+          id: loginUser.id,
+          image: loginUser.photo,
+          roomUserType: RoomUserType.admin,
+          updatedAt: now)
+    ];
 
     RoomEntity newRoom = RoomEntity(
       id: RoomModel().getNewId(),
-      ownerId: loginUser.id,
-      ownerImage: loginUser.photo,
       title: fields['title'],
       place: fields['placeType'],
       description: fields['description'] ?? '',
@@ -50,8 +58,9 @@ class CreateRoomDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
-      users: [loginUser.id],
-      updatedAt: DateTime.now(),
+      users: roomUserList,
+      chats: [],
+      updatedAt: now,
     );
 
     Navigator.pop(context);

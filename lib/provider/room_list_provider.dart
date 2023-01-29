@@ -1,7 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vc_space/model/room_model.dart';
-import 'package:vc_space/service/analytics_service.dart';
 
+import '../model/room_model.dart';
+import '../service/analytics_service.dart';
 import '../entity/room_entity.dart';
 
 final roomListProvider =

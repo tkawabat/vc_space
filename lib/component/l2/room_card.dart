@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vc_space/service/room_service.dart';
 
 import '../../entity/room_entity.dart';
+import '../../entity/user_entity.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/room_user_number.dart';
@@ -10,12 +12,14 @@ import 'room_tag_list.dart';
 
 class RoomCard extends StatelessWidget {
   final RoomEntity room;
-  final String? userId;
+  final UserEntity? user;
 
-  const RoomCard({super.key, required this.room, required this.userId});
+  const RoomCard({super.key, required this.room, required this.user});
 
   @override
   Widget build(BuildContext context) {
+    final owner = RoomService().getAdminUser(room);
+
     return InkWell(
         onTap: () => showDialog(
             context: context,
@@ -23,7 +27,7 @@ class RoomCard extends StatelessWidget {
             builder: (_) {
               return RoomDialog(
                 room: room,
-                userId: userId,
+                user: user,
               );
             }),
         child: Container(
@@ -38,13 +42,13 @@ class RoomCard extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: UserIcon(
-                      photo: room.ownerImage,
+                      photo: owner.image,
                       tooltip: '主催者を見る',
                       onTap: () => showDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (_) {
-                            return UserDialog(userId: room.ownerId);
+                            return UserDialog(userId: owner.id);
                           }),
                     ),
                     title: Text(room.title),

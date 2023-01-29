@@ -4,6 +4,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import 'chat_entity.dart';
+import 'room_user_entity.dart';
 import 'converter/datetime_converter.dart';
 import 'converter/enter_type_converter.dart';
 import 'converter/place_type_converter.dart';
@@ -37,8 +39,6 @@ enum EnterType {
 class RoomEntity with _$RoomEntity {
   const factory RoomEntity({
     required String id,
-    required String ownerId,
-    required String ownerImage,
     required String title,
     @JsonKey(defaultValue: '') required String description,
     @PlaceTypeConverter() required PlaceType place,
@@ -48,7 +48,8 @@ class RoomEntity with _$RoomEntity {
     required int maxNumber,
     @EnterTypeConverter() required EnterType enterType,
     String? password,
-    required List<String> users,
+    required List<RoomUserEntity> users,
+    required List<ChatEntity> chats,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _RoomEntity;
 

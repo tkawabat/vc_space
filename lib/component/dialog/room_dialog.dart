@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
+import '../../entity/user_entity.dart';
 import '../../service/room_service.dart';
 import '../l1/cancel_button.dart';
 import '../l1/room_user_number.dart';
@@ -9,9 +10,9 @@ import '../l2/room_tag_list.dart';
 
 class RoomDialog extends StatelessWidget {
   final RoomEntity room;
-  final String? userId;
+  final UserEntity? user;
 
-  const RoomDialog({super.key, required this.room, required this.userId});
+  const RoomDialog({super.key, required this.room, required this.user});
 
   @override
   Widget build(BuildContext context) {
@@ -55,13 +56,12 @@ class RoomDialog extends StatelessWidget {
       actions: [
         const CancelButton(),
         TextButton(
-            child: const Text('入室する'),
-            onPressed: () {
-              if (userId == null) {
-              } else {
-                RoomService().enter(room.id, userId!);
-              }
-            }),
+            onPressed: user == null
+                ? null
+                : () {
+                    RoomService().join(room.id, user!);
+                  },
+            child: const Text('入室する')),
       ],
     );
   }
