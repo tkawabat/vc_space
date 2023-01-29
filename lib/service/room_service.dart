@@ -14,20 +14,8 @@ class RoomService {
 
   RoomService._internal();
 
-  Future<bool> join(String roomId, UserEntity user) async {
-    final result = await RoomModel().join(roomId, user);
-
-    if (!result) {
-      PageService().snackbar('参加できませんでした', SnackBarType.error);
-      return false;
-    }
-
-    PageService().transition(PageNames.room, {'id': roomId});
-    PageService().snackbar('部屋に参加しました', SnackBarType.info);
-
-    // snapshot
-
-    return true;
+  bool isJoined(RoomEntity room, String userId) {
+    return !room.users.every((e) => e.id != userId);
   }
 
   List<RoomEntity> getJoinedRoom(List<RoomEntity> roomList, String userId) {
@@ -39,5 +27,25 @@ class RoomService {
         .where((e) => e.roomUserType == RoomUserType.admin)
         .toList()
         .first;
+  }
+
+  void enter(String roomId) {
+    PageService().transition(PageNames.room, {'id': roomId});
+  }
+
+  Future<bool> join(RoomEntity room, UserEntity user) async {
+    // 未参加だったら参加する
+    if (!isJoined(room, user.id)) {
+      final result = await RoomModel().join(room.id, user);
+      if (!result) {
+        PageService().snackbar('参加できませんでした', SnackBarType.error);
+        return false;
+      }
+      PageService().snackbar('部屋に参加しました', SnackBarType.info);
+    }
+
+    enter(room.id);
+
+    return true;
   }
 }

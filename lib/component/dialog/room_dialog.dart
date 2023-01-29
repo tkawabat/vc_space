@@ -42,6 +42,9 @@ class RoomDialog extends StatelessWidget {
       // RoomCard(room: room, userId: userId),
     ];
 
+    String buttonText =
+        RoomService().isJoined(room, user?.id ?? '') ? '入室する' : '参加する';
+
     return AlertDialog(
       title: Text(room.title),
       content: SizedBox(
@@ -56,12 +59,10 @@ class RoomDialog extends StatelessWidget {
       actions: [
         const CancelButton(),
         TextButton(
-            onPressed: user == null
-                ? null
-                : () {
-                    RoomService().join(room.id, user!);
-                  },
-            child: const Text('入室する')),
+          onPressed:
+              user == null ? null : () => RoomService().join(room, user!),
+          child: Text(buttonText),
+        ),
       ],
     );
   }

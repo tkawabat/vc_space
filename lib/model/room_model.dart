@@ -32,6 +32,10 @@ class RoomModel extends ModelBase {
         .catchError(ErrorService().onError(null, 'getRoom'));
   }
 
+  Stream<RoomEntity?> getRoomSnapshot(String id) {
+    return collectionRef.doc(id).snapshots().map(_getEntity);
+  }
+
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
         .get()
@@ -63,7 +67,7 @@ class RoomModel extends ModelBase {
 
       if (room == null) return false;
       if (room.users.length >= room.maxNumber) return false;
-      if (room.users.every((e) => e.id != user.id)) return false;
+      if (!room.users.every((e) => e.id != user.id)) return false;
 
       var list = [...room.users];
       list.add(RoomUserEntity(
