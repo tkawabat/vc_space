@@ -33,7 +33,11 @@ class RoomModel extends ModelBase {
   }
 
   Stream<RoomEntity?> getRoomSnapshot(String id) {
-    return collectionRef.doc(id).snapshots().map(_getEntity);
+    return collectionRef
+        .doc(id)
+        .snapshots()
+        .map(_getEntity)
+        .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
   }
 
   Future<List<RoomEntity>> getRoomList() {
