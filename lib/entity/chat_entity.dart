@@ -12,8 +12,9 @@ part 'chat_entity.g.dart';
 @freezed
 class ChatEntity with _$ChatEntity {
   const factory ChatEntity({
-    required String id,
     required String userId,
+    required String photo,
+    required String name,
     required String text,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _ChatEntity;

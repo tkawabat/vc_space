@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class ConstSystem {
   static int getListByIdMax = 10;
 

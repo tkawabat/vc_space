@@ -1,12 +1,12 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../route.dart';
+import '../../entity/user_entity.dart';
 import '../../entity/room_entity.dart';
 import '../../service/page_service.dart';
+import '../../provider/login_provider.dart';
 import '../../provider/enter_room_stream_provider.dart';
 import '../l3/header.dart';
 import '../l3/vc_chat.dart';
@@ -26,6 +26,14 @@ class RoomDetailPage extends HookConsumerWidget {
     });
 
     final roomStream = ref.watch(enterRoomStreamProvider);
+    final user = ref.watch(loginUserProvider);
+
+    if (user == null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        PageService().transition(PageNames.home);
+      });
+      return const Loading();
+    }
 
     String title = dotenv.get('TITLE');
     final tabList = ['部屋情報', 'チャット', '参加者'];
@@ -42,7 +50,7 @@ class RoomDetailPage extends HookConsumerWidget {
       data: (RoomEntity? room) {
         if (room == null) return const Loading();
         title = room.title;
-        return buildBody(context, ref, room);
+        return buildBody(context, ref, room, user);
       },
     );
 
@@ -58,7 +66,8 @@ class RoomDetailPage extends HookConsumerWidget {
         ));
   }
 
-  Widget buildBody(BuildContext context, WidgetRef ref, RoomEntity room) {
+  Widget buildBody(
+      BuildContext context, WidgetRef ref, RoomEntity room, UserEntity user) {
     return TabBarView(children: [
       Column(
         children: [
@@ -70,7 +79,7 @@ class RoomDetailPage extends HookConsumerWidget {
           ),
         ],
       ),
-      Column(children: const [Expanded(child: VCChat())]),
+      Column(children: [Expanded(child: VCChat(room: room, user: user))]),
       Column(
         children: [
           ElevatedButton(

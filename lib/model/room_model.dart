@@ -2,10 +2,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'model_base.dart';
-import '../entity/room_user_entity.dart';
+import '../entity/chat_entity.dart';
 import '../entity/user_entity.dart';
-import '../service/error_service.dart';
+import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
+import '../service/error_service.dart';
+import '../service/const_service.dart';
 
 class RoomModel extends ModelBase {
   static final RoomModel _instance = RoomModel._internal();
@@ -83,5 +85,27 @@ class RoomModel extends ModelBase {
 
       return true;
     }).catchError(ErrorService().onError(false, 'enterRoom'));
+  }
+
+  Future<void> addChat(RoomEntity room, UserEntity user, String text) async {
+    var list = [...room.chats];
+    final now = DateTime.now();
+    list.add(ChatEntity(
+      userId: user.id,
+      name: user.name,
+      photo: user.photo,
+      text: text,
+      updatedAt: now,
+    ));
+
+    list.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+
+    final diff = list.length - ConstService.chatMaxNumber;
+    if (diff > 0) list.removeRange(0, diff);
+
+    return collectionRef.doc(room.id).update({
+      'chats': list.map((e) => e.toJson()).toList(),
+      'updatedAt': now
+    }).catchError(ErrorService().onError(null, 'addChat'));
   }
 }
