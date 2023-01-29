@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
+import '../provider/room_list_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
 import 'login_service.dart';
@@ -25,6 +26,8 @@ class PageService {
     // 一回だけ行う処理
     _context = context;
     listenFirebaseAuth(ref);
+
+    ref.read(roomListProvider.notifier).get();
 
     initialized = true;
   }

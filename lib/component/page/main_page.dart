@@ -13,7 +13,6 @@ class MainPage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
-    ref.read(roomListProvider.notifier).get();
 
     return Scaffold(
       appBar: Header(title: dotenv.get('TITLE')),
