@@ -12,7 +12,8 @@ typedef SnackBarType = AnimatedSnackBarType;
 class PageService {
   static final PageService _instance = PageService._internal();
   bool initialized = false;
-  BuildContext? _context;
+  BuildContext? context;
+  WidgetRef? ref;
 
   factory PageService() {
     return _instance;
@@ -24,7 +25,8 @@ class PageService {
     if (initialized) return;
 
     // 一回だけ行う処理
-    _context = context;
+    this.context = context;
+    this.ref = ref;
     listenFirebaseAuth(ref);
 
     ref.read(roomListProvider.notifier).get();
@@ -33,21 +35,21 @@ class PageService {
   }
 
   void back() {
-    if (_context == null) return;
-    if (!Navigator.canPop(_context!)) return;
-    Navigator.pop(_context!);
+    if (context == null) return;
+    if (!Navigator.canPop(context!)) return;
+    Navigator.pop(context!);
   }
 
   void transition(PageNames page, [Map<String, String>? arguments]) {
-    if (_context == null) return;
-    Navigator.pushNamed(_context!, page.path, arguments: arguments);
+    if (context == null) return;
+    Navigator.pushNamed(context!, page.path, arguments: arguments);
   }
 
   void snackbar(
     String text,
     SnackBarType type,
   ) {
-    if (_context == null) return;
+    if (context == null) return;
 
     AnimatedSnackBar.material(
       text,
@@ -55,7 +57,7 @@ class PageService {
       mobileSnackBarPosition: MobileSnackBarPosition.bottom,
       desktopSnackBarPosition: DesktopSnackBarPosition.bottomLeft,
       duration: const Duration(seconds: 2),
-    ).show(_context!);
+    ).show(context!);
   }
 
   Future<void> showConfirmDialog(
@@ -64,13 +66,13 @@ class PageService {
     submitText = '決定',
     Function()? onCancel,
   ]) async {
-    if (_context == null) {
+    if (context == null) {
       logEvent(LogEventName.view_error, 'confirmDialog');
       return;
     }
 
     return showDialog(
-        context: _context!,
+        context: context!,
         barrierDismissible: true,
         builder: (_) {
           return AlertDialog(content: Text(text), actions: [

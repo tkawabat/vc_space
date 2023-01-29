@@ -1,8 +1,9 @@
+import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
-import '../route.dart';
 import '../model/room_model.dart';
+import '../provider/enter_room_stream_provider.dart';
 import 'page_service.dart';
 
 class RoomService {
@@ -31,6 +32,10 @@ class RoomService {
 
   void enter(String roomId) {
     PageService().transition(PageNames.room, {'id': roomId});
+  }
+
+  void leave() {
+    PageService().ref?.read(enterRoomIdProvider.notifier).set(null);
   }
 
   Future<bool> join(RoomEntity room, UserEntity user) async {

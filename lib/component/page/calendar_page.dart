@@ -37,7 +37,7 @@ class CalendarPage extends HookConsumerWidget {
     }
     if (userList[userId] == userNotFound) {
       // 未ログイン表示をする
-      Timer(const Duration(microseconds: 1), () {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
         PageService().transition(PageNames.home);
         PageService().snackbar('存在しないユーザーです。', SnackBarType.error);
       });

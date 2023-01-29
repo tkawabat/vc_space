@@ -21,22 +21,19 @@ class RoomDetailPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
 
-    String title = dotenv.get('TITLE');
-    final tabList = ['チャット', '部屋情報', '参加者'];
-
-    final enterRoomId = ref.watch(enterRoomIdProvider);
-    if (enterRoomId == null) {
-      Timer(const Duration(microseconds: 1), () {
-        ref.read(enterRoomIdProvider.notifier).set(roomId);
-      });
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(enterRoomIdProvider.notifier).set(roomId);
+    });
 
     final roomStream = ref.watch(enterRoomStreamProvider);
+
+    String title = dotenv.get('TITLE');
+    final tabList = ['部屋情報', 'チャット', '参加者'];
 
     final body = roomStream.when<Widget>(
       loading: () => const Loading(),
       error: (Object error, StackTrace stackTrace) {
-        Timer(const Duration(microseconds: 1), () {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
           PageService().transition(PageNames.home);
           PageService().snackbar('部屋情報の取得に失敗しました。', SnackBarType.error);
         });
@@ -63,17 +60,6 @@ class RoomDetailPage extends HookConsumerWidget {
 
   Widget buildBody(BuildContext context, WidgetRef ref, RoomEntity room) {
     return TabBarView(children: [
-      Column(children: const [Expanded(child: VCChat())]),
-      // Column(
-      //   children: [
-      //     ElevatedButton(
-      //       onPressed: () {
-      //         Navigator.pop(context);
-      //       },
-      //       child: const Text('戻る'),
-      //     ),
-      //   ],
-      // ),
       Column(
         children: [
           ElevatedButton(
@@ -84,6 +70,7 @@ class RoomDetailPage extends HookConsumerWidget {
           ),
         ],
       ),
+      Column(children: const [Expanded(child: VCChat())]),
       Column(
         children: [
           ElevatedButton(

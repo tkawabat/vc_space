@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../provider/login_provider.dart';
 import '../../route.dart';
+import '../../provider/enter_room_stream_provider.dart';
+import '../../provider/login_provider.dart';
 import '../../service/page_service.dart';
 import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
@@ -38,6 +39,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           photo: loginUser.photo,
           tooltip: 'マイページ',
           onTap: () {
+            ref.read(enterRoomIdProvider.notifier).set(null);
             PageService().transition(PageNames.user);
           });
     }
@@ -45,7 +47,10 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     return AppBar(
       leading: IconButton(
           icon: const Icon(Icons.home),
-          onPressed: () => PageService().transition(PageNames.home)),
+          onPressed: () {
+            ref.read(enterRoomIdProvider.notifier).set(null);
+            PageService().transition(PageNames.home);
+          }),
       title: Text(title),
       actions: [
         IconButton(

@@ -16,5 +16,7 @@ final enterRoomIdProvider =
 class EnterRoomIdNotifer extends StateNotifier<String?> {
   EnterRoomIdNotifer() : super(null);
 
-  void set(String id) => state = id;
+  void set(String? id) {
+    if (state != id) state = id;
+  }
 }
