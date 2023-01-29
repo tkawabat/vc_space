@@ -9,6 +9,7 @@ import 'room_user_entity.dart';
 import 'converter/datetime_converter.dart';
 import 'converter/enter_type_converter.dart';
 import 'converter/place_type_converter.dart';
+import '../service/const_system.dart';
 
 part 'room_entity.freezed.dart';
 part 'room_entity.g.dart';
@@ -17,6 +18,7 @@ enum PlaceType {
   discord('Discord'),
   twitcasting('ツイキャス'),
   twitter('Twitterスペース'),
+  zoom('Zoom'),
   spoon('Spoon'),
   none('未定'),
   ;
@@ -27,7 +29,7 @@ enum PlaceType {
 
 enum EnterType {
   noLimit('制限なし'),
-  follow('フォローのみ'),
+  // follow('フォローのみ'),
   password('パスワード'),
   ;
 
@@ -56,3 +58,16 @@ class RoomEntity with _$RoomEntity {
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>
       _$RoomEntityFromJson(json);
 }
+
+final roomNotFound = RoomEntity(
+    id: ConstSystem.roomNotFound,
+    title: '存在しない部屋です',
+    description: '',
+    place: PlaceType.none,
+    startTime: DateTime.now(),
+    tags: [],
+    maxNumber: 2,
+    enterType: EnterType.password,
+    users: [],
+    chats: [],
+    updatedAt: DateTime.now());

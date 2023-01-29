@@ -29,7 +29,7 @@ class PageService {
     this.ref = ref;
     listenFirebaseAuth(ref);
 
-    ref.read(roomListProvider.notifier).get();
+    ref.read(roomListProvider.notifier).getList();
 
     initialized = true;
   }

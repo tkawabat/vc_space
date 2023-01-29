@@ -6,7 +6,9 @@ import '../../route.dart';
 import '../../entity/user_entity.dart';
 import '../../entity/room_entity.dart';
 import '../../service/page_service.dart';
+import '../../service/room_service.dart';
 import '../../provider/login_provider.dart';
+import '../../provider/room_list_provider.dart';
 import '../../provider/enter_room_stream_provider.dart';
 import '../l3/header.dart';
 import '../l3/vc_chat.dart';
@@ -49,6 +51,12 @@ class RoomDetailPage extends HookConsumerWidget {
       },
       data: (RoomEntity? room) {
         if (room == null) return const Loading();
+        if (!RoomService().isJoined(room, user.id)) {
+          ref.read(roomListProvider.notifier).getList();
+          RoomService().leave();
+          return const Loading();
+        }
+
         title = room.title;
         return buildBody(context, ref, room, user);
       },

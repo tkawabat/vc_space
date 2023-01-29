@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/service/room_service.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
+import '../../service/room_service.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/room_user_number.dart';
@@ -42,7 +42,7 @@ class RoomCard extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: UserIcon(
-                      photo: owner.image,
+                      photo: owner.photo,
                       tooltip: '主催者を見る',
                       onTap: () => showDialog(
                           context: context,

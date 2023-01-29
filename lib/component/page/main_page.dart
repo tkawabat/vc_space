@@ -22,7 +22,7 @@ class MainPage extends HookConsumerWidget {
           children: <Widget>[
             ElevatedButton(
               onPressed: () {
-                ref.read(roomListProvider.notifier).get();
+                ref.read(roomListProvider.notifier).getList();
                 PageService().snackbar('部屋を取得しました', SnackBarType.info);
               },
               child: const Text("更新"),

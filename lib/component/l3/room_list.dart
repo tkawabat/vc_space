@@ -15,8 +15,9 @@ class RoomList extends ConsumerWidget {
 
     final scrollController = ScrollController();
 
-    final list =
-        roomList.map((room) => RoomCard(room: room, user: user)).toList();
+    final list = roomList.entries
+        .map((e) => RoomCard(room: e.value, user: user))
+        .toList();
 
     return Flexible(
       child: Scrollbar(

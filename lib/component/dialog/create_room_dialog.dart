@@ -14,6 +14,7 @@ import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
+import '../../service/room_service.dart';
 import '../../service/time_service.dart';
 import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
@@ -43,7 +44,7 @@ class CreateRoomDialog extends HookConsumerWidget {
     final roomUserList = [
       RoomUserEntity(
           id: loginUser.id,
-          image: loginUser.photo,
+          photo: loginUser.photo,
           roomUserType: RoomUserType.admin,
           updatedAt: now)
     ];
@@ -68,7 +69,7 @@ class CreateRoomDialog extends HookConsumerWidget {
     await RoomModel().setRoom(newRoom);
     PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
-    // RoomService().enter(newRoom.id, loginUser.id);
+    RoomService().enter(newRoom.id);
   }
 
   @override

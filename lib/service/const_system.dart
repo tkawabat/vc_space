@@ -3,4 +3,6 @@ class ConstSystem {
 
   static String userNotFound = 'notFound';
   static String userOnLoad = 'onLoad';
+
+  static String roomNotFound = 'notFound';
 }

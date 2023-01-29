@@ -1,23 +1,30 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../model/room_model.dart';
-import '../service/analytics_service.dart';
 import '../entity/room_entity.dart';
 
 final roomListProvider =
-    StateNotifierProvider<RoomListNotifer, List<RoomEntity>>(
+    StateNotifierProvider<RoomListNotifer, Map<String, RoomEntity>>(
         (ref) => RoomListNotifer());
 
-class RoomListNotifer extends StateNotifier<List<RoomEntity>> {
-  RoomListNotifer() : super([]);
+class RoomListNotifer extends StateNotifier<Map<String, RoomEntity>> {
+  RoomListNotifer() : super({});
 
-  Future<void> get() async {
+  Future<void> get(String roomId) async {
+    RoomEntity room = await RoomModel().getRoom(roomId) ?? roomNotFound;
+    add(room);
+  }
+
+  Future<void> getList() async {
     final list = await RoomModel().getRoomList();
-    state = list;
+    for (final room in list) {
+      add(room);
+    }
   }
 
   void add(RoomEntity room) {
-    logEvent(LogEventName.create_room, 'room', 'aaa');
-    state = [...state, room];
+    final newState = {...state};
+    newState[room.id] = room;
+    state = newState;
   }
 }

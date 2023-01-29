@@ -24,7 +24,7 @@ enum RoomUserType {
 class RoomUserEntity with _$RoomUserEntity {
   const factory RoomUserEntity({
     required String id,
-    required String image,
+    required String photo,
     @RoomUserTypeConverter() required RoomUserType roomUserType,
     @DateTimeConverter() required DateTime updatedAt,
   }) = _RoomUserEntity;

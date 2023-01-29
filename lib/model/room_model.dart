@@ -8,6 +8,7 @@ import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../service/error_service.dart';
 import '../service/const_service.dart';
+import '../service/analytics_service.dart';
 
 class RoomModel extends ModelBase {
   static final RoomModel _instance = RoomModel._internal();
@@ -57,10 +58,9 @@ class RoomModel extends ModelBase {
   Future<void> setRoom(RoomEntity room) {
     final json = room.toJson();
     json.remove('id');
-    return collectionRef
-        .doc(room.id)
-        .set(json)
-        .catchError(ErrorService().onError(null, 'setRoom'));
+    return collectionRef.doc(room.id).set(json).then((_) {
+      logEvent(LogEventName.create_room, 'room', '');
+    }).catchError(ErrorService().onError(null, 'setRoom'));
   }
 
   Future<bool> join(String roomId, UserEntity user) async {
@@ -78,13 +78,14 @@ class RoomModel extends ModelBase {
       var list = [...room.users];
       list.add(RoomUserEntity(
           id: user.id,
-          image: user.id,
+          photo: user.id,
           roomUserType: RoomUserType.member,
           updatedAt: DateTime.now()));
-      transaction.update(documentReference, {'users': list});
+      transaction.update(
+          documentReference, {'users': list.map((e) => e.toJson()).toList()});
 
       return true;
-    }).catchError(ErrorService().onError(false, 'enterRoom'));
+    }).catchError(ErrorService().onError(false, 'joinRoom'));
   }
 
   Future<void> addChat(RoomEntity room, UserEntity user, String text) async {

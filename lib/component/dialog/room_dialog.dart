@@ -55,8 +55,12 @@ class RoomDialog extends StatelessWidget {
       actions: [
         const CancelButton(),
         TextButton(
-          onPressed:
-              user == null ? null : () => RoomService().join(room, user!),
+          onPressed: user == null
+              ? null
+              : () {
+                  Navigator.pop(context);
+                  RoomService().join(room, user!);
+                },
           child: Text(buttonText),
         ),
       ],
