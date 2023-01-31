@@ -9,7 +9,6 @@ import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 
 import '../l1/user_no_login_icon.dart';
-import '../l1/create_room_button.dart';
 import '../l1/user_icon.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
@@ -62,7 +61,10 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
                     PageService().transition(
                         PageNames.calendar, {'userId': loginUser.id});
                   }),
-        const CreateRoomButton(),
+        IconButton(
+            tooltip: '部屋をタグ検索',
+            icon: const Icon(Icons.search),
+            onPressed: () {}),
         const Padding(padding: EdgeInsets.only(left: 8)),
         userIcon,
         const Padding(padding: EdgeInsets.only(right: 16)),

@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../provider/room_list_provider.dart';
 import '../../service/page_service.dart';
+import '../dialog/create_room_dialog.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
@@ -16,20 +17,31 @@ class MainPage extends HookConsumerWidget {
 
     return Scaffold(
       appBar: Header(title: dotenv.get('TITLE')),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                ref.read(roomListProvider.notifier).getList();
-                PageService().snackbar('部屋を取得しました', SnackBarType.info);
-              },
-              child: const Text("更新"),
-            ),
-            const RoomList(),
-          ],
-        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(
+            onPressed: () {
+              ref.read(roomListProvider.notifier).getList();
+              PageService().snackbar('部屋を取得しました', SnackBarType.info);
+            },
+            child: const Text("更新"),
+          ),
+          const RoomList(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        tooltip: '部屋を作る',
+        onPressed: () {
+          showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) {
+                return CreateRoomDialog();
+              });
+        },
+        child: const Icon(Icons.add, size: 48),
       ),
     );
   }
