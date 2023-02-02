@@ -45,6 +45,8 @@ class RoomModel extends ModelBase {
 
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
+        // .where('tags', whereIn: )
+        .orderBy('updatedAt', descending: true)
         .get()
         .then((results) => results.docs
             .map(_getEntity)
