@@ -4,7 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../provider/room_list_provider.dart';
 import '../../service/page_service.dart';
-import '../dialog/create_room_dialog.dart';
+import '../dialog/room_create_dialog.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
@@ -38,7 +38,7 @@ class MainPage extends HookConsumerWidget {
               context: context,
               barrierDismissible: true,
               builder: (_) {
-                return CreateRoomDialog();
+                return RoomCreateDialog();
               });
         },
         child: const Icon(Icons.add, size: 48),

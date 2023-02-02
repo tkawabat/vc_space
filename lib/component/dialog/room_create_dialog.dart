@@ -19,8 +19,8 @@ import '../../service/time_service.dart';
 import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
 
-class CreateRoomDialog extends HookConsumerWidget {
-  CreateRoomDialog({super.key});
+class RoomCreateDialog extends HookConsumerWidget {
+  RoomCreateDialog({super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
   final tagKey = GlobalKey<TagFieldState>();
