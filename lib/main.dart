@@ -4,12 +4,11 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
 import 'route.dart';
 
-import 'service/supabase_service.dart';
-import 'service/login_service.dart';
 import 'component/page/main_page.dart';
 
 Future main() async {
@@ -22,9 +21,10 @@ Future main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await SupabaseService().initialize();
-  await LoginService().setUser();
-  await SupabaseService().reconnect(); // for develop
+  await Supabase.initialize(
+    url: dotenv.get('SUPABASE_URL'),
+    anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+  );
 
   await initializeDateFormatting('ja');
 
