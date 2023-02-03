@@ -27,7 +27,11 @@ class PageService {
     // 一回だけ行う処理
     this.context = context;
     this.ref = ref;
-    listenFirebaseAuth(ref);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LoginService().initializeUser(ref);
+    });
+    // LoginService().initializeUser(ref);
 
     ref.read(roomListProvider.notifier).getList();
 

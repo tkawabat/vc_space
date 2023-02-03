@@ -12,7 +12,6 @@ import '../../service/page_service.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
-import '../l1/twitter_link.dart';
 import '../l1/user_icon.dart';
 import '../l3/header.dart';
 

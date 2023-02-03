@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../provider/room_list_provider.dart';
 import '../../service/page_service.dart';
+import '../../service/login_service.dart';
 import '../dialog/room_create_dialog.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
@@ -23,8 +24,10 @@ class MainPage extends HookConsumerWidget {
         children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              ref.read(roomListProvider.notifier).getList();
-              PageService().snackbar('部屋を取得しました', SnackBarType.info);
+              // listenFirebaseAuth(ref);
+              LoginService().logout();
+              // ref.read(roomListProvider.notifier).getList();
+              // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },
             child: const Text("更新"),
           ),
@@ -41,7 +44,7 @@ class MainPage extends HookConsumerWidget {
                 return RoomCreateDialog();
               });
         },
-        child: const Icon(Icons.add, size: 48),
+        child: const Icon(Icons.add, size: 32),
       ),
     );
   }

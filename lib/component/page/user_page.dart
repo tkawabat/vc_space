@@ -7,13 +7,12 @@ import '../../route.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
-import '../../service/twitter_service.dart';
+import '../../service/login_service.dart';
 import '../../service/page_service.dart';
 
 import '../dialog/user_dialog.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
-import '../l1/twitter_link.dart';
 import '../l1/user_icon.dart';
 import '../l2/tag_field.dart';
 import '../l3/header.dart';
@@ -60,18 +59,18 @@ class UserPage extends HookConsumerWidget {
               ),
               title: Text(user.name),
               trailing: IconButton(
-                tooltip: 'Twitter情報を再読み込み',
+                tooltip: '名前、アイコンを再読み込み',
                 icon: const Icon(Icons.sync),
                 onPressed: () {
                   PageService()
-                      .showConfirmDialog('Twitterで再認証して、名前、アイコン再読み込みする', () {
-                    twitterLogin();
+                      .showConfirmDialog('Discordで再認証して、名前、アイコンを再読み込みする', () {
+                    LoginService().login();
+                    PageService().back();
                   });
                 },
               ),
             ),
             const SizedBox(height: 10),
-            TwitterLink(user: user),
             const SizedBox(height: 40),
             UserPageBasic(user: user),
             const SizedBox(height: 80),
@@ -79,7 +78,7 @@ class UserPage extends HookConsumerWidget {
               color: Theme.of(context).colorScheme.error,
               onTap: () {
                 PageService().showConfirmDialog('ログアウトする', () {
-                  twitterLogout(ref);
+                  LoginService().logout();
                   PageService().back();
                 });
               },

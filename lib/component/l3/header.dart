@@ -4,8 +4,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../route.dart';
 import '../../provider/enter_room_stream_provider.dart';
 import '../../provider/login_provider.dart';
+import '../../service/login_service.dart';
 import '../../service/page_service.dart';
-import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
 import '../dialog/room_search_dialog.dart';
 import '../l1/user_no_login_icon.dart';
@@ -27,11 +27,11 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
 
     Widget userIcon = UserNoLoginIcon(
       onTap: () {
-        PageService().showConfirmDialog('Twitterでログインする', () {
-          twitterLogin();
+        PageService().showConfirmDialog('Discordでログインする', () {
+          LoginService().login();
         });
       },
-      tooltip: 'Twitterログイン',
+      tooltip: 'Discordでログイン',
     );
     if (loginUser != null) {
       userIcon = UserIcon(

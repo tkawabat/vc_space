@@ -8,7 +8,6 @@ import '../../service/time_service.dart';
 import '../l1/loading.dart';
 import '../l1/tag.dart';
 import '../l1/user_icon.dart';
-import '../l1/twitter_link.dart';
 
 class UserDialog extends HookConsumerWidget {
   final String userId;
@@ -34,7 +33,6 @@ class UserDialog extends HookConsumerWidget {
     }
 
     final List<Widget> list = [
-      TwitterLink(user: user),
       const Text('自己紹介', style: TextStyle(fontWeight: FontWeight.bold)),
       Text(user.greeting),
       // const SizedBox(height: 20),

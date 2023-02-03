@@ -8,6 +8,8 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'firebase_options.dart';
 import 'route.dart';
 
+import 'service/supabase_service.dart';
+import 'service/login_service.dart';
 import 'component/page/main_page.dart';
 
 Future main() async {
@@ -15,9 +17,14 @@ Future main() async {
   await dotenv.load(fileName: 'assets/env.$flavor');
 
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await SupabaseService().initialize();
+  await LoginService().setUser();
+  await SupabaseService().reconnect(); // for develop
 
   await initializeDateFormatting('ja');
 
