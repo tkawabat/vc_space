@@ -34,9 +34,28 @@ class UserModel extends ModelBase {
   }
 
   Future<void> updateUser(UserEntity user) async {
-    final documentReference = collectionRef.doc(user.id);
-    return documentReference
-        .set(user.toJson())
-        .catchError(ErrorService().onError(false, 'updateUser'));
+    // final documentReference = collectionRef.doc(user.id);
+    // return documentReference
+    //     .set(user.toJson())
+    //     .catchError(ErrorService().onError(false, 'updateUser'));
+  }
+
+  Future<bool> upsertOnView(
+      String uid, String name, String photo, String discordName) async {
+    final hoge = supabase.from('user');
+    final result = await hoge
+        .upsert({
+          'uid': uid,
+          'name': name,
+          'photo': photo,
+          'discord_name': discordName,
+        })
+        .select()
+        .catchError(ErrorService().onError(null, 'upsertOnView'));
+
+    if (result != null) {
+      return true;
+    }
+    return false;
   }
 }

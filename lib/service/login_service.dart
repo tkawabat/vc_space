@@ -24,6 +24,13 @@ class LoginService {
     debugPrint(user?.id);
 
     // ユーザー更新
+    if (user != null &&
+        user.userMetadata != null &&
+        user.userMetadata!.isNotEmpty) {
+      final meta = user.userMetadata!;
+      UserModel().upsertOnView(
+          user.id, meta['full_name'], meta['avatar_url'], meta['name']);
+    }
 
     // ユーザー取得
   }
