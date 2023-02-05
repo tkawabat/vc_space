@@ -72,58 +72,64 @@ class RoomModel extends ModelBase {
             ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
-  Future<void> setRoom(RoomEntity room) {
-    final json = room.toJson();
-    json.remove('id');
-    return collectionRef.doc(room.id).set(json).then((_) {
-      logEvent(LogEventName.create_room, 'room', '');
-    }).catchError(ErrorService().onError(null, 'setRoom'));
+  Future<void> insertRoom(RoomEntity room) async {
+    final hoge = supabase.from('room');
+    final result = await hoge
+        .insert(room.toJson())
+        .catchError(ErrorService().onError(null, 'insertRoom'));
+    // final json = room.toJson();
+    // json.remove('id');
+    // return collectionRef.doc(room.id).set(json).then((_) {
+    //   logEvent(LogEventName.create_room, 'room', '');
+    // }).catchError(ErrorService().onError(null, 'setRoom'));
   }
 
   Future<bool> join(String roomId, UserEntity user) async {
-    final documentReference = collectionRef.doc(roomId);
+    // TODO
+    return true;
+    // final documentReference = collectionRef.doc(roomId);
 
-    return FirebaseFirestore.instance
-        .runTransaction<bool>((Transaction transaction) async {
-      final RoomEntity? room =
-          await transaction.get(documentReference).then(_getEntity);
+    // return FirebaseFirestore.instance
+    //     .runTransaction<bool>((Transaction transaction) async {
+    //   final RoomEntity? room =
+    //       await transaction.get(documentReference).then(_getEntity);
 
-      if (room == null) return false;
-      if (room.users.length >= room.maxNumber) return false;
-      if (!room.users.every((e) => e.id != user.uid)) return false;
+    //   if (room == null) return false;
+    //   if (room.users.length >= room.maxNumber) return false;
+    //   if (!room.users.every((e) => e.id != user.uid)) return false;
 
-      var list = [...room.users];
-      list.add(RoomUserEntity(
-          id: user.uid,
-          photo: user.uid,
-          roomUserType: RoomUserType.member,
-          updatedAt: DateTime.now()));
-      transaction.update(
-          documentReference, {'users': list.map((e) => e.toJson()).toList()});
+    //   var list = [...room.users];
+    //   list.add(RoomUserEntity(
+    //       id: user.uid,
+    //       photo: user.uid,
+    //       roomUserType: RoomUserType.member,
+    //       updatedAt: DateTime.now()));
+    //   transaction.update(
+    //       documentReference, {'users': list.map((e) => e.toJson()).toList()});
 
-      return true;
-    }).catchError(ErrorService().onError(false, 'joinRoom'));
+    //   return true;
+    // }).catchError(ErrorService().onError(false, 'joinRoom'));
   }
 
   Future<void> addChat(RoomEntity room, UserEntity user, String text) async {
-    var list = [...room.chats];
-    final now = DateTime.now();
-    list.add(ChatEntity(
-      userId: user.uid,
-      name: user.name,
-      photo: user.photo,
-      text: text,
-      updatedAt: now,
-    ));
+    // var list = [...room.chats];
+    // final now = DateTime.now();
+    // list.add(ChatEntity(
+    //   userId: user.uid,
+    //   name: user.name,
+    //   photo: user.photo,
+    //   text: text,
+    //   updatedAt: now,
+    // ));
 
-    list.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
+    // list.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
 
-    final diff = list.length - ConstService.chatMaxNumber;
-    if (diff > 0) list.removeRange(0, diff);
+    // final diff = list.length - ConstService.chatMaxNumber;
+    // if (diff > 0) list.removeRange(0, diff);
 
-    return collectionRef.doc(room.id).update({
-      'chats': list.map((e) => e.toJson()).toList(),
-      'updatedAt': now
-    }).catchError(ErrorService().onError(null, 'addChat'));
+    // return collectionRef.doc(room.id).update({
+    //   'chats': list.map((e) => e.toJson()).toList(),
+    //   'updatedAt': now
+    // }).catchError(ErrorService().onError(null, 'addChat'));
   }
 }

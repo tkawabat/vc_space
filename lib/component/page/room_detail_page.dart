@@ -51,11 +51,12 @@ class RoomDetailPage extends HookConsumerWidget {
       },
       data: (RoomEntity? room) {
         if (room == null) return const Loading();
-        if (!RoomService().isJoined(room, user.uid)) {
-          ref.read(roomListProvider.notifier).getList();
-          RoomService().leave();
-          return const Loading();
-        }
+        // TODO
+        // if (!RoomService().isJoined(room, user.uid)) {
+        //   ref.read(roomListProvider.notifier).getList();
+        //   RoomService().leave();
+        //   return const Loading();
+        // }
 
         title = room.title;
         return buildBody(context, ref, room, user);

@@ -13,6 +13,7 @@ import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
+import '../../service/const_system.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../service/time_service.dart';
@@ -41,35 +42,27 @@ class RoomCreateDialog extends HookConsumerWidget {
         fields['enterType'] == EnterType.password ? fields['password'] : null;
     final now = DateTime.now();
 
-    final roomUserList = [
-      RoomUserEntity(
-          id: loginUser.uid,
-          photo: loginUser.photo,
-          roomUserType: RoomUserType.admin,
-          updatedAt: now)
-    ];
-
     RoomEntity newRoom = RoomEntity(
-      id: RoomModel().getNewId(),
+      roomId: ConstSystem.roomBeforeInsert,
+      owner: loginUser.uid,
       title: fields['title'],
-      place: fields['placeType'],
+      placeType: fields['placeType'],
       description: fields['description'] ?? '',
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
       tags: tags,
       enterType: fields['enterType'],
       password: password,
-      users: roomUserList,
-      chats: [],
       updatedAt: now,
     );
 
     Navigator.pop(context);
 
-    await RoomModel().setRoom(newRoom);
+    await RoomModel().insertRoom(newRoom);
     PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
-    RoomService().enter(newRoom.id);
+    // TODO
+    // RoomService().enter(newRoom.id);
   }
 
   @override

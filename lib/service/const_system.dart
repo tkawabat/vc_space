@@ -4,5 +4,6 @@ class ConstSystem {
   static String userNotFound = 'notFound';
   static String userOnLoad = 'onLoad';
 
-  static String roomNotFound = 'notFound';
+  static int roomBeforeInsert = -10;
+  static int roomNotFound = -20;
 }

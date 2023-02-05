@@ -17,15 +17,17 @@ class VCChat extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<types.Message> messages = room.chats
-        .map((chat) => types.TextMessage(
-              author: types.User(
-                  id: chat.userId, firstName: chat.name, imageUrl: chat.photo),
-              createdAt: chat.updatedAt.millisecondsSinceEpoch,
-              text: chat.text,
-              id: chat.userId + chat.updatedAt.toString(),
-            ))
-        .toList();
+    // TODO
+    final List<types.Message> messages = [];
+    // final List<types.Message> messages = room.chats
+    //     .map((chat) => types.TextMessage(
+    //           author: types.User(
+    //               id: chat.userId, firstName: chat.name, imageUrl: chat.photo),
+    //           createdAt: chat.updatedAt.millisecondsSinceEpoch,
+    //           text: chat.text,
+    //           id: chat.userId + chat.updatedAt.toString(),
+    //         ))
+    //     .toList();
 
     return Chat(
       user:

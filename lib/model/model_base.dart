@@ -18,10 +18,6 @@ class ModelBase {
     return json;
   }
 
-  String getNewId() {
-    return collectionRef.doc().id;
-  }
-
   Future<List<T>> getListById<T>(
       List<String> idList,
       T? Function(DocumentSnapshot<Map<String, dynamic>>) mapFunc,
