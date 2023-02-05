@@ -14,7 +14,7 @@ class RoomModel extends ModelBase {
   final String tableName = 'room';
   final String columns = '''
       *,
-      user!inner (
+      user:owner (
         name,
         photo
       )
