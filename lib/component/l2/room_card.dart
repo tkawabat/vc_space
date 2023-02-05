@@ -18,10 +18,6 @@ class RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final owner = userNotFound;
-    // TODO
-    // final owner = RoomService().getAdminUser(room);
-
     return InkWell(
         onTap: () => showDialog(
             context: context,
@@ -44,13 +40,13 @@ class RoomCard extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: UserIcon(
-                      photo: owner.photo,
+                      photo: room.ownerData.photo,
                       tooltip: '主催者を見る',
                       onTap: () => showDialog(
                           context: context,
                           barrierDismissible: true,
                           builder: (_) {
-                            return UserDialog(userId: owner.uid);
+                            return UserDialog(userId: room.owner);
                           }),
                     ),
                     title: Text(room.title),
