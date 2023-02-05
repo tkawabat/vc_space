@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'model_base.dart';
 import '../entity/chat_entity.dart';
@@ -19,6 +20,20 @@ class RoomModel extends ModelBase {
 
   RoomModel._internal() {
     collectionRef = FirebaseFirestore.instance.collection('Room');
+  }
+
+  Future<void> insert() async {
+    final data = await supabase
+        .from('hoge')
+        .select()
+        .eq('id', '21906c78-8963-465b-84c1-82b611141bd1');
+    debugPrint(data.toString());
+
+    // await supabase
+    //     .from('hoge')
+    //     .insert({'id': uuid.v4(), 'start': '20230102 10:00:00'});
+
+    // await supabase.rpc('hoge', params: {});
   }
 
   RoomEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
@@ -45,7 +60,7 @@ class RoomModel extends ModelBase {
 
   Future<List<RoomEntity>> getRoomList() {
     return collectionRef
-        // .where('tags', whereIn: )
+        // .where('tags', whereIn: ['a'])
         .orderBy('updatedAt', descending: true)
         .get()
         .then((results) => results.docs
@@ -75,12 +90,12 @@ class RoomModel extends ModelBase {
 
       if (room == null) return false;
       if (room.users.length >= room.maxNumber) return false;
-      if (!room.users.every((e) => e.id != user.id)) return false;
+      if (!room.users.every((e) => e.id != user.uid)) return false;
 
       var list = [...room.users];
       list.add(RoomUserEntity(
-          id: user.id,
-          photo: user.id,
+          id: user.uid,
+          photo: user.uid,
           roomUserType: RoomUserType.member,
           updatedAt: DateTime.now()));
       transaction.update(
@@ -94,7 +109,7 @@ class RoomModel extends ModelBase {
     var list = [...room.chats];
     final now = DateTime.now();
     list.add(ChatEntity(
-      userId: user.id,
+      userId: user.uid,
       name: user.name,
       photo: user.photo,
       text: text,

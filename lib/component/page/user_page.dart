@@ -54,7 +54,7 @@ class UserPage extends HookConsumerWidget {
                     context: context,
                     barrierDismissible: true,
                     builder: (_) {
-                      return UserDialog(userId: user.id);
+                      return UserDialog(userId: user.uid);
                     }),
               ),
               title: Text(user.name),

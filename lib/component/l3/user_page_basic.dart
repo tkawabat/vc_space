@@ -30,14 +30,12 @@ class UserPageBasic extends HookConsumerWidget {
     var tags = tagKey.currentState!.tagsController.getTags ?? [];
 
     UserEntity newUser = UserEntity(
-        id: user.id,
+        uid: user.uid,
         name: user.name,
         photo: user.photo,
-        twitterId: user.twitterId,
+        discordName: user.discordName,
         greeting: fields['greeting'],
         tags: tags,
-        blocks: user.blocks,
-        times: user.times,
         updatedAt: DateTime.now());
 
     UserModel().updateUser(newUser).then((_) {

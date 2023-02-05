@@ -43,7 +43,7 @@ class RoomCreateDialog extends HookConsumerWidget {
 
     final roomUserList = [
       RoomUserEntity(
-          id: loginUser.id,
+          id: loginUser.uid,
           photo: loginUser.photo,
           roomUserType: RoomUserType.admin,
           updatedAt: now)

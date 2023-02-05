@@ -28,7 +28,8 @@ class VCChat extends HookConsumerWidget {
         .toList();
 
     return Chat(
-      user: types.User(id: user.id, imageUrl: user.photo, firstName: user.name),
+      user:
+          types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
       onSendPressed: (types.PartialText text) {
         RoomModel().addChat(room, user, text.text);

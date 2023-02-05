@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../model/room_model.dart';
 import '../../provider/room_list_provider.dart';
 import '../../service/page_service.dart';
 import '../../service/login_service.dart';
@@ -24,8 +25,9 @@ class MainPage extends HookConsumerWidget {
         children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              // listenFirebaseAuth(ref);
-              LoginService().logout();
+              // LoginService().logout();
+              RoomModel().insert();
+
               // ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },

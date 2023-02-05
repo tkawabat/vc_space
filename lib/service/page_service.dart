@@ -31,9 +31,8 @@ class PageService {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       LoginService().initializeUser(ref);
     });
-    // LoginService().initializeUser(ref);
 
-    ref.read(roomListProvider.notifier).getList();
+    // ref.read(roomListProvider.notifier).getList();
 
     initialized = true;
   }

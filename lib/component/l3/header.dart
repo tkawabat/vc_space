@@ -59,7 +59,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
                 ? null
                 : () {
                     PageService().transition(
-                        PageNames.calendar, {'userId': loginUser.id});
+                        PageNames.calendar, {'userId': loginUser.uid});
                   }),
         IconButton(
             tooltip: '部屋をタグ検索',

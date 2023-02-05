@@ -17,22 +17,23 @@ class LoginService {
   LoginService._internal();
 
   /// ページ表示後にuser情報をproviderに設定する
-  void initializeUser(WidgetRef ref) {
-    final user = auth.currentUser;
-    ref.read(loginProvider.notifier).set(user?.id, ref);
+  Future<void> initializeUser(WidgetRef ref) async {
+    final currentUser = auth.currentUser;
+    ref.read(loginProvider.notifier).set(currentUser?.id, ref);
 
-    debugPrint(user?.id);
+    debugPrint(currentUser?.id);
 
     // ユーザー更新
-    if (user != null &&
-        user.userMetadata != null &&
-        user.userMetadata!.isNotEmpty) {
-      final meta = user.userMetadata!;
-      UserModel().upsertOnView(
-          user.id, meta['full_name'], meta['avatar_url'], meta['name']);
+    if (currentUser != null &&
+        currentUser.userMetadata != null &&
+        currentUser.userMetadata!.isNotEmpty) {
+      final meta = currentUser.userMetadata!;
+      final user = await UserModel().upsertOnView(
+          currentUser.id, meta['full_name'], meta['avatar_url'], meta['name']);
+      if (user != null) {
+        ref.read(loginUserProvider.notifier).set(user);
+      }
     }
-
-    // ユーザー取得
   }
 
   Future<void> login() async {

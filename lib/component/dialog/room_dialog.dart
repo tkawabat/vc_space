@@ -39,7 +39,7 @@ class RoomDialog extends StatelessWidget {
     ];
 
     String buttonText =
-        RoomService().isJoined(room, user?.id ?? '') ? '入室する' : '参加する';
+        RoomService().isJoined(room, user?.uid ?? '') ? '入室する' : '参加する';
 
     return AlertDialog(
       title: Text(room.title),

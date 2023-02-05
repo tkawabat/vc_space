@@ -40,7 +40,7 @@ class UserModel extends ModelBase {
     //     .catchError(ErrorService().onError(false, 'updateUser'));
   }
 
-  Future<bool> upsertOnView(
+  Future<UserEntity?> upsertOnView(
       String uid, String name, String photo, String discordName) async {
     final hoge = supabase.from('user');
     final result = await hoge
@@ -51,11 +51,12 @@ class UserModel extends ModelBase {
           'discord_name': discordName,
         })
         .select()
+        .single()
         .catchError(ErrorService().onError(null, 'upsertOnView'));
 
     if (result != null) {
-      return true;
+      return UserEntity.fromJson(result);
     }
-    return false;
+    return null;
   }
 }

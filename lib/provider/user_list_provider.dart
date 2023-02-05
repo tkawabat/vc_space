@@ -25,7 +25,7 @@ class UserListNotifer extends StateNotifier<Map<String, UserEntity>> {
 
   void set(UserEntity user) {
     final newState = {...state};
-    newState[user.id] = user;
+    newState[user.uid] = user;
     state = newState;
   }
 }

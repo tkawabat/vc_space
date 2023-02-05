@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:uuid/uuid.dart';
 
 import '../service/error_service.dart';
 
 class ModelBase {
   late CollectionReference<Map<String, dynamic>> collectionRef;
   final supabase = Supabase.instance.client;
+  final uuid = const Uuid();
 
   Map<String, dynamic>? getJsonWithId(
       DocumentSnapshot<Map<String, dynamic>> snapshot) {
