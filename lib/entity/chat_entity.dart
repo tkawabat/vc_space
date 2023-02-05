@@ -1,10 +1,10 @@
 // ignore_for_file: invalid_annotation_target
 
-// json_serialize内で使っているので消しちゃだめ
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'converter/datetime_converter.dart';
+import 'converter/timestampz_converter.dart';
+import 'user_data_entity.dart';
 
 part 'chat_entity.freezed.dart';
 part 'chat_entity.g.dart';
@@ -12,11 +12,12 @@ part 'chat_entity.g.dart';
 @freezed
 class ChatEntity with _$ChatEntity {
   const factory ChatEntity({
-    required String userId,
-    required String photo,
-    required String name,
+    required int roomId,
+    required int roomChatId,
+    required String uid,
     required String text,
-    @DateTimeConverter() required DateTime updatedAt,
+    @TimestampzConverter() required DateTime updatedAt,
+    @JsonKey(name: 'user') required UserDataEntity userData,
   }) = _ChatEntity;
 
   factory ChatEntity.fromJson(Map<String, dynamic> json) =>

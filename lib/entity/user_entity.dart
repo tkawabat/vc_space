@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'converter/timestampz_converter.dart';
-import 'converter/datetime_converter.dart';
 import '../service/const_system.dart';
 
 part 'user_entity.freezed.dart';
