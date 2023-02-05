@@ -88,6 +88,8 @@ class RoomEntity with _$RoomEntity {
       _$RoomEntityFromJson(json);
 }
 
+const ownerDataEmpty = RoomOwnerEntity(name: '', photo: '');
+
 final roomNotFound = RoomEntity(
     roomId: ConstSystem.roomNotFound,
     owner: '',
@@ -99,4 +101,4 @@ final roomNotFound = RoomEntity(
     placeType: PlaceType.none,
     tags: [],
     updatedAt: DateTime.now(),
-    ownerData: const RoomOwnerEntity(name: '', photo: ''));
+    ownerData: ownerDataEmpty);

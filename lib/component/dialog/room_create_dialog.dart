@@ -54,6 +54,7 @@ class RoomCreateDialog extends HookConsumerWidget {
       enterType: fields['enterType'],
       password: password,
       updatedAt: now,
+      ownerData: ownerDataEmpty,
     );
 
     Navigator.pop(context);

@@ -86,6 +86,7 @@ class RoomModel extends ModelBase {
   Future<RoomEntity?> insertRoom(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');
+    json.remove('user');
 
     return supabase
         .from(tableName)
