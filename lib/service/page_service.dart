@@ -32,7 +32,7 @@ class PageService {
       LoginService().initializeUser(ref);
     });
 
-    // ref.read(roomListProvider.notifier).getList();
+    ref.read(roomListProvider.notifier).getList();
 
     initialized = true;
   }

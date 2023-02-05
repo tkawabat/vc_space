@@ -27,7 +27,7 @@ class MainPage extends HookConsumerWidget {
             onPressed: () {
               // LoginService().logout();
 
-              // ref.read(roomListProvider.notifier).getList();
+              ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },
             child: const Text("デバッグ"),

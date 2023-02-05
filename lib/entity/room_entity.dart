@@ -5,6 +5,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'converter/timestampz_converter.dart';
 import 'converter/enter_type_converter.dart';
 import 'converter/place_type_converter.dart';
+import 'room_owner_entity.dart';
 import '../service/const_system.dart';
 
 part 'room_entity.freezed.dart';
@@ -80,6 +81,7 @@ class RoomEntity with _$RoomEntity {
     String? placeUrl,
     required List<String> tags,
     @TimestampzConverter() required DateTime updatedAt,
+    @JsonKey(name: 'user') required RoomOwnerEntity ownerData,
   }) = _RoomEntity;
 
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>
@@ -96,4 +98,5 @@ final roomNotFound = RoomEntity(
     enterType: EnterType.password,
     placeType: PlaceType.none,
     tags: [],
-    updatedAt: DateTime.now());
+    updatedAt: DateTime.now(),
+    ownerData: const RoomOwnerEntity(name: '', photo: ''));

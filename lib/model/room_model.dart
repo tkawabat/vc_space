@@ -10,8 +10,15 @@ import '../entity/room_entity.dart';
 import '../service/error_service.dart';
 
 class RoomModel extends ModelBase {
-  final String tableName = 'room';
   static final RoomModel _instance = RoomModel._internal();
+  final String tableName = 'room';
+  final String columns = '''
+      *,
+      user!inner (
+        name,
+        photo
+      )
+    ''';
 
   factory RoomModel() {
     return _instance;
@@ -19,6 +26,12 @@ class RoomModel extends ModelBase {
 
   RoomModel._internal() {
     collectionRef = FirebaseFirestore.instance.collection('Room');
+  }
+
+  List<RoomEntity> _getEntityList(dynamic result) {
+    if (result == null) return [];
+    if (result is! List) return [];
+    return result.map((e) => RoomEntity.fromJson(e)).toList();
   }
 
   RoomEntity? _getEntity(dynamic result) {
@@ -49,28 +62,35 @@ class RoomModel extends ModelBase {
         .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
   }
 
-  Future<List<RoomEntity>> getRoomList() {
-    return collectionRef
-        // .where('tags', whereIn: ['a'])
-        .orderBy('updatedAt', descending: true)
-        .get()
-        .then((results) => results.docs
-            .map(_getEntityOld)
-            .toList()
-            .whereType<RoomEntity>()
-            .toList())
+  Future<List<RoomEntity>> getRoomList() async {
+    return supabase
+        .from(tableName)
+        .select(columns)
+        .then(_getEntityList)
         .catchError(
             ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
+
+    // return collectionRef
+    //     // .where('tags', whereIn: ['a'])
+    //     .orderBy('updatedAt', descending: true)
+    //     .get()
+    //     .then((results) => results.docs
+    //         .map(_getEntityOld)
+    //         .toList()
+    //         .whereType<RoomEntity>()
+    //         .toList())
+    //     .catchError(
+    //         ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
   Future<RoomEntity?> insertRoom(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');
 
-    return await supabase
+    return supabase
         .from(tableName)
         .insert(json)
-        .select()
+        .select(columns)
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, 'insertRoom'));

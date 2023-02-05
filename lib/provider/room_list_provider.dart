@@ -25,7 +25,7 @@ class RoomListNotifer extends StateNotifier<Map<String, RoomEntity>> {
   void add(RoomEntity room) {
     final newState = {...state};
     // TODO
-    newState[room.roomId as String] = room;
+    newState[room.roomId.toString()] = room;
     state = newState;
   }
 }
