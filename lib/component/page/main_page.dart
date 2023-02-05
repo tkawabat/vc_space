@@ -26,12 +26,11 @@ class MainPage extends HookConsumerWidget {
           ElevatedButton(
             onPressed: () {
               // LoginService().logout();
-              RoomModel().insert();
 
               // ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },
-            child: const Text("更新"),
+            child: const Text("デバッグ"),
           ),
           const RoomList(),
         ],

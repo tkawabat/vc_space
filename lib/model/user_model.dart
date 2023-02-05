@@ -5,6 +5,7 @@ import '../service/error_service.dart';
 import '../entity/user_entity.dart';
 
 class UserModel extends ModelBase {
+  final String tableName = 'user';
   static final UserModel _instance = UserModel._internal();
 
   factory UserModel() {
@@ -15,7 +16,13 @@ class UserModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('User');
   }
 
-  UserEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  UserEntity? _getEntity(dynamic result) {
+    if (result == null) return null;
+    if (result is! Map<String, dynamic>) return null;
+    return UserEntity.fromJson(result);
+  }
+
+  UserEntity? _getEntityOld(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final json = getJsonWithId(snapshot);
     if (json == null) return null;
     return UserEntity.fromJson(json);
@@ -25,12 +32,12 @@ class UserModel extends ModelBase {
     return collectionRef
         .doc(id)
         .get()
-        .then(_getEntity)
+        .then(_getEntityOld)
         .catchError(ErrorService().onError(null, 'getUser'));
   }
 
   Future<List<UserEntity>> getUserList(List<String> idList) {
-    return getListById<UserEntity>(idList, _getEntity, 'getUserList');
+    return getListById<UserEntity>(idList, _getEntityOld, 'getUserList');
   }
 
   Future<void> updateUser(UserEntity user) async {
@@ -42,8 +49,8 @@ class UserModel extends ModelBase {
 
   Future<UserEntity?> upsertOnView(
       String uid, String name, String photo, String discordName) async {
-    final hoge = supabase.from('user');
-    final result = await hoge
+    return await supabase
+        .from(tableName)
         .upsert({
           'uid': uid,
           'name': name,
@@ -52,11 +59,7 @@ class UserModel extends ModelBase {
         })
         .select()
         .single()
+        .then(_getEntity)
         .catchError(ErrorService().onError(null, 'upsertOnView'));
-
-    if (result != null) {
-      return UserEntity.fromJson(result);
-    }
-    return null;
   }
 }

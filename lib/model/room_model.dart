@@ -8,10 +8,9 @@ import '../entity/user_entity.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../service/error_service.dart';
-import '../service/const_service.dart';
-import '../service/analytics_service.dart';
 
 class RoomModel extends ModelBase {
+  final String tableName = 'room';
   static final RoomModel _instance = RoomModel._internal();
 
   factory RoomModel() {
@@ -22,21 +21,13 @@ class RoomModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('Room');
   }
 
-  Future<void> insert() async {
-    final data = await supabase
-        .from('hoge')
-        .select()
-        .eq('id', '21906c78-8963-465b-84c1-82b611141bd1');
-    debugPrint(data.toString());
-
-    // await supabase
-    //     .from('hoge')
-    //     .insert({'id': uuid.v4(), 'start': '20230102 10:00:00'});
-
-    // await supabase.rpc('hoge', params: {});
+  RoomEntity? _getEntity(dynamic result) {
+    if (result == null) return null;
+    if (result is! Map<String, dynamic>) return null;
+    return RoomEntity.fromJson(result);
   }
 
-  RoomEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
+  RoomEntity? _getEntityOld(DocumentSnapshot<Map<String, dynamic>> snapshot) {
     final json = getJsonWithId(snapshot);
     if (json == null) return null;
     return RoomEntity.fromJson(json);
@@ -46,7 +37,7 @@ class RoomModel extends ModelBase {
     return collectionRef
         .doc(id)
         .get()
-        .then(_getEntity)
+        .then(_getEntityOld)
         .catchError(ErrorService().onError(null, 'getRoom'));
   }
 
@@ -54,7 +45,7 @@ class RoomModel extends ModelBase {
     return collectionRef
         .doc(id)
         .snapshots()
-        .map(_getEntity)
+        .map(_getEntityOld)
         .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
   }
 
@@ -64,7 +55,7 @@ class RoomModel extends ModelBase {
         .orderBy('updatedAt', descending: true)
         .get()
         .then((results) => results.docs
-            .map(_getEntity)
+            .map(_getEntityOld)
             .toList()
             .whereType<RoomEntity>()
             .toList())
@@ -72,16 +63,17 @@ class RoomModel extends ModelBase {
             ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
-  Future<void> insertRoom(RoomEntity room) async {
-    final hoge = supabase.from('room');
-    final result = await hoge
-        .insert(room.toJson())
+  Future<RoomEntity?> insertRoom(RoomEntity room) async {
+    var json = room.toJson();
+    json.remove('room_id');
+
+    return await supabase
+        .from(tableName)
+        .insert(json)
+        .select()
+        .single()
+        .then(_getEntity)
         .catchError(ErrorService().onError(null, 'insertRoom'));
-    // final json = room.toJson();
-    // json.remove('id');
-    // return collectionRef.doc(room.id).set(json).then((_) {
-    //   logEvent(LogEventName.create_room, 'room', '');
-    // }).catchError(ErrorService().onError(null, 'setRoom'));
   }
 
   Future<bool> join(String roomId, UserEntity user) async {
