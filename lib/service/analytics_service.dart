@@ -10,7 +10,7 @@ enum LogEventName {
   sign_up,
   modify_user,
   search_user,
-  firestore_error,
+  database_error,
   view_error,
 }
 
