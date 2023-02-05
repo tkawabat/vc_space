@@ -5,6 +5,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 import '../model/user_model.dart';
 import '../provider/login_provider.dart';
+import 'page_service.dart';
 
 class LoginService {
   static final LoginService _instance = LoginService._internal();
@@ -19,7 +20,7 @@ class LoginService {
   /// ページ表示後にuser情報をproviderに設定する
   Future<void> initializeUser(WidgetRef ref) async {
     final currentUser = auth.currentUser;
-    ref.read(loginProvider.notifier).set(currentUser?.id, ref);
+    // ref.read(loginProvider.notifier).set(currentUser?.id, ref);
 
     debugPrint(currentUser?.id);
 
@@ -30,7 +31,10 @@ class LoginService {
       final meta = currentUser.userMetadata!;
       final user = await UserModel().upsertOnView(
           currentUser.id, meta['full_name'], meta['avatar_url'], meta['name']);
+
+      var message = 'ログインしました';
       if (user != null) {
+        PageService().snackbar('ログインしました', SnackBarType.info);
         ref.read(loginUserProvider.notifier).set(user);
       }
     }
@@ -40,9 +44,10 @@ class LoginService {
     await auth.signInWithOAuth(supa.Provider.discord);
   }
 
-  Future<void> logout() async {
+  Future<void> logout(WidgetRef ref) async {
     await auth.signOut();
 
-    // ユーザー情報を捨てる
+    ref.read(loginUserProvider.notifier).set(null);
+    PageService().snackbar('ログアウトしました', SnackBarType.info);
   }
 }

@@ -78,7 +78,7 @@ class UserPage extends HookConsumerWidget {
               color: Theme.of(context).colorScheme.error,
               onTap: () {
                 PageService().showConfirmDialog('ログアウトする', () {
-                  LoginService().logout();
+                  LoginService().logout(ref);
                   PageService().back();
                 });
               },
