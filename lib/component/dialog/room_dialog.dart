@@ -43,10 +43,8 @@ class RoomDialog extends HookConsumerWidget {
         ? Text(room.description)
         : const Text('部屋説明無し', style: TextStyle(color: Colors.black54));
 
-    // TODO
-    String buttonText = '入室する';
-    // String buttonText =
-    //     RoomService().isJoined(room, user?.uid ?? '') ? '入室する' : '参加する';
+    String buttonText =
+        RoomService().isJoined(room, loginUser?.uid ?? '') ? '入室する' : '参加する';
 
     return FormBuilder(
       key: formKey,

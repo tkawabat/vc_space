@@ -16,22 +16,20 @@ class RoomService {
 
   RoomService._internal();
 
-  // TODO
-  // bool isJoined(RoomEntity room, String userId) {
-  //   return !room.users.every((e) => e.id != userId);
-  // }
+  bool isJoined(RoomEntity room, String userId) {
+    return !room.users.every((e) => e.uid != userId);
+  }
 
   List<RoomEntity> getJoinedRoom(List<RoomEntity> roomList, String userId) {
     return roomList.where((room) => true).toList();
   }
 
-  // TODO
-  // RoomUserEntity getAdminUser(RoomEntity room) {
-  //   return room.users
-  //       .where((e) => e.roomUserType == RoomUserType.admin)
-  //       .toList()
-  //       .first;
-  // }
+  RoomUserEntity getAdminUser(RoomEntity room) {
+    return room.users
+        .where((e) => e.roomUserType == RoomUserType.admin)
+        .toList()
+        .first;
+  }
 
   void enter(String roomId) {
     PageService().transition(PageNames.room, {'id': roomId});
@@ -43,17 +41,18 @@ class RoomService {
 
   Future<bool> join(RoomEntity room, UserEntity user, String? password) async {
     // 未参加だったら参加する
-    // TODO
-    // if (!isJoined(room, user.uid)) {
-    final result = await RoomUserModel()
-        .insert(room.roomId, user.uid, RoomUserType.member, password);
-    if (!result) {
-      PageService().snackbar('参加できませんでした', SnackBarType.error);
-      return false;
+    if (!isJoined(room, user.uid)) {
+      final result = await RoomUserModel()
+          .insert(room.roomId, user.uid, RoomUserType.member, password);
+      if (!result) {
+        PageService().snackbar('参加できませんでした', SnackBarType.error);
+        return false;
+      }
+      PageService().snackbar('部屋に参加しました', SnackBarType.info);
+      // TODO ステートにも自分を追加する
     }
-    PageService().snackbar('部屋に参加しました', SnackBarType.info);
-    // }
 
+    // TODO
     // enter(room.roomId as String);
 
     return true;

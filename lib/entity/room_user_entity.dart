@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vc_space/service/const_system.dart';
 
 import 'converter/timestampz_converter.dart';
 import 'converter/room_user_type_converter.dart';
@@ -45,3 +46,11 @@ class RoomUserEntity with _$RoomUserEntity {
   factory RoomUserEntity.fromJson(Map<String, dynamic> json) =>
       _$RoomUserEntityFromJson(json);
 }
+
+final roomUserEmpty = RoomUserEntity(
+  roomId: ConstSystem.roomNotFound,
+  uid: ConstSystem.userNotFound,
+  roomUserType: RoomUserType.admin,
+  updatedAt: ConstSystem.emptyTime,
+  userData: userDataEmpty,
+);

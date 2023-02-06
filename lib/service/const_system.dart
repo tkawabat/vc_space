@@ -1,4 +1,6 @@
 class ConstSystem {
+  static DateTime emptyTime = DateTime(2000);
+
   static int getListByIdMax = 10;
 
   static String userNotFound = 'notFound';

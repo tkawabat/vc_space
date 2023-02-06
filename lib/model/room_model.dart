@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'model_base.dart';
 import '../entity/chat_entity.dart';
 import '../entity/user_entity.dart';
-import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../service/const_service.dart';
 import '../service/error_service.dart';
@@ -14,9 +13,13 @@ class RoomModel extends ModelBase {
   final String tableName = 'room';
   final String columns = '''
       *,
-      user:owner (
-        name,
-        photo
+      room_user!inner (
+        *,
+        user!inner (
+          name,
+          photo,
+          discord_name
+        )
       )
     ''';
 
@@ -29,11 +32,14 @@ class RoomModel extends ModelBase {
   void hoge() async {
     // TODO
     supabase
-        .from('room_user')
-        .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
-        .eq('room_id', 1)
-        // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
-        .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
+        .rpc('insert_room_owner')
+
+        // supabase
+        //     .from('room_user')
+        //     .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
+        //     .eq('room_id', 1)
+        //     // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+        //     .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
         .then((_) => debugPrint('success'))
         .catchError(ErrorService().onError(null, 'hoge'));
   }
@@ -84,7 +90,7 @@ class RoomModel extends ModelBase {
   Future<RoomEntity?> insert(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');
-    json.remove('user');
+    json.remove('users');
     json['password'] = encodePassword(json['password']);
 
     return supabase

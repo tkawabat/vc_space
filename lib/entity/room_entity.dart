@@ -1,6 +1,7 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:vc_space/entity/room_user_entity.dart';
 
 import 'converter/timestampz_converter.dart';
 import 'converter/enter_type_converter.dart';
@@ -81,7 +82,7 @@ class RoomEntity with _$RoomEntity {
     String? placeUrl,
     required List<String> tags,
     @TimestampzConverter() required DateTime updatedAt,
-    @JsonKey(name: 'user') required UserDataEntity ownerData,
+    @JsonKey(name: 'room_user') required List<RoomUserEntity> users,
   }) = _RoomEntity;
 
   factory RoomEntity.fromJson(Map<String, dynamic> json) =>
@@ -89,14 +90,15 @@ class RoomEntity with _$RoomEntity {
 }
 
 final roomNotFound = RoomEntity(
-    roomId: ConstSystem.roomNotFound,
-    owner: '',
-    title: '存在しない部屋です',
-    description: '',
-    startTime: DateTime.now(),
-    maxNumber: 2,
-    enterType: EnterType.password,
-    placeType: PlaceType.none,
-    tags: [],
-    updatedAt: DateTime.now(),
-    ownerData: userDataEmpty);
+  roomId: ConstSystem.roomNotFound,
+  owner: '',
+  title: '存在しない部屋です',
+  description: '',
+  startTime: DateTime.now(),
+  maxNumber: 2,
+  enterType: EnterType.password,
+  placeType: PlaceType.none,
+  tags: [],
+  updatedAt: DateTime.now(),
+  users: [roomUserEmpty],
+);

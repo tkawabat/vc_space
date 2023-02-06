@@ -11,10 +11,11 @@ class UserDataEntity with _$UserDataEntity {
   const factory UserDataEntity({
     required String name,
     required String photo,
+    required String discordName,
   }) = _UserDataEntity;
 
   factory UserDataEntity.fromJson(Map<String, dynamic> json) =>
       _$UserDataEntityFromJson(json);
 }
 
-const userDataEmpty = UserDataEntity(name: '', photo: '');
+const userDataEmpty = UserDataEntity(name: '', photo: '', discordName: '');

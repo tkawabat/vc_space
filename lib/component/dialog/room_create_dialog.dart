@@ -59,7 +59,7 @@ class RoomCreateDialog extends HookConsumerWidget {
       enterType: fields['enterType'],
       password: password,
       updatedAt: now,
-      ownerData: userDataEmpty,
+      users: [roomUserEmpty],
     );
 
     await RoomModel().insert(newRoom);

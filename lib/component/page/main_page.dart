@@ -29,15 +29,15 @@ class MainPage extends HookConsumerWidget {
           ElevatedButton(
             onPressed: () {
               // LoginService().logout();
-              // RoomModel().hoge();
+              RoomModel().hoge();
 
-              final waitTimeEntity = WaitTimeEntity(
-                  uid: '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b',
-                  waitTimeId: ConstSystem.waitTimeBeforeInsertId,
-                  startTime: DateTime.now(),
-                  endTime: DateTime.now(),
-                  updatedAt: DateTime.now());
-              WaitTimeModel().insert(waitTimeEntity);
+              // final waitTimeEntity = WaitTimeEntity(
+              //     uid: '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b',
+              //     waitTimeId: ConstSystem.waitTimeBeforeInsertId,
+              //     startTime: DateTime.now(),
+              //     endTime: DateTime.now(),
+              //     updatedAt: DateTime.now());
+              // WaitTimeModel().insert(waitTimeEntity);
             },
             child: const Text("デバッグ"),
           ),

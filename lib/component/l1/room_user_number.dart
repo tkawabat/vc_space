@@ -24,9 +24,7 @@ class RoomUserNumber extends StatelessWidget {
           children: [
             enterTypeIcon,
             const Icon(Icons.person, size: 18),
-            // TODO
-            Text('1/${room.maxNumber}'),
-            // Text('${room.users.length}/${room.maxNumber}'),
+            Text('${room.users.length}/${room.maxNumber}'),
           ],
         ));
   }
