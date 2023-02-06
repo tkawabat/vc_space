@@ -45,8 +45,8 @@ enum PlaceType {
 
 enum EnterType {
   noLimit(10, '制限なし'),
-  follow(20, 'フォローのみ'),
-  password(30, 'パスワード'),
+  password(20, 'パスワード'),
+  follow(30, 'フォローのみ'),
   ;
 
   const EnterType(this.value, this.displayName);
@@ -58,9 +58,9 @@ enum EnterType {
       case 10:
         return EnterType.noLimit;
       case 20:
-        return EnterType.follow;
-      case 30:
         return EnterType.password;
+      case 30:
+        return EnterType.follow;
     }
     return EnterType.noLimit;
   }
