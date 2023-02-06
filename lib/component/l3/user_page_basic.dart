@@ -52,22 +52,22 @@ class UserPageBasic extends HookConsumerWidget {
     return FormBuilder(
       key: formKey,
       child: Container(
-          height: 300,
+          height: 400,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Text('基本情報', style: TextStyle(fontWeight: FontWeight.bold)),
-              const Spacer(),
+              const SizedBox(height: 8),
               greetingField(user.greeting),
-              const Spacer(),
+              const SizedBox(height: 16),
               TagField(
                 key: tagKey,
                 samples: ConstService.sampleUserTags,
                 initialTags: user.tags,
                 maxTagNumber: ConstService.maxTagLength,
               ),
-              const Spacer(),
+              const SizedBox(height: 24),
               Button(
                 alignment: Alignment.centerRight,
                 onTap: () => submit(ref),

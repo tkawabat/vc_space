@@ -42,7 +42,7 @@ class UserPage extends HookConsumerWidget {
         title: "マイページ",
       ),
       body: Container(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -70,10 +70,9 @@ class UserPage extends HookConsumerWidget {
                 },
               ),
             ),
-            const SizedBox(height: 10),
-            const SizedBox(height: 40),
+            const SizedBox(height: 24),
             UserPageBasic(user: user),
-            const SizedBox(height: 80),
+            const Spacer(),
             Button(
               color: Theme.of(context).colorScheme.error,
               onTap: () {
@@ -84,6 +83,7 @@ class UserPage extends HookConsumerWidget {
               },
               text: 'ログアウト',
             ),
+            const SizedBox(height: 16),
           ],
         ),
       ),
