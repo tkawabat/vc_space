@@ -1,20 +1,19 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'model_base.dart';
 import '../service/error_service.dart';
 import '../entity/user_entity.dart';
 
 class UserModel extends ModelBase {
-  final String tableName = 'user';
   static final UserModel _instance = UserModel._internal();
+  final String tableName = 'user';
+  final String columns = '''
+      *
+    ''';
 
   factory UserModel() {
     return _instance;
   }
 
-  UserModel._internal() {
-    collectionRef = FirebaseFirestore.instance.collection('User');
-  }
+  UserModel._internal();
 
   UserEntity? _getEntity(dynamic result) {
     if (result == null) return null;
@@ -22,25 +21,18 @@ class UserModel extends ModelBase {
     return UserEntity.fromJson(result);
   }
 
-  UserEntity? _getEntityOld(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final json = getJsonWithId(snapshot);
-    if (json == null) return null;
-    return UserEntity.fromJson(json);
-  }
-
-  Future<UserEntity?> getUser(String id) {
-    return collectionRef
-        .doc(id)
-        .get()
-        .then(_getEntityOld)
-        .catchError(ErrorService().onError(null, 'getUser'));
-  }
-
-  Future<List<UserEntity>> getUserList(List<String> idList) {
-    return getListById<UserEntity>(idList, _getEntityOld, 'getUserList');
+  Future<UserEntity?> getById(String uid) {
+    return supabase
+        .from(tableName)
+        .select(columns)
+        .eq('uid', uid)
+        .single()
+        .then(_getEntity)
+        .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
   Future<void> updateUser(UserEntity user) async {
+    // TODO
     // final documentReference = collectionRef.doc(user.id);
     // return documentReference
     //     .set(user.toJson())
@@ -57,9 +49,9 @@ class UserModel extends ModelBase {
           'photo': photo,
           'discord_name': discordName,
         })
-        .select()
+        .select(columns)
         .single()
         .then(_getEntity)
-        .catchError(ErrorService().onError(null, 'upsertOnView'));
+        .catchError(ErrorService().onError(null, '$tableName.upsertOnView'));
   }
 }

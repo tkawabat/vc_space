@@ -16,7 +16,7 @@ class UserListNotifer extends StateNotifier<Map<String, UserEntity>> {
       return;
     }
 
-    UserModel().getUser(userId).then((user) {
+    UserModel().getById(userId).then((user) {
       final newState = {...state};
       newState[userId] = user ?? userNotFound;
       state = newState;

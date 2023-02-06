@@ -10,7 +10,7 @@ class LoginUserNotifer extends StateNotifier<UserEntity?> {
   LoginUserNotifer() : super(null);
 
   Future<void> get(String id) async {
-    state = await UserModel().getUser(id);
+    state = await UserModel().getById(id);
   }
 
   void set(UserEntity? user) => state = user;

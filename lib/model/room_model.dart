@@ -27,6 +27,7 @@ class RoomModel extends ModelBase {
   RoomModel._internal();
 
   void hoge() async {
+    // TODO
     supabase
         .from('room_user')
         .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
@@ -60,6 +61,7 @@ class RoomModel extends ModelBase {
   }
 
   Stream<RoomEntity?> getRoomSnapshot(String id) {
+    // TODO
     final controller = StreamController<RoomEntity>();
     return controller.stream;
     // return collectionRef
@@ -95,6 +97,7 @@ class RoomModel extends ModelBase {
   }
 
   Future<void> addChat(RoomEntity room, UserEntity user, String text) async {
+    // TODO
     // var list = [...room.chats];
     // final now = DateTime.now();
     // list.add(ChatEntity(
