@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'model_base.dart';
@@ -7,6 +6,7 @@ import '../entity/chat_entity.dart';
 import '../entity/user_entity.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
+import '../service/const_service.dart';
 import '../service/error_service.dart';
 
 class RoomModel extends ModelBase {
@@ -24,9 +24,7 @@ class RoomModel extends ModelBase {
     return _instance;
   }
 
-  RoomModel._internal() {
-    collectionRef = FirebaseFirestore.instance.collection('Room');
-  }
+  RoomModel._internal();
 
   void hoge() async {
     supabase
@@ -51,35 +49,34 @@ class RoomModel extends ModelBase {
     return RoomEntity.fromJson(result);
   }
 
-  RoomEntity? _getEntityOld(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final json = getJsonWithId(snapshot);
-    if (json == null) return null;
-    return RoomEntity.fromJson(json);
-  }
-
-  Future<RoomEntity?> getRoom(String id) {
-    return collectionRef
-        .doc(id)
-        .get()
-        .then(_getEntityOld)
-        .catchError(ErrorService().onError(null, 'getRoom'));
-  }
-
-  Stream<RoomEntity?> getRoomSnapshot(String id) {
-    return collectionRef
-        .doc(id)
-        .snapshots()
-        .map(_getEntityOld)
-        .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
-  }
-
-  Future<List<RoomEntity>> getRoomList() async {
+  Future<RoomEntity?> getById(String roomId) {
     return supabase
         .from(tableName)
         .select(columns)
+        .eq('room_id', roomId)
+        .single()
+        .then(_getEntity)
+        .catchError(ErrorService().onError(null, '$tableName.getById'));
+  }
+
+  Stream<RoomEntity?> getRoomSnapshot(String id) {
+    final controller = StreamController<RoomEntity>();
+    return controller.stream;
+    // return collectionRef
+    //     .doc(id)
+    //     .snapshots()
+    //     .map(_getEntityOld)
+    //     .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
+  }
+
+  Future<List<RoomEntity>> getList(int start) async {
+    return supabase
+        .from(tableName)
+        .select(columns)
+        .range(start, start + ConstService.roomListStep)
         .then(_getEntityList)
         .catchError(
-            ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
+            ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));
   }
 
   Future<RoomEntity?> insert(RoomEntity room) async {
@@ -94,7 +91,7 @@ class RoomModel extends ModelBase {
         .select(columns)
         .single()
         .then(_getEntity)
-        .catchError(ErrorService().onError(null, 'room.insert'));
+        .catchError(ErrorService().onError(null, '$tableName.insert'));
   }
 
   Future<void> addChat(RoomEntity room, UserEntity user, String text) async {

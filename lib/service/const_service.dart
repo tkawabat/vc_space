@@ -1,4 +1,6 @@
 class ConstService {
+  static const roomListStep = 10;
+
   static const stepTime = 15;
 
   static const userGreetingMax = 140;
