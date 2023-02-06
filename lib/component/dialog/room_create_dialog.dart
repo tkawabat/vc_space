@@ -28,14 +28,18 @@ class RoomCreateDialog extends HookConsumerWidget {
   final tagKey = GlobalKey<TagFieldState>();
 
   Future<void> createRoom(BuildContext context, WidgetRef ref) async {
+    Navigator.pop(context);
+
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      PageService().snackbar('入力値に問題があります', SnackBarType.error);
       return;
     }
-    var fields = formKey.currentState!.value;
-    var tags = tagKey.currentState!.tagsController.getTags ?? [];
+    final fields = formKey.currentState!.value;
+    final tags = tagKey.currentState!.tagsController.getTags ?? [];
 
     final UserEntity? loginUser = ref.watch(loginUserProvider);
     if (loginUser == null) {
+      PageService().snackbar('部屋作成するにはログインが必要です', SnackBarType.error);
       return;
     }
 
@@ -58,9 +62,7 @@ class RoomCreateDialog extends HookConsumerWidget {
       ownerData: userDataEmpty,
     );
 
-    Navigator.pop(context);
-
-    await RoomModel().insertRoom(newRoom);
+    await RoomModel().insert(newRoom);
     PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
     // TODO

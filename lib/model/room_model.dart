@@ -28,6 +28,17 @@ class RoomModel extends ModelBase {
     collectionRef = FirebaseFirestore.instance.collection('Room');
   }
 
+  void hoge() async {
+    supabase
+        .from('room_user')
+        .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
+        .eq('room_id', 1)
+        // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+        .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
+        .then((_) => debugPrint('success'))
+        .catchError(ErrorService().onError(null, 'hoge'));
+  }
+
   List<RoomEntity> _getEntityList(dynamic result) {
     if (result == null) return [];
     if (result is! List) return [];
@@ -69,24 +80,13 @@ class RoomModel extends ModelBase {
         .then(_getEntityList)
         .catchError(
             ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
-
-    // return collectionRef
-    //     // .where('tags', whereIn: ['a'])
-    //     .orderBy('updatedAt', descending: true)
-    //     .get()
-    //     .then((results) => results.docs
-    //         .map(_getEntityOld)
-    //         .toList()
-    //         .whereType<RoomEntity>()
-    //         .toList())
-    //     .catchError(
-    //         ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
   }
 
-  Future<RoomEntity?> insertRoom(RoomEntity room) async {
+  Future<RoomEntity?> insert(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');
     json.remove('user');
+    json['password'] = encodePassword(json['password']);
 
     return supabase
         .from(tableName)
@@ -94,34 +94,7 @@ class RoomModel extends ModelBase {
         .select(columns)
         .single()
         .then(_getEntity)
-        .catchError(ErrorService().onError(null, 'insertRoom'));
-  }
-
-  Future<bool> join(String roomId, UserEntity user) async {
-    // TODO
-    return true;
-    // final documentReference = collectionRef.doc(roomId);
-
-    // return FirebaseFirestore.instance
-    //     .runTransaction<bool>((Transaction transaction) async {
-    //   final RoomEntity? room =
-    //       await transaction.get(documentReference).then(_getEntity);
-
-    //   if (room == null) return false;
-    //   if (room.users.length >= room.maxNumber) return false;
-    //   if (!room.users.every((e) => e.id != user.uid)) return false;
-
-    //   var list = [...room.users];
-    //   list.add(RoomUserEntity(
-    //       id: user.uid,
-    //       photo: user.uid,
-    //       roomUserType: RoomUserType.member,
-    //       updatedAt: DateTime.now()));
-    //   transaction.update(
-    //       documentReference, {'users': list.map((e) => e.toJson()).toList()});
-
-    //   return true;
-    // }).catchError(ErrorService().onError(false, 'joinRoom'));
+        .catchError(ErrorService().onError(null, 'room.insert'));
   }
 
   Future<void> addChat(RoomEntity room, UserEntity user, String text) async {

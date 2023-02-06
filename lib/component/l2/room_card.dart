@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../service/room_service.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/room_user_number.dart';
@@ -25,7 +24,6 @@ class RoomCard extends StatelessWidget {
             builder: (_) {
               return RoomDialog(
                 room: room,
-                user: user,
               );
             }),
         child: Container(

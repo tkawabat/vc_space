@@ -26,8 +26,8 @@ class MainPage extends HookConsumerWidget {
           ElevatedButton(
             onPressed: () {
               // LoginService().logout();
-
-              ref.read(roomListProvider.notifier).getList();
+              RoomModel().hoge();
+              // ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },
             child: const Text("デバッグ"),

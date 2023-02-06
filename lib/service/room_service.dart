@@ -41,12 +41,12 @@ class RoomService {
     PageService().ref?.read(enterRoomIdProvider.notifier).set(null);
   }
 
-  Future<bool> join(RoomEntity room, UserEntity user) async {
+  Future<bool> join(RoomEntity room, UserEntity user, String? password) async {
     // 未参加だったら参加する
     // TODO
     // if (!isJoined(room, user.uid)) {
     final result = await RoomUserModel()
-        .insert(room.roomId, user.uid, RoomUserType.member);
+        .insert(room.roomId, user.uid, RoomUserType.member, password);
     if (!result) {
       PageService().snackbar('参加できませんでした', SnackBarType.error);
       return false;

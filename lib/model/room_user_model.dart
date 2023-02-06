@@ -44,13 +44,15 @@ class RoomUserModel extends ModelBase {
             .onError<List<RoomUserEntity>>([], '$tableName.getByRoomId'));
   }
 
-  Future<bool> insert(int roomId, String uid, RoomUserType roomUserType) async {
+  Future<bool> insert(int roomId, String uid, RoomUserType roomUserType,
+      String? password) async {
     return supabase
         .from(tableName)
         .insert({
           'room_id': roomId,
           'uid': uid,
           'room_user_type': roomUserType.value,
+          'password': password,
         })
         .then((_) => true)
         .catchError(ErrorService().onError(false, 'room_user.insert'));
