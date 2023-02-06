@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vc_space/entity/wait_time_entity.dart';
 
 import '../../model/room_model.dart';
+import '../../model/wait_time_model.dart';
 import '../../provider/room_list_provider.dart';
+import '../../service/const_system.dart';
 import '../../service/page_service.dart';
 import '../../service/login_service.dart';
 import '../dialog/room_create_dialog.dart';
@@ -26,7 +29,23 @@ class MainPage extends HookConsumerWidget {
           ElevatedButton(
             onPressed: () {
               // LoginService().logout();
-              RoomModel().hoge();
+              // RoomModel().hoge();
+
+              final waitTimeEntity = WaitTimeEntity(
+                  uid: '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b',
+                  waitTimeId: ConstSystem.waitTimeBeforeInsertId,
+                  startTime: DateTime.now(),
+                  endTime: DateTime.now(),
+                  updatedAt: DateTime.now());
+              WaitTimeModel().insert(waitTimeEntity);
+            },
+            child: const Text("デバッグ"),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              // LoginService().logout();
+              var list = await WaitTimeModel().getList();
+              debugPrint(list.toString());
               // ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },

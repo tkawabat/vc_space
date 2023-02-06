@@ -6,4 +6,6 @@ class ConstSystem {
 
   static int roomBeforeInsert = -10;
   static int roomNotFound = -20;
+
+  static int waitTimeBeforeInsertId = -10;
 }
