@@ -31,12 +31,19 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<void> updateUser(UserEntity user) async {
-    // TODO
-    // final documentReference = collectionRef.doc(user.id);
-    // return documentReference
-    //     .set(user.toJson())
-    //     .catchError(ErrorService().onError(false, 'updateUser'));
+  Future<bool> updateUser(UserEntity user) async {
+    var json = user.toJson();
+    json.remove('uid');
+    json.remove('name');
+    json.remove('photo');
+    json.remove('discord_name');
+
+    return supabase
+        .from(tableName)
+        .update(json)
+        .eq('uid', user.uid)
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.update'));
   }
 
   Future<UserEntity?> upsertOnView(

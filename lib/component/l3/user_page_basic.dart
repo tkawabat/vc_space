@@ -41,9 +41,9 @@ class UserPageBasic extends HookConsumerWidget {
     UserModel().updateUser(newUser).then((_) {
       ref.read(loginUserProvider.notifier).set(newUser);
       ref.read(userListProvider.notifier).set(newUser);
-      PageService().snackbar('ユーザー情報を更新しました。', AnimatedSnackBarType.info);
+      PageService().snackbar('保存しました。', AnimatedSnackBarType.info);
     }).catchError((_) {
-      PageService().snackbar('ユーザー情報の更新に失敗しました。', AnimatedSnackBarType.error);
+      PageService().snackbar('保存に失敗しました。', AnimatedSnackBarType.error);
     });
   }
 
