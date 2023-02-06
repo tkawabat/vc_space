@@ -1,3 +1,4 @@
+import '../model/room_user_model.dart';
 import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
@@ -44,15 +45,16 @@ class RoomService {
     // 未参加だったら参加する
     // TODO
     // if (!isJoined(room, user.uid)) {
-    //   final result = await RoomModel().join(room.roomId, user);
-    //   if (!result) {
-    //     PageService().snackbar('参加できませんでした', SnackBarType.error);
-    //     return false;
-    //   }
-    //   PageService().snackbar('部屋に参加しました', SnackBarType.info);
+    final result = await RoomUserModel()
+        .insert(room.roomId, user.uid, RoomUserType.member);
+    if (!result) {
+      PageService().snackbar('参加できませんでした', SnackBarType.error);
+      return false;
+    }
+    PageService().snackbar('部屋に参加しました', SnackBarType.info);
     // }
 
-    enter(room.roomId as String);
+    // enter(room.roomId as String);
 
     return true;
   }
