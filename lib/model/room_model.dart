@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'model_base.dart';
-import '../entity/chat_entity.dart';
 import '../entity/user_entity.dart';
 import '../entity/room_entity.dart';
 import '../service/const_service.dart';
@@ -100,28 +99,5 @@ class RoomModel extends ModelBase {
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, '$tableName.insert'));
-  }
-
-  Future<void> addChat(RoomEntity room, UserEntity user, String text) async {
-    // TODO
-    // var list = [...room.chats];
-    // final now = DateTime.now();
-    // list.add(ChatEntity(
-    //   userId: user.uid,
-    //   name: user.name,
-    //   photo: user.photo,
-    //   text: text,
-    //   updatedAt: now,
-    // ));
-
-    // list.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-
-    // final diff = list.length - ConstService.chatMaxNumber;
-    // if (diff > 0) list.removeRange(0, diff);
-
-    // return collectionRef.doc(room.id).update({
-    //   'chats': list.map((e) => e.toJson()).toList(),
-    //   'updatedAt': now
-    // }).catchError(ErrorService().onError(null, 'addChat'));
   }
 }

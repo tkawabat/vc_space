@@ -1,0 +1,59 @@
+import 'dart:async';
+
+import 'model_base.dart';
+// import '../entity/room_chat_entity.dart';
+import '../service/error_service.dart';
+
+class RoomChatModel extends ModelBase {
+  static final RoomChatModel _instance = RoomChatModel._internal();
+  final String tableName = 'room_chat';
+  final String columns = '''
+      *
+    ''';
+
+  factory RoomChatModel() {
+    return _instance;
+  }
+
+  RoomChatModel._internal();
+
+  // List<RoomChatEntity> _getEntityList(dynamic result) {
+  //   if (result == null) return [];
+  //   if (result is! List) return [];
+  //   return result.map((e) => RoomChatEntity.fromJson(e)).toList();
+  // }
+
+  // RoomChatEntity? _getEntity(dynamic result) {
+  //   if (result == null) return null;
+  //   if (result is! Map<String, dynamic>) return null;
+  //   return RoomChatEntity.fromJson(result);
+  // }
+
+  StreamSubscription getStream(
+    int roomId,
+    void Function(List<Map<String, dynamic>>) onData,
+    void Function(Object) onError,
+  ) {
+    return supabase
+        .from(tableName)
+        .stream(primaryKey: ['room_id'])
+        .eq('room_id', roomId)
+        .order('updated_at')
+        .limit(20)
+        .listen(onData, onError: onError
+            // onError: ErrorService().onError<List<Map<String, dynamic>>>(
+            //     [], '$tableName.getStream'),
+            );
+  }
+
+  Future<bool> insert(String uid, String text) async {
+    return supabase
+        .from(tableName)
+        .insert({
+          'uid': uid,
+          'text': text,
+        })
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.insert'));
+  }
+}
