@@ -21,6 +21,11 @@ class RoomDialog extends HookConsumerWidget {
 
   final formKey = GlobalKey<FormBuilderState>();
 
+  Future<void> enterRoom(BuildContext context) async {
+    Navigator.pop(context);
+    RoomService().enter(room.roomId);
+  }
+
   Future<void> joinRoom(BuildContext context, UserEntity user) async {
     Navigator.pop(context);
 
@@ -35,6 +40,8 @@ class RoomDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
+    bool isJoined =
+        RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
 
     DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
     String start = '${formatter.format(room.startTime)}〜';
@@ -43,8 +50,18 @@ class RoomDialog extends HookConsumerWidget {
         ? Text(room.description)
         : const Text('部屋説明無し', style: TextStyle(color: Colors.black54));
 
-    String buttonText =
-        RoomService().isJoined(room, loginUser?.uid ?? '') ? '入室する' : '参加する';
+    bool passwordEnabled = room.enterType == EnterType.password && !isJoined;
+
+    String submitButtonText = '参加する';
+    void Function()? submitButtonOnPress;
+    if (loginUser == null) {
+      submitButtonOnPress = null;
+    } else if (isJoined) {
+      submitButtonText = '入室する';
+      submitButtonOnPress = () => enterRoom(context);
+    } else {
+      submitButtonOnPress = () => joinRoom(context, loginUser);
+    }
 
     return FormBuilder(
       key: formKey,
@@ -76,15 +93,14 @@ class RoomDialog extends HookConsumerWidget {
                 const SizedBox(height: 8),
                 RoomTagList(room: room, user: loginUser),
                 const Spacer(),
-                passwordField(room.enterType == EnterType.password),
+                passwordField(passwordEnabled),
               ],
             )),
         actions: [
           const CancelButton(),
           TextButton(
-            onPressed:
-                loginUser == null ? null : () => joinRoom(context, loginUser),
-            child: Text(buttonText),
+            onPressed: submitButtonOnPress,
+            child: Text(submitButtonText),
           ),
         ],
       ),
