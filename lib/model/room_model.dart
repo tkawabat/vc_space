@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'model_base.dart';
-import '../entity/user_entity.dart';
 import '../entity/room_entity.dart';
 import '../service/const_service.dart';
 import '../service/error_service.dart';
@@ -55,7 +54,7 @@ class RoomModel extends ModelBase {
     return RoomEntity.fromJson(result);
   }
 
-  Future<RoomEntity?> getById(String roomId) {
+  Future<RoomEntity?> getById(int roomId) {
     return supabase
         .from(tableName)
         .select(columns)
@@ -65,21 +64,18 @@ class RoomModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Stream<RoomEntity?> getRoomSnapshot(String id) {
-    // TODO
-    final controller = StreamController<RoomEntity>();
-    return controller.stream;
-    // return collectionRef
-    //     .doc(id)
-    //     .snapshots()
-    //     .map(_getEntityOld)
-    //     .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
+  Stream<List<Map<String, dynamic>>> getStream(int roomId) {
+    return supabase
+        .from(tableName)
+        .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
   Future<List<RoomEntity>> getList(int start) async {
     return supabase
         .from(tableName)
         .select(columns)
+        .gte('start_time', DateTime.now().toIso8601String())
+        .order('start_time', ascending: true)
         .range(start, start + ConstService.roomListStep)
         .then(_getEntityList)
         .catchError(

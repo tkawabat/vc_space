@@ -1,10 +1,11 @@
-import '../model/room_user_model.dart';
+import '../provider/enter_room_chat_provider.dart';
 import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
 import '../model/room_model.dart';
-import '../provider/enter_room_stream_provider.dart';
+import '../model/room_user_model.dart';
+import '../provider/enter_room_provider.dart';
 import 'page_service.dart';
 
 class RoomService {
@@ -31,12 +32,11 @@ class RoomService {
         .first;
   }
 
-  void enter(String roomId) {
-    PageService().transition(PageNames.room, {'id': roomId});
-  }
-
-  void leave() {
-    PageService().ref?.read(enterRoomIdProvider.notifier).set(null);
+  void enter(int roomId) {
+    if (PageService().ref == null) {
+      return;
+    }
+    PageService().transition(PageNames.room, {'id': roomId.toString()});
   }
 
   Future<bool> join(RoomEntity room, UserEntity user, String? password) async {
@@ -52,8 +52,7 @@ class RoomService {
       // TODO ステートにも自分を追加する
     }
 
-    // TODO
-    // enter(room.roomId as String);
+    enter(room.roomId);
 
     return true;
   }

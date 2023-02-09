@@ -9,7 +9,6 @@ import 'package:intl/intl.dart';
 
 import '../../entity/room_user_entity.dart';
 import '../../entity/room_entity.dart';
-import '../../entity/user_data_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
@@ -65,8 +64,7 @@ class RoomCreateDialog extends HookConsumerWidget {
     await RoomModel().insert(newRoom);
     PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
-    // TODO
-    // RoomService().enter(newRoom.id);
+    RoomService().enter(newRoom.roomId);
   }
 
   @override

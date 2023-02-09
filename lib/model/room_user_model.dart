@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'model_base.dart';
-import '../entity/user_entity.dart';
 import '../entity/room_user_entity.dart';
 import '../service/error_service.dart';
 
@@ -28,10 +27,16 @@ class RoomUserModel extends ModelBase {
     return result.map((e) => RoomUserEntity.fromJson(e)).toList();
   }
 
-  RoomUserEntity? _getEntity(dynamic result) {
-    if (result == null) return null;
-    if (result is! Map<String, dynamic>) return null;
-    return RoomUserEntity.fromJson(result);
+  // RoomUserEntity? _getEntity(dynamic result) {
+  //   if (result == null) return null;
+  //   if (result is! Map<String, dynamic>) return null;
+  //   return RoomUserEntity.fromJson(result);
+  // }
+
+  Stream<List<Map<String, dynamic>>> getStream(int roomId) {
+    return supabase
+        .from(tableName)
+        .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
   Future<List<RoomUserEntity>> getByRoomId(int roomId) async {

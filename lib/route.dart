@@ -21,7 +21,7 @@ Route<dynamic> generateRoute(RouteSettings setting) {
   String? name = setting.name;
 
   if (name == null) {
-    _transactionPage(PageNames.room.path, null);
+    _transactionPage(PageNames.home.path, null);
   }
 
   final uri = Uri.parse(name!);
@@ -69,7 +69,11 @@ Widget _roomPageTransaction(Map<String, String>? queryParameters) {
     return _homePageTransaction();
   }
 
-  return RoomDetailPage(roomId: queryParameters['id']!);
+  final roomId = int.tryParse(queryParameters['id']!);
+
+  if (roomId == null) return _homePageTransaction();
+
+  return RoomDetailPage(roomId: roomId);
 }
 
 Widget _calendarPageTransaction(Map<String, String>? queryParameters) {

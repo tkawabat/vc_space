@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'model_base.dart';
 // import '../entity/room_chat_entity.dart';
+import '../entity/user_entity.dart';
 import '../service/error_service.dart';
 
 class RoomChatModel extends ModelBase {
@@ -29,21 +30,13 @@ class RoomChatModel extends ModelBase {
   //   return RoomChatEntity.fromJson(result);
   // }
 
-  StreamSubscription getStream(
-    int roomId,
-    void Function(List<Map<String, dynamic>>) onData,
-    void Function(Object) onError,
-  ) {
+  Stream<List<Map<String, dynamic>>> getStream(int roomId) {
     return supabase
         .from(tableName)
         .stream(primaryKey: ['room_id'])
         .eq('room_id', roomId)
         .order('updated_at')
-        .limit(20)
-        .listen(onData, onError: onError
-            // onError: ErrorService().onError<List<Map<String, dynamic>>>(
-            //     [], '$tableName.getStream'),
-            );
+        .limit(20);
   }
 
   Future<bool> insert(int roomId, UserEntity user, String text) async {
