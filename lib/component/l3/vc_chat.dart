@@ -7,7 +7,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../model/room_model.dart';
+import '../../model/room_chat_model.dart';
 
 class VCChat extends HookConsumerWidget {
   final UserEntity user;
@@ -34,7 +34,7 @@ class VCChat extends HookConsumerWidget {
           types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
       onSendPressed: (types.PartialText text) {
-        RoomModel().addChat(room, user, text.text);
+        RoomChatModel().insert(room.roomId, user.uid, text.text);
       },
       showUserAvatars: true,
       showUserNames: true,
