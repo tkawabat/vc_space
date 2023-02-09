@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../route.dart';
-import '../../provider/enter_room_stream_provider.dart';
 import '../../provider/login_provider.dart';
 import '../../service/login_service.dart';
 import '../../service/page_service.dart';
@@ -38,18 +37,20 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           photo: loginUser.photo,
           tooltip: 'マイページ',
           onTap: () {
-            ref.read(enterRoomIdProvider.notifier).set(null);
             PageService().transition(PageNames.user);
           });
     }
 
     return AppBar(
-      leading: IconButton(
-          icon: const Icon(Icons.home),
-          onPressed: () {
-            ref.read(enterRoomIdProvider.notifier).set(null);
-            PageService().transition(PageNames.home);
-          }),
+      leading: PageService().canBack()
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                PageService().back();
+              })
+          : const SizedBox(
+              width: 18,
+            ),
       title: Text(title),
       actions: [
         IconButton(

@@ -37,10 +37,12 @@ class PageService {
     initialized = true;
   }
 
+  bool canBack() {
+    return context != null && Navigator.canPop(context!);
+  }
+
   void back() {
-    if (context == null) return;
-    if (!Navigator.canPop(context!)) return;
-    Navigator.pop(context!);
+    if (canBack()) Navigator.pop(context!);
   }
 
   void transition(PageNames page, [Map<String, String>? arguments]) {
