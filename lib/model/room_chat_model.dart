@@ -46,12 +46,15 @@ class RoomChatModel extends ModelBase {
             );
   }
 
-  Future<bool> insert(String uid, String text) async {
+  Future<bool> insert(int roomId, UserEntity user, String text) async {
     return supabase
         .from(tableName)
         .insert({
-          'uid': uid,
+          'room_id': roomId,
+          'uid': user.uid,
           'text': text,
+          'name': user.name,
+          'photo': user.photo,
         })
         .then((_) => true)
         .catchError(ErrorService().onError(false, '$tableName.insert'));

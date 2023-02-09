@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'converter/timestampz_converter.dart';
-import 'user_data_entity.dart';
 
 part 'room_chat_entity.freezed.dart';
 part 'room_chat_entity.g.dart';
@@ -15,8 +14,9 @@ class RoomChatEntity with _$RoomChatEntity {
     required int roomChatId,
     required String uid,
     required String text,
+    required String name,
+    required String photo,
     @TimestampzConverter() required DateTime updatedAt,
-    @JsonKey(name: 'user') required UserDataEntity userData,
   }) = _RoomChatEntity;
 
   factory RoomChatEntity.fromJson(Map<String, dynamic> json) =>
