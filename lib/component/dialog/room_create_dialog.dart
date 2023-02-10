@@ -13,27 +13,32 @@ import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_service.dart';
+import '../../service/const_system.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../service/time_service.dart';
 import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
 
-class CreateRoomDialog extends HookConsumerWidget {
-  CreateRoomDialog({super.key});
+class RoomCreateDialog extends HookConsumerWidget {
+  RoomCreateDialog({super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
   final tagKey = GlobalKey<TagFieldState>();
 
   Future<void> createRoom(BuildContext context, WidgetRef ref) async {
+    Navigator.pop(context);
+
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      PageService().snackbar('入力値に問題があります', SnackBarType.error);
       return;
     }
-    var fields = formKey.currentState!.value;
-    var tags = tagKey.currentState!.tagsController.getTags ?? [];
+    final fields = formKey.currentState!.value;
+    final tags = tagKey.currentState!.tagsController.getTags ?? [];
 
     final UserEntity? loginUser = ref.watch(loginUserProvider);
     if (loginUser == null) {
+      PageService().snackbar('部屋作成するにはログインが必要です', SnackBarType.error);
       return;
     }
 
@@ -41,35 +46,25 @@ class CreateRoomDialog extends HookConsumerWidget {
         fields['enterType'] == EnterType.password ? fields['password'] : null;
     final now = DateTime.now();
 
-    final roomUserList = [
-      RoomUserEntity(
-          id: loginUser.id,
-          photo: loginUser.photo,
-          roomUserType: RoomUserType.admin,
-          updatedAt: now)
-    ];
-
     RoomEntity newRoom = RoomEntity(
-      id: RoomModel().getNewId(),
+      roomId: ConstSystem.roomBeforeInsert,
+      owner: loginUser.uid,
       title: fields['title'],
-      place: fields['placeType'],
+      placeType: fields['placeType'],
       description: fields['description'] ?? '',
       maxNumber: fields['maxNumber'],
       startTime: fields['startTime'],
       tags: tags,
       enterType: fields['enterType'],
       password: password,
-      users: roomUserList,
-      chats: [],
       updatedAt: now,
+      users: [roomUserEmpty],
     );
 
-    Navigator.pop(context);
-
-    await RoomModel().setRoom(newRoom);
+    await RoomModel().insert(newRoom);
     PageService().snackbar('部屋を作成しました', SnackBarType.info);
 
-    RoomService().enter(newRoom.id);
+    RoomService().enter(newRoom.roomId);
   }
 
   @override

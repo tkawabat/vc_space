@@ -2,65 +2,77 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
+import '../../provider/enter_room_chat_provider.dart';
 import '../../route.dart';
 import '../../entity/user_entity.dart';
 import '../../entity/room_entity.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../provider/login_provider.dart';
-import '../../provider/room_list_provider.dart';
-import '../../provider/enter_room_stream_provider.dart';
+import '../../provider/enter_room_provider.dart';
 import '../l3/header.dart';
 import '../l3/vc_chat.dart';
 import '../l1/loading.dart';
 
-class RoomDetailPage extends HookConsumerWidget {
-  final String roomId;
+class RoomDetailPage extends ConsumerStatefulWidget {
+  final int roomId;
 
   const RoomDetailPage({Key? key, required this.roomId}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  RoomDetailPageState createState() => RoomDetailPageState();
+}
+
+class RoomDetailPageState extends ConsumerState<RoomDetailPage> {
+  static const tabList = ['部屋情報', 'チャット', '参加者'];
+
+  @override
+  void initState() {
+    super.initState();
+    ref.read(enterRoomProvider.notifier).startUpdate(widget.roomId);
+    ref.read(enterRoomChatProvider.notifier).startUpdate(widget.roomId);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    PageService().ref!.read(enterRoomProvider.notifier).stopUpdate();
+    PageService().ref!.read(enterRoomChatProvider.notifier).stopUpdate();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     PageService().init(context, ref);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(enterRoomIdProvider.notifier).set(roomId);
-    });
-
-    final roomStream = ref.watch(enterRoomStreamProvider);
+    final room = ref.watch(enterRoomProvider);
     final user = ref.watch(loginUserProvider);
 
     if (user == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        PageService().snackbar('未ログインのため、ホーム画面に戻ります。', SnackBarType.error);
+        PageService().transition(PageNames.home);
+      });
+      return const Loading();
+    }
+
+    if (room == null) {
+      return const Loading();
+    }
+
+    if (!RoomService().isJoined(room, user.uid)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        PageService().snackbar('入室していないため、ホーム画面に戻ります。', SnackBarType.error);
         PageService().transition(PageNames.home);
       });
       return const Loading();
     }
 
     String title = dotenv.get('TITLE');
-    final tabList = ['部屋情報', 'チャット', '参加者'];
-
-    final body = roomStream.when<Widget>(
-      loading: () => const Loading(),
-      error: (Object error, StackTrace stackTrace) {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          PageService().transition(PageNames.home);
-          PageService().snackbar('部屋情報の取得に失敗しました。', SnackBarType.error);
-        });
-        return const Loading();
-      },
-      data: (RoomEntity? room) {
-        if (room == null) return const Loading();
-        if (!RoomService().isJoined(room, user.id)) {
-          ref.read(roomListProvider.notifier).getList();
-          RoomService().leave();
-          return const Loading();
-        }
-
-        title = room.title;
-        return buildBody(context, ref, room, user);
-      },
-    );
+    Widget body = const Loading();
+    if (room != null) {
+      title = room.title;
+      body = buildBody(context, ref, room, user);
+    }
 
     return DefaultTabController(
         length: tabList.length,
@@ -87,7 +99,7 @@ class RoomDetailPage extends HookConsumerWidget {
           ),
         ],
       ),
-      Column(children: [Expanded(child: VCChat(room: room, user: user))]),
+      Column(children: [Expanded(child: VCChat(roomId: room.roomId))]),
       Column(
         children: [
           ElevatedButton(

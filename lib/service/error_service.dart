@@ -14,7 +14,7 @@ class ErrorService {
   T Function(dynamic error) onError<T>(T returnValue, String contentType) {
     return (error) {
       debugPrint(error.toString());
-      logEvent(LogEventName.firestore_error, contentType);
+      logEvent(LogEventName.database_error, contentType);
       return returnValue;
     };
   }

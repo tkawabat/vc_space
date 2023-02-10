@@ -12,4 +12,5 @@ targets:
         options:
           any_map: false
           checked: true
+          field_rename: snake
           explicit_to_json: true

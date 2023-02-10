@@ -2,16 +2,16 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../room_entity.dart';
 
-class PlaceTypeConverter implements JsonConverter<PlaceType, String> {
+class PlaceTypeConverter implements JsonConverter<PlaceType, int> {
   const PlaceTypeConverter();
 
   @override
-  PlaceType fromJson(String text) {
-    return PlaceType.values.byName(text);
+  PlaceType fromJson(int value) {
+    return PlaceType.fromValue(value);
   }
 
   @override
-  String toJson(PlaceType value) {
-    return value.name;
+  int toJson(PlaceType placeType) {
+    return placeType.value;
   }
 }

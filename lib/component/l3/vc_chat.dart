@@ -5,33 +5,46 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
-import '../../entity/room_entity.dart';
+import '../../entity/room_chat_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../model/room_model.dart';
+import '../../model/room_chat_model.dart';
+import '../../provider/enter_room_chat_provider.dart';
+import '../../provider/login_provider.dart';
+import '../l1/loading.dart';
 
 class VCChat extends HookConsumerWidget {
-  final UserEntity user;
-  final RoomEntity room;
+  final int roomId;
 
-  const VCChat({super.key, required this.user, required this.room});
+  const VCChat({super.key, required this.roomId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<types.Message> messages = room.chats
+    final List<RoomChatEntity> roomChatList = ref.watch(enterRoomChatProvider);
+    final UserEntity? user = ref.watch(loginUserProvider);
+
+    if (user == null) {
+      return const Loading();
+    }
+
+    final List<types.Message> messages = roomChatList
         .map((chat) => types.TextMessage(
               author: types.User(
-                  id: chat.userId, firstName: chat.name, imageUrl: chat.photo),
+                id: chat.uid,
+                firstName: chat.name,
+                imageUrl: chat.photo,
+              ),
               createdAt: chat.updatedAt.millisecondsSinceEpoch,
               text: chat.text,
-              id: chat.userId + chat.updatedAt.toString(),
+              id: chat.roomChatId.toString(),
             ))
         .toList();
 
     return Chat(
-      user: types.User(id: user.id, imageUrl: user.photo, firstName: user.name),
+      user:
+          types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
       onSendPressed: (types.PartialText text) {
-        RoomModel().addChat(room, user, text.text);
+        RoomChatModel().insert(roomId, user, text.text);
       },
       showUserAvatars: true,
       showUserNames: true,

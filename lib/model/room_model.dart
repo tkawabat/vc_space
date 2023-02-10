@@ -1,112 +1,99 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 import 'model_base.dart';
-import '../entity/chat_entity.dart';
-import '../entity/user_entity.dart';
-import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
-import '../service/error_service.dart';
 import '../service/const_service.dart';
-import '../service/analytics_service.dart';
+import '../service/error_service.dart';
 
 class RoomModel extends ModelBase {
   static final RoomModel _instance = RoomModel._internal();
+  final String tableName = 'room';
+  final String columns = '''
+      *,
+      room_user!inner (
+        *,
+        user!inner (
+          name,
+          photo,
+          discord_name
+        )
+      )
+    ''';
 
   factory RoomModel() {
     return _instance;
   }
 
-  RoomModel._internal() {
-    collectionRef = FirebaseFirestore.instance.collection('Room');
+  RoomModel._internal();
+
+  void hoge() async {
+    // TODO
+    supabase
+        .rpc('insert_room_owner')
+
+        // supabase
+        //     .from('room_user')
+        //     .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
+        //     .eq('room_id', 1)
+        //     // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+        //     .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
+        .then((_) => debugPrint('success'))
+        .catchError(ErrorService().onError(null, 'hoge'));
   }
 
-  RoomEntity? _getEntity(DocumentSnapshot<Map<String, dynamic>> snapshot) {
-    final json = getJsonWithId(snapshot);
-    if (json == null) return null;
-    return RoomEntity.fromJson(json);
+  List<RoomEntity> _getEntityList(dynamic result) {
+    if (result == null) return [];
+    if (result is! List) return [];
+    return result.map((e) => RoomEntity.fromJson(e)).toList();
   }
 
-  Future<RoomEntity?> getRoom(String id) {
-    return collectionRef
-        .doc(id)
-        .get()
+  RoomEntity? _getEntity(dynamic result) {
+    if (result == null) return null;
+    if (result is! Map<String, dynamic>) return null;
+    return RoomEntity.fromJson(result);
+  }
+
+  Future<RoomEntity?> getById(int roomId) {
+    return supabase
+        .from(tableName)
+        .select(columns)
+        .eq('room_id', roomId)
+        .single()
         .then(_getEntity)
-        .catchError(ErrorService().onError(null, 'getRoom'));
+        .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Stream<RoomEntity?> getRoomSnapshot(String id) {
-    return collectionRef
-        .doc(id)
-        .snapshots()
-        .map(_getEntity)
-        .handleError(ErrorService().onError(null, 'getRoomSnapshot'));
+  Stream<List<Map<String, dynamic>>> getStream(int roomId) {
+    return supabase
+        .from(tableName)
+        .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
-  Future<List<RoomEntity>> getRoomList() {
-    return collectionRef
-        .get()
-        .then((results) => results.docs
-            .map(_getEntity)
-            .toList()
-            .whereType<RoomEntity>()
-            .toList())
+  Future<List<RoomEntity>> getList(int start) async {
+    return supabase
+        .from(tableName)
+        .select(columns)
+        .gte('start_time', DateTime.now().toIso8601String())
+        .order('start_time', ascending: true)
+        .range(start, start + ConstService.roomListStep)
+        .then(_getEntityList)
         .catchError(
-            ErrorService().onError<List<RoomEntity>>([], 'getRoomList'));
+            ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));
   }
 
-  Future<void> setRoom(RoomEntity room) {
-    final json = room.toJson();
-    json.remove('id');
-    return collectionRef.doc(room.id).set(json).then((_) {
-      logEvent(LogEventName.create_room, 'room', '');
-    }).catchError(ErrorService().onError(null, 'setRoom'));
-  }
+  Future<RoomEntity?> insert(RoomEntity room) async {
+    var json = room.toJson();
+    json.remove('room_id');
+    json.remove('users');
+    json['password'] = encodePassword(json['password']);
 
-  Future<bool> join(String roomId, UserEntity user) async {
-    final documentReference = collectionRef.doc(roomId);
-
-    return FirebaseFirestore.instance
-        .runTransaction<bool>((Transaction transaction) async {
-      final RoomEntity? room =
-          await transaction.get(documentReference).then(_getEntity);
-
-      if (room == null) return false;
-      if (room.users.length >= room.maxNumber) return false;
-      if (!room.users.every((e) => e.id != user.id)) return false;
-
-      var list = [...room.users];
-      list.add(RoomUserEntity(
-          id: user.id,
-          photo: user.id,
-          roomUserType: RoomUserType.member,
-          updatedAt: DateTime.now()));
-      transaction.update(
-          documentReference, {'users': list.map((e) => e.toJson()).toList()});
-
-      return true;
-    }).catchError(ErrorService().onError(false, 'joinRoom'));
-  }
-
-  Future<void> addChat(RoomEntity room, UserEntity user, String text) async {
-    var list = [...room.chats];
-    final now = DateTime.now();
-    list.add(ChatEntity(
-      userId: user.id,
-      name: user.name,
-      photo: user.photo,
-      text: text,
-      updatedAt: now,
-    ));
-
-    list.sort((a, b) => a.updatedAt.compareTo(b.updatedAt));
-
-    final diff = list.length - ConstService.chatMaxNumber;
-    if (diff > 0) list.removeRange(0, diff);
-
-    return collectionRef.doc(room.id).update({
-      'chats': list.map((e) => e.toJson()).toList(),
-      'updatedAt': now
-    }).catchError(ErrorService().onError(null, 'addChat'));
+    return supabase
+        .from(tableName)
+        .insert(json)
+        .select(columns)
+        .single()
+        .then(_getEntity)
+        .catchError(ErrorService().onError(null, '$tableName.insert'));
   }
 }

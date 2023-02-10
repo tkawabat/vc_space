@@ -2,16 +2,16 @@ import 'package:json_annotation/json_annotation.dart';
 
 import '../room_user_entity.dart';
 
-class RoomUserTypeConverter implements JsonConverter<RoomUserType, String> {
+class RoomUserTypeConverter implements JsonConverter<RoomUserType, int> {
   const RoomUserTypeConverter();
 
   @override
-  RoomUserType fromJson(String text) {
-    return RoomUserType.values.byName(text);
+  RoomUserType fromJson(int value) {
+    return RoomUserType.fromValue(value);
   }
 
   @override
-  String toJson(RoomUserType value) {
-    return value.name;
+  int toJson(RoomUserType roomUserType) {
+    return roomUserType.value;
   }
 }

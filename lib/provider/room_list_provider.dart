@@ -10,13 +10,14 @@ final roomListProvider =
 class RoomListNotifer extends StateNotifier<Map<String, RoomEntity>> {
   RoomListNotifer() : super({});
 
-  Future<void> get(String roomId) async {
-    RoomEntity room = await RoomModel().getRoom(roomId) ?? roomNotFound;
+  Future<void> get(int roomId) async {
+    RoomEntity room = await RoomModel().getById(roomId) ?? roomNotFound;
     add(room);
   }
 
   Future<void> getList() async {
-    final list = await RoomModel().getRoomList();
+    // TODO
+    final list = await RoomModel().getList(0);
     for (final room in list) {
       add(room);
     }
@@ -24,7 +25,8 @@ class RoomListNotifer extends StateNotifier<Map<String, RoomEntity>> {
 
   void add(RoomEntity room) {
     final newState = {...state};
-    newState[room.id] = room;
+    // TODO
+    newState[room.roomId.toString()] = room;
     state = newState;
   }
 }

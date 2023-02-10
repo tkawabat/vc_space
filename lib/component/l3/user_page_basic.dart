@@ -30,22 +30,20 @@ class UserPageBasic extends HookConsumerWidget {
     var tags = tagKey.currentState!.tagsController.getTags ?? [];
 
     UserEntity newUser = UserEntity(
-        id: user.id,
+        uid: user.uid,
         name: user.name,
         photo: user.photo,
-        twitterId: user.twitterId,
+        discordName: user.discordName,
         greeting: fields['greeting'],
         tags: tags,
-        blocks: user.blocks,
-        times: user.times,
         updatedAt: DateTime.now());
 
     UserModel().updateUser(newUser).then((_) {
       ref.read(loginUserProvider.notifier).set(newUser);
       ref.read(userListProvider.notifier).set(newUser);
-      PageService().snackbar('ユーザー情報を更新しました。', AnimatedSnackBarType.info);
+      PageService().snackbar('保存しました。', AnimatedSnackBarType.info);
     }).catchError((_) {
-      PageService().snackbar('ユーザー情報の更新に失敗しました。', AnimatedSnackBarType.error);
+      PageService().snackbar('保存に失敗しました。', AnimatedSnackBarType.error);
     });
   }
 
@@ -54,22 +52,22 @@ class UserPageBasic extends HookConsumerWidget {
     return FormBuilder(
       key: formKey,
       child: Container(
-          height: 300,
+          height: 400,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               const Text('基本情報', style: TextStyle(fontWeight: FontWeight.bold)),
-              const Spacer(),
+              const SizedBox(height: 8),
               greetingField(user.greeting),
-              const Spacer(),
+              const SizedBox(height: 16),
               TagField(
                 key: tagKey,
                 samples: ConstService.sampleUserTags,
                 initialTags: user.tags,
                 maxTagNumber: ConstService.maxTagLength,
               ),
-              const Spacer(),
+              const SizedBox(height: 24),
               Button(
                 alignment: Alignment.centerRight,
                 onTap: () => submit(ref),

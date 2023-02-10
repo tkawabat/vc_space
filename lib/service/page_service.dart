@@ -27,17 +27,22 @@ class PageService {
     // 一回だけ行う処理
     this.context = context;
     this.ref = ref;
-    listenFirebaseAuth(ref);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      LoginService().initializeUser(ref);
+    });
 
     ref.read(roomListProvider.notifier).getList();
 
     initialized = true;
   }
 
+  bool canBack() {
+    return context != null && Navigator.canPop(context!);
+  }
+
   void back() {
-    if (context == null) return;
-    if (!Navigator.canPop(context!)) return;
-    Navigator.pop(context!);
+    if (canBack()) Navigator.pop(context!);
   }
 
   void transition(PageNames page, [Map<String, String>? arguments]) {

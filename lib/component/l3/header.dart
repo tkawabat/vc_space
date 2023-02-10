@@ -2,14 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../route.dart';
-import '../../provider/enter_room_stream_provider.dart';
 import '../../provider/login_provider.dart';
+import '../../service/login_service.dart';
 import '../../service/page_service.dart';
-import '../../service/twitter_service.dart';
 import '../../entity/user_entity.dart';
-
+import '../dialog/room_search_dialog.dart';
 import '../l1/user_no_login_icon.dart';
-import '../l1/create_room_button.dart';
 import '../l1/user_icon.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
@@ -28,29 +26,31 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
 
     Widget userIcon = UserNoLoginIcon(
       onTap: () {
-        PageService().showConfirmDialog('Twitterでログインする', () {
-          twitterLogin();
+        PageService().showConfirmDialog('Discordでログインする', () {
+          LoginService().login();
         });
       },
-      tooltip: 'Twitterログイン',
+      tooltip: 'Discordでログイン',
     );
     if (loginUser != null) {
       userIcon = UserIcon(
           photo: loginUser.photo,
           tooltip: 'マイページ',
           onTap: () {
-            ref.read(enterRoomIdProvider.notifier).set(null);
             PageService().transition(PageNames.user);
           });
     }
 
     return AppBar(
-      leading: IconButton(
-          icon: const Icon(Icons.home),
-          onPressed: () {
-            ref.read(enterRoomIdProvider.notifier).set(null);
-            PageService().transition(PageNames.home);
-          }),
+      leading: PageService().canBack()
+          ? IconButton(
+              icon: const Icon(Icons.arrow_back_ios),
+              onPressed: () {
+                PageService().back();
+              })
+          : const SizedBox(
+              width: 18,
+            ),
       title: Text(title),
       actions: [
         IconButton(
@@ -60,9 +60,19 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
                 ? null
                 : () {
                     PageService().transition(
-                        PageNames.calendar, {'userId': loginUser.id});
+                        PageNames.calendar, {'userId': loginUser.uid});
                   }),
-        const CreateRoomButton(),
+        IconButton(
+            tooltip: '部屋をタグ検索',
+            icon: const Icon(Icons.search),
+            onPressed: () {
+              showDialog(
+                  context: context,
+                  barrierDismissible: true,
+                  builder: (_) {
+                    return RoomSearchDialog();
+                  });
+            }),
         const Padding(padding: EdgeInsets.only(left: 8)),
         userIcon,
         const Padding(padding: EdgeInsets.only(right: 16)),
