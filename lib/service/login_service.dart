@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
@@ -20,9 +18,6 @@ class LoginService {
   /// ページ表示後にuser情報をproviderに設定する
   Future<void> initializeUser(WidgetRef ref) async {
     final currentUser = auth.currentUser;
-    // ref.read(loginProvider.notifier).set(currentUser?.id, ref);
-
-    debugPrint(currentUser?.id);
 
     // ユーザー更新
     if (currentUser != null &&
@@ -32,7 +27,6 @@ class LoginService {
       final user = await UserModel().upsertOnView(
           currentUser.id, meta['full_name'], meta['avatar_url'], meta['name']);
 
-      var message = 'ログインしました';
       if (user != null) {
         PageService().snackbar('ログインしました', SnackBarType.info);
         ref.read(loginUserProvider.notifier).set(user);
