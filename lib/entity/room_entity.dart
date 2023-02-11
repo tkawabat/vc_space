@@ -6,7 +6,6 @@ import 'package:vc_space/entity/room_user_entity.dart';
 import 'converter/timestampz_converter.dart';
 import 'converter/enter_type_converter.dart';
 import 'converter/place_type_converter.dart';
-import 'user_data_entity.dart';
 import '../service/const_system.dart';
 
 part 'room_entity.freezed.dart';
