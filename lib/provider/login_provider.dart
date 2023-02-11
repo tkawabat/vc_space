@@ -9,9 +9,23 @@ final loginUserProvider = StateNotifierProvider<LoginUserNotifer, UserEntity?>(
 class LoginUserNotifer extends StateNotifier<UserEntity?> {
   LoginUserNotifer() : super(null);
 
-  Future<void> get(String id) async {
-    state = await UserModel().getById(id);
+  Future<void> get(String uid) async {
+    state = await UserModel().getById(uid);
   }
 
   void set(UserEntity? user) => state = user;
+
+  void follow(String uid) {
+    if (state == null) return;
+    final follows = [...state!.follows];
+    follows.add(uid);
+    state = state!.copyWith(follows: follows);
+  }
+
+  void unfollow(String uid) {
+    if (state == null) return;
+    final follows = [...state!.follows];
+    follows.remove(uid);
+    state = state!.copyWith(follows: follows);
+  }
 }

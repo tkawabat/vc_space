@@ -45,7 +45,7 @@ class RoomCard extends StatelessWidget {
                           context: context,
                           barrierDismissible: true,
                           builder: (_) {
-                            return UserDialog(userId: room.owner);
+                            return UserDialog(uid: room.owner);
                           }),
                     ),
                     title: Text(room.title),
