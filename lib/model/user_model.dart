@@ -31,12 +31,22 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<bool> updateUser(UserEntity user) async {
+  Future<bool> updateUser(
+    UserEntity user, {
+    List<String>? targetColumnList,
+  }) async {
     var json = user.toJson();
     json.remove('uid');
     json.remove('name');
     json.remove('photo');
     json.remove('discord_name');
+
+    if (targetColumnList != null) {
+      for (var key in json.keys) {
+        if (targetColumnList.contains(key)) continue;
+        json.remove(key);
+      }
+    }
 
     return supabase
         .from(tableName)
@@ -60,5 +70,23 @@ class UserModel extends ModelBase {
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, '$tableName.upsertOnView'));
+  }
+
+  Future<bool> follow(String followee) {
+    return supabase
+        .rpc('follow', params: {
+          'followee': followee,
+        })
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.follow'));
+  }
+
+  Future<bool> unfollow(String followee) {
+    return supabase
+        .rpc('unfollow', params: {
+          'followee': followee,
+        })
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.unfollow'));
   }
 }
