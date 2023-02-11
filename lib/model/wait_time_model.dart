@@ -29,17 +29,18 @@ class WaitTimeModel extends ModelBase {
     return WaitTimeEntity.fromJson(result);
   }
 
-  Future<List<WaitTimeEntity>> getList() async {
+  Future<List<WaitTimeEntity>> getListByUid(String uid) async {
     return supabase
         .from(tableName)
         .select(columns)
+        .eq('uid', uid)
         .then(_getEntityList)
         .catchError(ErrorService()
-            .onError<List<WaitTimeEntity>>([], '$tableName.getList'));
+            .onError<List<WaitTimeEntity>>([], '$tableName.getListByUid'));
   }
 
-  Future<WaitTimeEntity?> insert(WaitTimeEntity waitTimeEntity) async {
-    var json = waitTimeEntity.toJson();
+  Future<WaitTimeEntity?> insert(WaitTimeEntity waitTime) async {
+    var json = waitTime.toJson();
     json.remove('wait_time_id');
     json.remove('updated_at');
 
@@ -52,11 +53,12 @@ class WaitTimeModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.insert'));
   }
 
-  Future<bool> delete(int waitTimeId) async {
+  Future<bool> delete(String uid, int waitTimeId) async {
     return supabase
         .from(tableName)
         .delete()
         .match({
+          'uid': uid,
           'wait_time_id': waitTimeId,
         })
         .then((_) => true)

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -9,10 +8,9 @@ import '../../provider/user_list_provider.dart';
 import '../../entity/user_entity.dart';
 import '../../service/page_service.dart';
 
-import '../dialog/user_dialog.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
-import '../l1/user_icon.dart';
+import '../l2/wait_time_row.dart';
 import '../l3/header.dart';
 
 class CalendarPage extends HookConsumerWidget {
@@ -78,10 +76,11 @@ class CalendarPage extends HookConsumerWidget {
               itemCount: eventsState.value.length + 1,
               itemBuilder: ((context, i) {
                 if (i == eventsState.value.length) {
-                  return IconButton(
-                      tooltip: '空き時間を追加',
-                      onPressed: () {},
-                      icon: const Icon(Icons.add_circle_outline));
+                  return WaitTimeRow();
+                  // return IconButton(
+                  //     tooltip: '空き時間を追加',
+                  //     onPressed: () {},
+                  //     icon: const Icon(Icons.add_circle_outline));
                 }
                 return Card(child: ListTile(title: Text('')));
               }),
