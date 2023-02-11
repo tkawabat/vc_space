@@ -38,14 +38,22 @@ class MainPage extends HookConsumerWidget {
               //     endTime: DateTime.now(),
               //     updatedAt: DateTime.now());
               // WaitTimeModel().insert(waitTimeEntity);
+
+              // RoomModel().getStream(8, (list) {
+              //   debugPrint('onData');
+              //   debugPrint(list.toString());
+              // }, (error) {
+              //   debugPrint('onError');
+              //   debugPrint(error.toString());
+              // });
             },
             child: const Text("デバッグ"),
           ),
           ElevatedButton(
             onPressed: () async {
               // LoginService().logout();
-              var list = await WaitTimeModel().getList();
-              debugPrint(list.toString());
+              // var list = await WaitTimeModel().getList();
+              // debugPrint(list.toString());
               // ref.read(roomListProvider.notifier).getList();
               // PageService().snackbar('部屋を取得しました', SnackBarType.info);
             },
