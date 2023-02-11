@@ -48,7 +48,7 @@ class RoomUserEntity with _$RoomUserEntity {
 }
 
 final roomUserEmpty = RoomUserEntity(
-  roomId: ConstSystem.roomNotFound,
+  roomId: ConstSystem.idNotFound,
   uid: ConstSystem.userNotFound,
   roomUserType: RoomUserType.admin,
   updatedAt: ConstSystem.emptyTime,

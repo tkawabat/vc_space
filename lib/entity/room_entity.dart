@@ -89,7 +89,7 @@ class RoomEntity with _$RoomEntity {
 }
 
 final roomNotFound = RoomEntity(
-  roomId: ConstSystem.roomNotFound,
+  roomId: ConstSystem.idNotFound,
   owner: '',
   title: '存在しない部屋です',
   description: '',

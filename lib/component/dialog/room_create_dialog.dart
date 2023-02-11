@@ -47,7 +47,7 @@ class RoomCreateDialog extends HookConsumerWidget {
     final now = DateTime.now();
 
     RoomEntity newRoom = RoomEntity(
-      roomId: ConstSystem.roomBeforeInsert,
+      roomId: ConstSystem.idBeforeInsert,
       owner: loginUser.uid,
       title: fields['title'],
       placeType: fields['placeType'],

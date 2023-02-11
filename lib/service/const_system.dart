@@ -6,8 +6,6 @@ class ConstSystem {
   static String userNotFound = 'notFound';
   static String userOnLoad = 'onLoad';
 
-  static int roomBeforeInsert = -10;
-  static int roomNotFound = -20;
-
-  static int waitTimeBeforeInsertId = -10;
+  static int idBeforeInsert = -10;
+  static int idNotFound = -20;
 }
