@@ -17,6 +17,7 @@ class UserEntity with _$UserEntity {
     @JsonKey(defaultValue: 'よろしくお願いします。') required String greeting,
     required String discordName,
     @JsonKey(defaultValue: []) required List<String> tags,
+    required List<String> follows,
     @TimestampzConverter() required DateTime updatedAt,
   }) = _UserEntity;
 
@@ -31,6 +32,7 @@ final userOnLoad = UserEntity(
   discordName: '',
   greeting: '',
   tags: [],
+  follows: [],
   updatedAt: DateTime.now(),
 );
 
@@ -40,6 +42,7 @@ final userNotFound = UserEntity(
   photo: '',
   greeting: '',
   tags: [],
+  follows: [],
   discordName: '',
   updatedAt: DateTime.now(),
 );

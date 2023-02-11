@@ -36,6 +36,7 @@ class UserPageBasic extends HookConsumerWidget {
         discordName: user.discordName,
         greeting: fields['greeting'],
         tags: tags,
+        follows: user.follows,
         updatedAt: DateTime.now());
 
     UserModel().updateUser(newUser).then((_) {
