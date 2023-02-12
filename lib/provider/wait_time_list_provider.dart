@@ -11,6 +11,7 @@ class WaitTimeListNotifer extends StateNotifier<List<WaitTimeEntity>> {
   WaitTimeListNotifer() : super([]);
 
   Future<void> getList(String uid) async {
+    state = [];
     state = await WaitTimeModel().getListByUid(uid);
   }
 

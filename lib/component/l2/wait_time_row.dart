@@ -2,8 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 
 import '../../entity/wait_time_entity.dart';
 import '../../provider/login_provider.dart';
@@ -12,10 +12,15 @@ import '../../service/const_service.dart';
 import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 
-class WaitTimeRow extends ConsumerWidget {
+class WaitTimeRow extends HookConsumerWidget {
+  final String uid;
   final WaitTimeEntity? waitTime;
 
-  WaitTimeRow({super.key, this.waitTime});
+  WaitTimeRow(
+    this.uid, {
+    super.key,
+    this.waitTime,
+  });
 
   final formKey = GlobalKey<FormBuilderState>();
 
@@ -23,15 +28,12 @@ class WaitTimeRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(loginUserProvider);
 
+    bool canUpdate = user != null && user.uid == uid;
+
     final startTime =
         waitTime?.startTime ?? TimeService().getStepNow(ConstService.stepTime);
     final endTime =
         waitTime?.endTime ?? startTime.add(const Duration(hours: 1));
-
-    final fields = formKey.currentState?.fields;
-    final canUpdate = user != null &&
-        waitTime?.startTime.compareTo(fields?['startTime'] as DateTime) == 0 &&
-        waitTime?.endTime.compareTo(fields?['endTime'] as DateTime) == 0;
 
     return FormBuilder(
         key: formKey,
@@ -39,16 +41,7 @@ class WaitTimeRow extends ConsumerWidget {
           const Text('空き時間', style: TextStyle(fontWeight: FontWeight.bold)),
           timeField('startTime', '開始', startTime),
           timeField('endTime', '終了', endTime),
-          if (canUpdate)
-            IconButton(
-                tooltip: '元に戻す',
-                icon: const Icon(Icons.undo),
-                onPressed: () =>
-                    PageService().showConfirmDialog('変更を元に戻します。', () {
-                      fields!['startTime']?.didChange(waitTime!.startTime);
-                      fields['endTime']?.didChange(waitTime!.endTime);
-                    })),
-          if (canUpdate || waitTime == null)
+          if (canUpdate && waitTime == null)
             IconButton(
                 tooltip: '保存する',
                 icon: const Icon(Icons.check),
@@ -58,21 +51,20 @@ class WaitTimeRow extends ConsumerWidget {
                       PageService().snackbar('入力値に問題があります', SnackBarType.error);
                       return;
                     }
+                    // TODO 開始のほうがあとにならないように
                     final fields = formKey.currentState!.value;
                     WaitTimeService()
-                        .add(user!.uid, fields['startTime'], fields['endTime']);
+                        .add(user.uid, fields['startTime'], fields['endTime']);
                   });
                 }),
-          if (!canUpdate && waitTime != null)
+          if (canUpdate && waitTime != null)
             IconButton(
               tooltip: '削除する',
               icon: const Icon(Icons.delete),
-              onPressed: user == null
-                  ? null
-                  : () => PageService().showConfirmDialog(
-                      '空き時間を削除しますか？',
-                      () => WaitTimeService()
-                          .delete(user.uid, waitTime!.waitTimeId)),
+              onPressed: () => PageService().showConfirmDialog(
+                  '空き時間を削除しますか？',
+                  () =>
+                      WaitTimeService().delete(user.uid, waitTime!.waitTimeId)),
             ),
         ]));
   }
@@ -81,8 +73,6 @@ class WaitTimeRow extends ConsumerWidget {
     final formatter = DateFormat('HH:mm', 'ja');
     final controller = TextEditingController();
     final focusNode = FocusNode();
-
-    // TODO 日付またぎ問題
 
     return Flexible(
       child: FormBuilderDateTimePicker(

@@ -3,34 +3,84 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
-import '../../route.dart';
-import '../../provider/user_list_provider.dart';
+import '../../entity/room_entity.dart';
+import '../../entity/room_user_entity.dart';
 import '../../entity/user_entity.dart';
+import '../../entity/wait_time_entity.dart';
+import '../../provider/room_list_join_provider.dart';
+import '../../provider/user_list_provider.dart';
+import '../../provider/wait_time_list_provider.dart';
+import '../../route.dart';
 import '../../service/page_service.dart';
-
-import '../l1/button.dart';
+import '../../service/room_service.dart';
+import '../../service/time_service.dart';
 import '../l1/loading.dart';
 import '../l2/wait_time_row.dart';
 import '../l3/header.dart';
 
-class CalendarPage extends HookConsumerWidget {
-  final String userId;
+class CalendarPage extends StatefulHookConsumerWidget {
+  final String uid;
 
-  const CalendarPage({Key? key, required this.userId}) : super(key: key);
-
-  void addTime() {}
+  const CalendarPage({Key? key, required this.uid}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  CalendarPageState createState() => CalendarPageState();
+}
+
+class CalendarPageState extends ConsumerState<CalendarPage> {
+  Map<DateTime, List<dynamic>> getEventMap(
+    List<WaitTimeEntity> waitTimeList,
+    List<RoomEntity> roomList,
+  ) {
+    final Map<DateTime, List<dynamic>> map = {};
+    for (final waitTime in waitTimeList) {
+      final key = TimeService().getDay(waitTime.startTime);
+      if (!map.containsKey(key)) {
+        map[key] = [];
+      }
+      map[key]!.add(waitTime);
+
+      for (final room in roomList) {
+        final key = TimeService().getDay(room.startTime);
+        if (!map.containsKey(key)) {
+          map[key] = [];
+        }
+        map[key]!.add(waitTime);
+      }
+    }
+    return map;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(waitTimeListProvider.notifier).getList(widget.uid);
+      ref.read(roomListJoinProvider.notifier).getList(widget.uid);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     PageService().init(context, ref);
 
     final userList = ref.watch(userListProvider);
-    if (!userList.containsKey(userId)) {
+    final waitTimeList = ref.watch(waitTimeListProvider);
+    final roomList = ref.watch(roomListJoinProvider);
+
+    final now = TimeService().getDay(DateTime.now());
+    final selectedDayState = useState<DateTime>(now);
+    final ValueNotifier<List> eventState = useState<List>([]);
+
+    if (!userList.containsKey(widget.uid)) {
       // データ取得前なら取得して待ち
-      ref.read(userListProvider.notifier).get(userId);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(userListProvider.notifier).get(widget.uid);
+      });
       return const Loading();
     }
-    if (userList[userId] == userNotFound) {
+    if (userList[widget.uid] == userNotFound) {
       // 未ログイン表示をする
       WidgetsBinding.instance.addPostFrameCallback((_) {
         PageService().transition(PageNames.home);
@@ -39,13 +89,11 @@ class CalendarPage extends HookConsumerWidget {
       return const Loading();
     }
 
-    final selectedDayState = useState<DateTime>(DateTime.now());
-    final ValueNotifier<List> eventsState = useState<List>([]);
+    final eventMap = getEventMap(waitTimeList, roomList);
 
-    final sampleMap = {
-      DateTime.utc(2023, 2, 3): [{}, {}],
-      DateTime.utc(2023, 2, 5): [{}, {}, {}, {}, {}],
-    };
+    // 初期選択状態を入れる
+    final key = TimeService().getDay(selectedDayState.value);
+    eventState.value = eventMap[key] ?? [];
 
     return Scaffold(
       appBar: const Header(
@@ -57,49 +105,87 @@ class CalendarPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
-                headerStyle: const HeaderStyle(formatButtonVisible: false),
-                firstDay: DateTime.now().add(const Duration(days: -1)),
-                lastDay: DateTime.now().add(const Duration(days: 90)),
-                focusedDay: selectedDayState.value,
-                locale: 'ja_JP',
-                selectedDayPredicate: (day) =>
-                    isSameDay(selectedDayState.value, day),
-                onDaySelected: (selectedDay, _) {
-                  selectedDayState.value = selectedDay;
-                  eventsState.value = sampleMap[selectedDay] ?? [];
-                },
-                eventLoader: (date) {
-                  return sampleMap[date] ?? [];
-                }),
+              headerStyle: const HeaderStyle(formatButtonVisible: false),
+              firstDay: DateTime.now().add(const Duration(days: 0)),
+              lastDay: DateTime.now().add(const Duration(days: 90)),
+              focusedDay: selectedDayState.value,
+              locale: 'ja_JP',
+              selectedDayPredicate: (day) =>
+                  isSameDay(selectedDayState.value, day),
+              onDaySelected: (selectedDay, _) {
+                selectedDayState.value = selectedDay;
+                final key = TimeService().getDay(selectedDay); // timezoneの差を吸収
+                eventState.value = eventMap[key] ?? [];
+              },
+              eventLoader: (date) {
+                final key = TimeService().getDay(date); // timezoneの差を吸収
+                return eventMap[key] ?? [];
+              },
+              calendarBuilders:
+                  CalendarBuilders(markerBuilder: (context, date, events) {
+                if (events.isNotEmpty) {
+                  return _buildEventsMarker(date, events);
+                }
+              }),
+            ),
+            WaitTimeRow(widget.uid), // 新規追加用
             Expanded(
                 child: ListView.builder(
-              itemCount: eventsState.value.length + 1,
+              itemCount: eventState.value.length,
               itemBuilder: ((context, i) {
-                if (i == eventsState.value.length) {
-                  return WaitTimeRow();
-                  // return IconButton(
-                  //     tooltip: '空き時間を追加',
-                  //     onPressed: () {},
-                  //     icon: const Icon(Icons.add_circle_outline));
+                if (eventState.value[i] is WaitTimeEntity) {
+                  return WaitTimeRow(widget.uid, waitTime: eventState.value[i]);
                 }
                 return Card(child: ListTile(title: Text('')));
               }),
             )),
-            const SizedBox(height: 10),
-            Button(
-              alignment: Alignment.centerRight,
-              onTap: () {},
-              text: '保存',
-            ),
           ],
         ),
       ),
     );
   }
 
-  // FormBuilderField timeField() {
-  //   return FormBuilderDateTimePicker(
-  //     child: child
-  //   )
-  // }
+  Widget _buildEventsMarker(DateTime date, List events) {
+    var waitTimeNumber = 0;
+    var joinRoomNumber = 0;
+    var offerRoomNumber = 0;
+    for (final event in events) {
+      if (event is WaitTimeEntity) waitTimeNumber++;
+      if (event is RoomEntity) {
+        final roomUser = RoomService().getRoomUser(event, widget.uid);
+        if (roomUser == null) continue;
+        if (roomUser.roomUserType == RoomUserType.offer) {
+          offerRoomNumber++;
+        } else {
+          waitTimeNumber++;
+        }
+      }
+    }
+
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _eventMarker(waitTimeNumber, Colors.black45),
+        _eventMarker(joinRoomNumber, Colors.blueAccent),
+        _eventMarker(offerRoomNumber, Colors.red[300]!),
+      ],
+    );
+  }
+
+  Widget _eventMarker(int num, Color color) {
+    if (num == 0) return const SizedBox();
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: color,
+      ),
+      width: 16.0,
+      height: 16.0,
+      child: Center(
+        child: Text(num.toString(),
+            style: const TextStyle(color: Colors.white, fontSize: 12.0)),
+      ),
+    );
+  }
 }

@@ -84,5 +84,5 @@ Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
     return _homePageTransaction();
   }
 
-  return CalendarPage(userId: queryParameters['userId']!);
+  return CalendarPage(uid: queryParameters['userId']!);
 }

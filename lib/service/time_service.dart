@@ -7,6 +7,10 @@ class TimeService {
 
   TimeService._internal();
 
+  DateTime getDay(DateTime time) {
+    return DateTime(time.year, time.month, time.day);
+  }
+
   // 区切りが良い時間を返す
   DateTime getStepDateTime(DateTime time, int step) {
     final remain = time.minute % step;
