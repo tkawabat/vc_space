@@ -17,16 +17,20 @@ Future main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  List<Future> list = [];
 
-  await Supabase.initialize(
+  list.add(Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  ));
+
+  list.add(Supabase.initialize(
     url: dotenv.get('SUPABASE_URL'),
     anonKey: dotenv.get('SUPABASE_ANON_KEY'),
-  );
+  ));
 
-  await initializeDateFormatting('ja');
+  list.add(initializeDateFormatting('ja'));
+
+  await Future.wait(list);
 
   runApp(const ProviderScope(child: MyApp()));
 }
