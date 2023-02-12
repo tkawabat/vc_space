@@ -5,11 +5,11 @@ class TimestampzConverter implements JsonConverter<DateTime, String> {
 
   @override
   DateTime fromJson(String timestampz) {
-    return DateTime.parse(timestampz);
+    return DateTime.parse(timestampz).toLocal();
   }
 
   @override
   String toJson(DateTime time) {
-    return time.toIso8601String();
+    return time.toUtc().toIso8601String();
   }
 }
