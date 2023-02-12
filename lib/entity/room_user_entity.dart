@@ -1,8 +1,8 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:vc_space/service/const_system.dart';
 
+import '../service/const_system.dart';
 import 'converter/timestampz_converter.dart';
 import 'converter/room_user_type_converter.dart';
 import 'user_data_entity.dart';
@@ -13,7 +13,8 @@ part 'room_user_entity.g.dart';
 enum RoomUserType {
   admin(10, '主催者'),
   member(20, '参加者'),
-  offer(80, 'オファー中'),
+  offer(70, 'オファー中'),
+  kick(80, '除外'),
   ;
 
   const RoomUserType(this.value, this.displayName);
@@ -26,8 +27,10 @@ enum RoomUserType {
         return RoomUserType.admin;
       case 20:
         return RoomUserType.member;
-      case 30:
+      case 70:
         return RoomUserType.offer;
+      case 80:
+        return RoomUserType.kick;
     }
     throw Exception('RoomUserType error. value=$value');
   }
