@@ -1,11 +1,8 @@
-import '../provider/enter_room_chat_provider.dart';
 import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
-import '../model/room_model.dart';
 import '../model/room_user_model.dart';
-import '../provider/enter_room_provider.dart';
 import 'page_service.dart';
 
 class RoomService {
@@ -18,7 +15,9 @@ class RoomService {
   RoomService._internal();
 
   bool isJoined(RoomEntity room, String userId) {
-    return !room.users.every((e) => e.uid != userId);
+    return room.users.any((e) =>
+        e.uid == userId &&
+        [RoomUserType.admin, RoomUserType.member].contains(e.roomUserType));
   }
 
   List<RoomEntity> getJoinedRoom(List<RoomEntity> roomList, String userId) {
@@ -30,6 +29,10 @@ class RoomService {
         .where((e) => e.roomUserType == RoomUserType.admin)
         .toList()
         .first;
+  }
+
+  RoomUserEntity? getRoomUser(RoomEntity room, String uid) {
+    return room.users.firstWhere((element) => element.uid == uid);
   }
 
   void enter(int roomId) {

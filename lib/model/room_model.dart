@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
+import '../entity/room_user_entity.dart';
 import 'model_base.dart';
 import '../entity/room_entity.dart';
 import '../service/const_service.dart';
@@ -59,6 +60,7 @@ class RoomModel extends ModelBase {
         .from(tableName)
         .select(columns)
         .eq('room_id', roomId)
+        .lt('room_user.room_user_type', RoomUserType.kick.value)
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, '$tableName.getById'));
@@ -74,12 +76,27 @@ class RoomModel extends ModelBase {
     return supabase
         .from(tableName)
         .select(columns)
+        .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', DateTime.now().toIso8601String())
         .order('start_time', ascending: true)
         .range(start, start + ConstService.roomListStep)
         .then(_getEntityList)
         .catchError(
             ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));
+  }
+
+  Future<List<RoomEntity>> getJoinList(String uid) async {
+    return supabase
+        .from(tableName)
+        .select('$columns, check:room_user!inner (uid)')
+        .in_('check.uid', [uid])
+        .lt('check.room_user_type', RoomUserType.kick.value)
+        .lt('room_user.room_user_type', RoomUserType.kick.value)
+        .gte('start_time', DateTime.now().toIso8601String())
+        .order('start_time', ascending: true)
+        .then(_getEntityList)
+        .catchError(ErrorService()
+            .onError<List<RoomEntity>>([], '$tableName.getJoinList'));
   }
 
   Future<RoomEntity?> insert(RoomEntity room) async {
