@@ -13,7 +13,16 @@ class RoomUserNumber extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget enterTypeIcon = const SizedBox();
     if (room.enterType == EnterType.password) {
-      enterTypeIcon = const Icon(Icons.lock_outline, size: 18);
+      enterTypeIcon = Tooltip(
+        message: room.enterType.displayName,
+        child: const Icon(Icons.lock_outline, size: 18),
+      );
+    }
+    if (room.enterType == EnterType.follow) {
+      enterTypeIcon = Tooltip(
+        message: room.enterType.displayName,
+        child: const Icon(Icons.favorite_outline, size: 18),
+      );
     }
 
     return SizedBox(

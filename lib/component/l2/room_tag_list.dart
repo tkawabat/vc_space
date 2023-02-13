@@ -30,9 +30,9 @@ class RoomTagList extends StatelessWidget {
         ));
 
     if (user != null && RoomService().isJoined(room, user!.uid)) {
-      widgets.add(const Tag(
+      widgets.add(Tag(
         text: '参加済み',
-        tagColor: Colors.cyan,
+        tagColor: Colors.orange.shade200,
         bold: true,
       ));
     }

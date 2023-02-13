@@ -13,6 +13,7 @@ import '../../service/room_service.dart';
 import '../l1/cancel_button.dart';
 import '../l1/room_user_number.dart';
 import '../l2/room_tag_list.dart';
+import '../l2/room_user_row.dart';
 
 class RoomDialog extends HookConsumerWidget {
   final RoomEntity room;
@@ -63,18 +64,19 @@ class RoomDialog extends HookConsumerWidget {
       submitButtonOnPress = () => joinRoom(context, loginUser);
     }
 
+    const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
+
     return FormBuilder(
       key: formKey,
       child: AlertDialog(
         title: Text(room.title),
         content: SizedBox(
             width: 400,
-            height: 350,
+            height: 400,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('基本情報',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
+                const Text('基本情報', style: titleStyle),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -83,13 +85,18 @@ class RoomDialog extends HookConsumerWidget {
                     RoomUserNumber(room: room),
                   ],
                 ),
+                const SizedBox(height: 2),
+                Text('入室制限: ${room.enterType.displayName}'),
                 const SizedBox(height: 16),
-                const Text('部屋説明',
-                    style: TextStyle(fontWeight: FontWeight.w700)),
+                const Text('参加者', style: titleStyle),
+                const SizedBox(height: 8),
+                RoomUserRow(room),
+                const SizedBox(height: 8),
+                const Text('部屋説明', style: titleStyle),
                 const SizedBox(height: 8),
                 description,
                 const SizedBox(height: 16),
-                const Text('タグ', style: TextStyle(fontWeight: FontWeight.w700)),
+                const Text('タグ', style: titleStyle),
                 const SizedBox(height: 8),
                 RoomTagList(room: room, user: loginUser),
                 const Spacer(),

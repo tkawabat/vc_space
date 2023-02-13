@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/entity/room_user_entity.dart';
 
 import '../../entity/room_entity.dart';
 import '../../provider/login_provider.dart';
@@ -11,6 +10,7 @@ import '../dialog/user_dialog.dart';
 import '../l1/room_user_number.dart';
 import '../l1/user_icon.dart';
 import 'room_tag_list.dart';
+import 'room_user_row.dart';
 
 class RoomCard extends ConsumerWidget {
   final RoomEntity room;
@@ -57,7 +57,7 @@ class RoomCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                     alignment: Alignment.topLeft,
-                    child: Row(children: buildUserIconList(context, room)),
+                    child: RoomUserRow(room, hideAdmin: true),
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
@@ -80,23 +80,5 @@ class RoomCard extends ConsumerWidget {
         RoomUserNumber(room: room),
       ],
     );
-  }
-
-  List<Widget> buildUserIconList(BuildContext context, RoomEntity room) {
-    final List<Widget> list = [];
-    for (final roomUser in room.users) {
-      if (roomUser.roomUserType != RoomUserType.member) continue;
-      list.add(UserIcon(
-        photo: roomUser.userData.photo,
-        tooltip: roomUser.userData.name,
-        onTap: () => showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (_) {
-              return UserDialog(uid: roomUser.uid);
-            }),
-      ));
-    }
-    return list;
   }
 }
