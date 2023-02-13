@@ -11,11 +11,18 @@ class ErrorService {
 
   ErrorService._internal();
 
-  T Function(dynamic error) onError<T>(T returnValue, String contentType) {
+  T Function(dynamic error) onError<T>(
+    T returnValue,
+    String contentType, {
+    void Function()? onError,
+  }) {
     return (error) {
+      if (onError != null) onError();
       debugPrint(error.toString());
       logEvent(LogEventName.database_error, contentType);
-      return returnValue;
+      throw Exception;
+      // TODO 問題なければreturnValueを消す
+      // return returnValue
     };
   }
 }

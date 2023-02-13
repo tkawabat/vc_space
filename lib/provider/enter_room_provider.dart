@@ -7,6 +7,7 @@ import '../entity/room_entity.dart';
 import '../model/room_model.dart';
 import '../model/room_private_model.dart';
 import '../model/room_user_model.dart';
+import '../service/error_service.dart';
 
 final enterRoomProvider = StateNotifierProvider<EnterRoomNotifer, RoomEntity?>(
     (ref) => EnterRoomNotifer());
@@ -28,17 +29,16 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
       state = await RoomModel().getById(roomId);
     }
 
-    subscriptions['room'] = RoomModel()
-        .getStream(roomId)
-        .listen(onData, onError: _onStreamError, cancelOnError: true);
+    subscriptions['room'] = RoomModel().getStream(roomId).listen(onData,
+        onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
 
-    subscriptions['room_user'] = RoomUserModel()
-        .getStream(roomId)
-        .listen(onData, onError: _onStreamError, cancelOnError: true);
+    subscriptions['room_user'] = RoomUserModel().getStream(roomId).listen(
+        onData,
+        onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
 
-    subscriptions['room_private'] = RoomPrivateModel()
-        .getStream(roomId)
-        .listen(onData, onError: _onStreamError, cancelOnError: true);
+    subscriptions['room_private'] = RoomPrivateModel().getStream(roomId).listen(
+        onData,
+        onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
   }
 
   Future<void> stopUpdate() {
@@ -54,9 +54,9 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
     return Future.wait(futureList).then((_) => state = null);
   }
 
-  void _onStreamError(Object error) {
-    // TODO
-    debugPrint(error.toString());
-    stopUpdate();
+  @override
+  void dispose() async {
+    await stopUpdate();
+    super.dispose();
   }
 }

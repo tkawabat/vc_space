@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/room_chat_entity.dart';
 import '../model/room_chat_model.dart';
+import '../service/error_service.dart';
 
 final enterRoomChatProvider =
     StateNotifierProvider<EnterRoomChatNotifer, List<RoomChatEntity>>(
@@ -23,11 +24,8 @@ class EnterRoomChatNotifer extends StateNotifier<List<RoomChatEntity>> {
       state = list.map((e) => RoomChatEntity.fromJson(e)).toList();
     }
 
-    subscription = RoomChatModel()
-        .getStream(roomId)
-        .listen(onData, onError: _onStreamError, onDone: () {
-      debugPrint('onDone');
-    }, cancelOnError: true);
+    subscription = RoomChatModel().getStream(roomId).listen(onData,
+        onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
   }
 
   Future<void> stopUpdate() {
@@ -41,9 +39,9 @@ class EnterRoomChatNotifer extends StateNotifier<List<RoomChatEntity>> {
     return Future.wait(futureList).then((_) => state = []);
   }
 
-  void _onStreamError(Object error) {
-    // TODO
-    debugPrint(error.toString());
-    stopUpdate();
+  @override
+  void dispose() async {
+    await stopUpdate();
+    super.dispose();
   }
 }
