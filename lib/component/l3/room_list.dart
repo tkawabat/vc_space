@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../provider/login_provider.dart';
 import '../../provider/room_list_provider.dart';
 import '../l2/room_card.dart';
 
@@ -11,13 +10,10 @@ class RoomList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final roomList = ref.watch(roomListProvider);
-    final user = ref.watch(loginUserProvider);
 
     final scrollController = ScrollController();
 
-    final list = roomList.entries
-        .map((e) => RoomCard(room: e.value, user: user))
-        .toList();
+    final list = roomList.entries.map((e) => RoomCard(e.value)).toList();
 
     return Flexible(
       child: Scrollbar(

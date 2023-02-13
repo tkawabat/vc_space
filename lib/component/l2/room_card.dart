@@ -1,23 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:vc_space/service/room_service.dart';
 
 import '../../entity/room_entity.dart';
-import '../../entity/user_entity.dart';
+import '../../provider/login_provider.dart';
+import '../../service/room_service.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/room_user_number.dart';
 import '../l1/user_icon.dart';
 import 'room_tag_list.dart';
 
-class RoomCard extends StatelessWidget {
+class RoomCard extends ConsumerWidget {
   final RoomEntity room;
-  final UserEntity? user;
 
-  const RoomCard({super.key, required this.room, required this.user});
+  const RoomCard(this.room, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(loginUserProvider);
+
     return InkWell(
         onTap: () => showDialog(
             context: context,
@@ -62,7 +64,7 @@ class RoomCard extends StatelessWidget {
   }
 
   Widget buildTrailing(room) {
-    DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
+    DateFormat formatter = DateFormat('M/d(E) HH:mm', 'ja_JP');
     String start = formatter.format(room.startTime);
 
     return Column(
