@@ -12,7 +12,7 @@ import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 
 class WaitTimeInput extends HookConsumerWidget {
-  String uid;
+  final String uid;
 
   WaitTimeInput(this.uid, {super.key});
 
