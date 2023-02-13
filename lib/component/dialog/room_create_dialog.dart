@@ -61,10 +61,12 @@ class RoomCreateDialog extends HookConsumerWidget {
       users: [roomUserEmpty],
     );
 
-    await RoomModel().insert(newRoom);
-    PageService().snackbar('部屋を作成しました', SnackBarType.info);
-
-    RoomService().enter(newRoom.roomId);
+    await RoomModel().insert(newRoom).then((roomId) {
+      PageService().snackbar('部屋を作成しました', SnackBarType.info);
+      RoomService().enter(roomId);
+    }).catchError((_) {
+      PageService().snackbar('部屋を作成に失敗しました', SnackBarType.error);
+    });
   }
 
   @override

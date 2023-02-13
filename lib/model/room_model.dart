@@ -2,10 +2,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../entity/room_user_entity.dart';
-import 'model_base.dart';
 import '../entity/room_entity.dart';
 import '../service/const_service.dart';
+import '../service/const_system.dart';
 import '../service/error_service.dart';
+import 'model_base.dart';
 
 class RoomModel extends ModelBase {
   static final RoomModel _instance = RoomModel._internal();
@@ -99,18 +100,20 @@ class RoomModel extends ModelBase {
             .onError<List<RoomEntity>>([], '$tableName.getJoinList'));
   }
 
-  Future<RoomEntity?> insert(RoomEntity room) async {
+  Future<int> insert(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');
-    json.remove('users');
+    json.remove('room_user');
     json['password'] = encodePassword(json['password']);
 
     return supabase
         .from(tableName)
         .insert(json)
-        .select(columns)
+        .select('room_id')
         .single()
-        .then(_getEntity)
-        .catchError(ErrorService().onError(null, '$tableName.insert'));
+        .then((value) {
+      return value['room_id'] as int;
+    }).catchError(ErrorService()
+            .onError(ConstSystem.idNotFound, '$tableName.insert'));
   }
 }
