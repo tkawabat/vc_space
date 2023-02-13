@@ -44,6 +44,13 @@ class RoomModel extends ModelBase {
         .catchError(ErrorService().onError(null, 'hoge'));
   }
 
+  String _getStartTimeLimit() {
+    return DateTime.now()
+        .add(const Duration(hours: ConstService.roomStartTimeLimitHours))
+        .toUtc()
+        .toIso8601String();
+  }
+
   List<RoomEntity> _getEntityList(dynamic result) {
     if (result == null) return [];
     if (result is! List) return [];
@@ -78,7 +85,7 @@ class RoomModel extends ModelBase {
         .from(tableName)
         .select(columns)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
-        .gte('start_time', DateTime.now().toIso8601String())
+        .gte('start_time', _getStartTimeLimit())
         .order('start_time', ascending: true)
         .range(start, start + ConstService.roomListStep)
         .then(_getEntityList)
@@ -93,7 +100,7 @@ class RoomModel extends ModelBase {
         .in_('check.uid', [uid])
         .lt('check.room_user_type', RoomUserType.kick.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
-        .gte('start_time', DateTime.now().toIso8601String())
+        .gte('start_time', _getStartTimeLimit())
         .order('start_time', ascending: true)
         .then(_getEntityList)
         .catchError(ErrorService()
