@@ -4,13 +4,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_provider.dart';
 import '../../provider/user_list_provider.dart';
-import '../../service/const_design.dart';
 import '../../service/time_service.dart';
 import '../../service/user_service.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
-import '../l1/tag.dart';
 import '../l1/user_icon.dart';
+import '../l2/user_tag_list.dart';
 
 class UserDialog extends HookConsumerWidget {
   final String uid;
@@ -100,10 +99,7 @@ class UserDialog extends HookConsumerWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
               alignment: Alignment.topLeft,
-              child: Wrap(
-                spacing: 2,
-                children: buildTag(user),
-              ),
+              child: UserTagList(user),
             ),
             const SizedBox(height: 16),
             const Spacer(),
@@ -116,20 +112,5 @@ class UserDialog extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  List<Widget> buildTag(UserEntity user) {
-    if (user.tags.isEmpty) {
-      return [const Tag(text: 'なし')];
-    }
-
-    List<Widget> widgets = user.tags
-        .map((text) => Tag(
-              text: text,
-              tagColor: ConstDesign.validTagColor,
-            ))
-        .toList();
-
-    return widgets;
   }
 }
