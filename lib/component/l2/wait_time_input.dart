@@ -5,35 +5,39 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:intl/intl.dart';
 
-import '../../entity/wait_time_entity.dart';
 import '../../provider/login_provider.dart';
 import '../../service/page_service.dart';
 import '../../service/const_service.dart';
 import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 
-class WaitTimeRow extends HookConsumerWidget {
-  final String uid;
-  final WaitTimeEntity? waitTime;
+class WaitTimeInput extends HookConsumerWidget {
+  String uid;
 
-  WaitTimeRow(
-    this.uid, {
-    super.key,
-    this.waitTime,
-  });
+  WaitTimeInput(this.uid, {super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
+
+  void addWaitTime() {
+    PageService().showConfirmDialog('空き時間を登録しますか？', () {
+      if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+        PageService().snackbar('入力値に問題があります', SnackBarType.error);
+        return;
+      }
+      // TODO 開始のほうがあとにならないように
+      final fields = formKey.currentState!.value;
+      WaitTimeService().add(uid, fields['startTime'], fields['endTime']);
+    });
+  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(loginUserProvider);
 
-    bool canUpdate = user != null && user.uid == uid;
+    if (user == null || user.uid != uid) return const SizedBox();
 
-    final startTime =
-        waitTime?.startTime ?? TimeService().getStepNow(ConstService.stepTime);
-    final endTime =
-        waitTime?.endTime ?? startTime.add(const Duration(hours: 1));
+    final startTime = TimeService().getStepNow(ConstService.stepTime);
+    final endTime = startTime.add(const Duration(hours: 1));
 
     return FormBuilder(
         key: formKey,
@@ -41,31 +45,10 @@ class WaitTimeRow extends HookConsumerWidget {
           const Text('空き時間', style: TextStyle(fontWeight: FontWeight.bold)),
           timeField('startTime', '開始', startTime),
           timeField('endTime', '終了', endTime),
-          if (canUpdate && waitTime == null)
-            IconButton(
-                tooltip: '保存する',
-                icon: const Icon(Icons.check),
-                onPressed: () {
-                  PageService().showConfirmDialog('空き時間を登録しますか？', () {
-                    if (!(formKey.currentState?.saveAndValidate() ?? false)) {
-                      PageService().snackbar('入力値に問題があります', SnackBarType.error);
-                      return;
-                    }
-                    // TODO 開始のほうがあとにならないように
-                    final fields = formKey.currentState!.value;
-                    WaitTimeService()
-                        .add(user.uid, fields['startTime'], fields['endTime']);
-                  });
-                }),
-          if (canUpdate && waitTime != null)
-            IconButton(
-              tooltip: '削除する',
-              icon: const Icon(Icons.delete),
-              onPressed: () => PageService().showConfirmDialog(
-                  '空き時間を削除しますか？',
-                  () =>
-                      WaitTimeService().delete(user.uid, waitTime!.waitTimeId)),
-            ),
+          IconButton(
+              tooltip: '保存する',
+              icon: const Icon(Icons.check),
+              onPressed: () => addWaitTime()),
         ]));
   }
 

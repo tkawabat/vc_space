@@ -5,17 +5,15 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/room_user_entity.dart';
-import '../../entity/user_entity.dart';
 import '../../entity/wait_time_entity.dart';
 import '../../provider/room_list_join_provider.dart';
-import '../../provider/user_list_provider.dart';
 import '../../provider/wait_time_list_provider.dart';
-import '../../route.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../service/time_service.dart';
-import '../l1/loading.dart';
-import '../l2/wait_time_row.dart';
+import '../l2/room_card.dart';
+import '../l2/wait_time_card.dart';
+import '../l2/wait_time_input.dart';
 import '../l3/header.dart';
 
 class CalendarPage extends StatefulHookConsumerWidget {
@@ -39,15 +37,16 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
         map[key] = [];
       }
       map[key]!.add(waitTime);
-
-      for (final room in roomList) {
-        final key = TimeService().getDay(room.startTime);
-        if (!map.containsKey(key)) {
-          map[key] = [];
-        }
-        map[key]!.add(waitTime);
-      }
     }
+
+    for (final room in roomList) {
+      final key = TimeService().getDay(room.startTime);
+      if (!map.containsKey(key)) {
+        map[key] = [];
+      }
+      map[key]!.add(room);
+    }
+
     return map;
   }
 
@@ -65,29 +64,12 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
   Widget build(BuildContext context) {
     PageService().init(context, ref);
 
-    final userList = ref.watch(userListProvider);
     final waitTimeList = ref.watch(waitTimeListProvider);
     final roomList = ref.watch(roomListJoinProvider);
 
     final now = TimeService().getDay(DateTime.now());
     final selectedDayState = useState<DateTime>(now);
     final ValueNotifier<List> eventState = useState<List>([]);
-
-    if (!userList.containsKey(widget.uid)) {
-      // データ取得前なら取得して待ち
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(userListProvider.notifier).get(widget.uid);
-      });
-      return const Loading();
-    }
-    if (userList[widget.uid] == userNotFound) {
-      // 未ログイン表示をする
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        PageService().transition(PageNames.home);
-        PageService().snackbar('存在しないユーザーです。', SnackBarType.error);
-      });
-      return const Loading();
-    }
 
     final eventMap = getEventMap(waitTimeList, roomList);
 
@@ -100,7 +82,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
         title: "カレンダー",
       ),
       body: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
@@ -126,17 +108,21 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
                 if (events.isNotEmpty) {
                   return _buildEventsMarker(date, events);
                 }
+                return const SizedBox();
               }),
             ),
-            WaitTimeRow(widget.uid), // 新規追加用
+            WaitTimeInput(widget.uid),
             Expanded(
                 child: ListView.builder(
               itemCount: eventState.value.length,
               itemBuilder: ((context, i) {
                 if (eventState.value[i] is WaitTimeEntity) {
-                  return WaitTimeRow(widget.uid, waitTime: eventState.value[i]);
+                  return WaitTimeCard(eventState.value[i], widget.uid);
                 }
-                return Card(child: ListTile(title: Text('')));
+                if (eventState.value[i] is RoomEntity) {
+                  return RoomCard(eventState.value[i]);
+                }
+                return const SizedBox();
               }),
             )),
           ],
@@ -157,7 +143,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
         if (roomUser.roomUserType == RoomUserType.offer) {
           offerRoomNumber++;
         } else {
-          waitTimeNumber++;
+          joinRoomNumber++;
         }
       }
     }
