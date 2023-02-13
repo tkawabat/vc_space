@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/room_entity.dart';
 import '../model/room_model.dart';
+import '../model/room_private_model.dart';
 import '../model/room_user_model.dart';
 
 final enterRoomProvider = StateNotifierProvider<EnterRoomNotifer, RoomEntity?>(
@@ -16,7 +17,7 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
   Map<String, StreamSubscription?> subscriptions = {
     'room': null,
     'room_user': null,
-    'room_chat': null,
+    'room_private': null,
   };
 
   Future<void> startUpdate(int roomId) async {
@@ -32,6 +33,10 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
         .listen(onData, onError: _onStreamError, cancelOnError: true);
 
     subscriptions['room_user'] = RoomUserModel()
+        .getStream(roomId)
+        .listen(onData, onError: _onStreamError, cancelOnError: true);
+
+    subscriptions['room_private'] = RoomPrivateModel()
         .getStream(roomId)
         .listen(onData, onError: _onStreamError, cancelOnError: true);
   }
