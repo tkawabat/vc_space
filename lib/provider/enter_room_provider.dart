@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/room_entity.dart';
 import '../model/room_model.dart';
-import '../model/room_private_model.dart';
 import '../model/room_user_model.dart';
 import '../service/error_service.dart';
 
@@ -18,7 +17,6 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
   Map<String, StreamSubscription?> subscriptions = {
     'room': null,
     'room_user': null,
-    'room_private': null,
   };
 
   Future<void> startUpdate(int roomId) async {
@@ -33,10 +31,6 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
         onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
 
     subscriptions['room_user'] = RoomUserModel().getStream(roomId).listen(
-        onData,
-        onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
-
-    subscriptions['room_private'] = RoomPrivateModel().getStream(roomId).listen(
         onData,
         onError: ErrorService().onError(null, '', onError: () => stopUpdate()));
   }
