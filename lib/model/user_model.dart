@@ -31,7 +31,7 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<bool> updateUser(
+  Future<bool> update(
     UserEntity user, {
     List<String>? targetColumnList,
   }) async {

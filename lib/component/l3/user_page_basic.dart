@@ -38,7 +38,7 @@ class UserPageBasic extends HookConsumerWidget {
         follows: user.follows,
         updatedAt: DateTime.now());
 
-    UserModel().updateUser(newUser).then((_) {
+    UserModel().update(newUser).then((_) {
       ref.read(loginUserProvider.notifier).set(newUser);
       ref.read(userListProvider.notifier).set(newUser);
       PageService().snackbar('保存しました。', SnackBarType.info);
