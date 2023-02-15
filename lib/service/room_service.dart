@@ -80,4 +80,15 @@ class RoomService {
     // TODO ステートから自分を外す
     return success;
   }
+
+  FutureOr<bool> kick(RoomUserEntity roomUser) async {
+    final newRoomUser = roomUser.copyWith(roomUserType: RoomUserType.kick);
+    final success = await RoomUserModel().update(newRoomUser);
+    if (success) {
+      PageService().snackbar('部屋からキックしました', SnackBarType.info);
+    } else {
+      PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
+    }
+    return success;
+  }
 }
