@@ -11,7 +11,7 @@ part 'room_private_entity.g.dart';
 class RoomPrivateEntity with _$RoomPrivateEntity {
   const factory RoomPrivateEntity({
     required int roomId,
-    String? innerDescription,
+    @JsonKey(defaultValue: '') required String innerDescription,
     String? placeUrl,
     @TimestampzConverter() required DateTime updatedAt,
   }) = _RoomPrivateEntity;

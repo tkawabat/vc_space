@@ -12,6 +12,7 @@ class ConstService {
   static const roomPasswordMax = 8;
   static const roomTagMax = 10;
   static const chatMaxNumber = 20;
+  static const roomPlaceUrlMax = 512;
 
   static const maxTagLength = 10;
 
