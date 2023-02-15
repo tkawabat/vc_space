@@ -60,6 +60,16 @@ class RoomUserModel extends ModelBase {
           'password': password,
         })
         .then((_) => true)
-        .catchError(ErrorService().onError(false, 'room_user.insert'));
+        .catchError(ErrorService().onError(false, '$tableName.insert'));
+  }
+
+  Future<bool> delete(int roomId, String uid) async {
+    return supabase
+        .from(tableName)
+        .delete()
+        .eq('room_id', roomId)
+        .eq('uid', uid)
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.delete'));
   }
 }
