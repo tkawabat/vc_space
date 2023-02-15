@@ -123,4 +123,28 @@ class RoomModel extends ModelBase {
     }).catchError(ErrorService()
             .onError(ConstSystem.idNotFound, '$tableName.insert'));
   }
+
+  Future<bool> update(
+    RoomEntity room, {
+    List<String>? targetColumnList,
+  }) async {
+    var json = room.toJson();
+    json.remove('room_id');
+    json.remove('owner');
+    json.remove('room_user');
+
+    if (targetColumnList != null) {
+      for (var key in json.keys) {
+        if (targetColumnList.contains(key)) continue;
+        json.remove(key);
+      }
+    }
+
+    return supabase
+        .from(tableName)
+        .update(json)
+        .eq('room_id', room.roomId)
+        .then((_) => true)
+        .catchError(ErrorService().onError(false, '$tableName.update'));
+  }
 }

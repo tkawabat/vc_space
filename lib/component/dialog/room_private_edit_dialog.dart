@@ -45,7 +45,7 @@ class RoomPrivateEditDialog extends HookConsumerWidget {
     return FormBuilder(
         key: formKey,
         child: AlertDialog(
-            title: const Text('入室者限定情報'),
+            title: const Text('参加者向け情報'),
             content: SizedBox(
                 width: 400,
                 child: Column(
@@ -81,7 +81,7 @@ class RoomPrivateEditDialog extends HookConsumerWidget {
   }
 
   FormBuilderField innerDescriptionField(String? initialValue) {
-    const labelText = '入室者向け説明 (最大${ConstService.roomDescriptionMax}文字)';
+    const labelText = '参加者向け説明 (最大${ConstService.roomDescriptionMax}文字)';
 
     return FormBuilderTextField(
       name: 'innerDescription',

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
-import '../../provider/login_provider.dart';
 import '../../service/room_service.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/user_dialog.dart';
@@ -12,15 +10,13 @@ import '../l1/user_icon.dart';
 import 'room_tag_list.dart';
 import 'room_user_row.dart';
 
-class RoomCard extends ConsumerWidget {
+class RoomCard extends StatelessWidget {
   final RoomEntity room;
 
   const RoomCard(this.room, {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(loginUserProvider);
-
+  Widget build(BuildContext context) {
     return InkWell(
         onTap: () => showDialog(
             context: context,
@@ -62,7 +58,7 @@ class RoomCard extends ConsumerWidget {
                   Container(
                     padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
                     alignment: Alignment.topLeft,
-                    child: RoomTagList(room: room, user: user),
+                    child: RoomTagList(room),
                   ),
                 ],
               ),

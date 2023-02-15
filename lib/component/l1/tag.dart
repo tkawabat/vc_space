@@ -19,7 +19,7 @@ class Tag extends StatelessWidget {
     Widget widget = Chip(
       label: Text(
         text,
-        style: TextStyle(fontWeight: bold ? FontWeight.bold : null),
+        style: TextStyle(fontWeight: bold ? FontWeight.w600 : null),
       ),
       backgroundColor: tagColor,
     );

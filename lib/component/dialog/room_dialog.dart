@@ -98,7 +98,7 @@ class RoomDialog extends HookConsumerWidget {
                 const SizedBox(height: 16),
                 const Text('タグ', style: titleStyle),
                 const SizedBox(height: 8),
-                RoomTagList(room: room, user: loginUser),
+                RoomTagList(room),
                 const Spacer(),
                 passwordField(passwordEnabled),
               ],

@@ -20,8 +20,10 @@ import '../../service/time_service.dart';
 import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
 
-class RoomCreateDialog extends HookConsumerWidget {
-  RoomCreateDialog({super.key});
+class RoomEditDialog extends HookConsumerWidget {
+  final RoomEntity? room;
+
+  RoomEditDialog({super.key, this.room});
 
   final formKey = GlobalKey<FormBuilderState>();
   final tagKey = GlobalKey<TagFieldState>();
@@ -36,7 +38,7 @@ class RoomCreateDialog extends HookConsumerWidget {
     final fields = formKey.currentState!.value;
     final tags = tagKey.currentState!.tagsController.getTags ?? [];
 
-    final UserEntity? loginUser = ref.watch(loginUserProvider);
+    final UserEntity? loginUser = ref.read(loginUserProvider);
     if (loginUser == null) {
       PageService().snackbar('部屋作成するにはログインが必要です', SnackBarType.error);
       return;
@@ -69,30 +71,82 @@ class RoomCreateDialog extends HookConsumerWidget {
     });
   }
 
+  Future<void> updateRoom(BuildContext context, WidgetRef ref) async {
+    Navigator.pop(context);
+
+    if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      PageService().snackbar('入力値に問題があります', SnackBarType.error);
+      return;
+    }
+    final fields = formKey.currentState!.value;
+    final tags = tagKey.currentState!.tagsController.getTags ?? [];
+
+    if (room == null) {
+      PageService().snackbar('部屋の更新に失敗しました', SnackBarType.error);
+      return;
+    }
+
+    final String? password =
+        fields['enterType'] == EnterType.password ? fields['password'] : null;
+    final now = DateTime.now();
+
+    RoomEntity newRoom = RoomEntity(
+      roomId: room!.roomId,
+      owner: room!.owner,
+      title: fields['title'],
+      placeType: fields['placeType'],
+      description: fields['description'] ?? '',
+      maxNumber: fields['maxNumber'],
+      startTime: fields['startTime'],
+      tags: tags,
+      enterType: fields['enterType'],
+      password: password,
+      updatedAt: now,
+      users: room!.users,
+    );
+
+    await RoomModel().update(newRoom).then((roomId) {
+      PageService().snackbar('部屋情報を更新しました', SnackBarType.info);
+    }).catchError((_) {
+      PageService().snackbar('部屋の更新に失敗しました', SnackBarType.error);
+    });
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ScrollController();
     final ValueNotifier<bool> enabledPassword = useState<bool>(false);
 
+    final int? roomUserNum = room == null ? null : room!.users.length;
+
     List<Widget> list = [
-      titleField(),
-      placeTypeField(),
-      startTimeField(),
-      maxNumberField(),
-      enterTypeField(enabledPassword),
+      titleField(room?.title),
+      placeTypeField(room?.placeType),
+      startTimeField(room?.startTime),
+      maxNumberField(room?.maxNumber, roomUserNum),
+      enterTypeField(room?.enterType, enabledPassword),
       passwordField(enabledPassword),
       TagField(
         key: tagKey,
+        initialTags: room?.tags ?? [],
         samples: ConstService.sampleRoomTags,
         maxTagNumber: ConstService.maxTagLength,
       ),
-      descriptionField(),
+      descriptionField(room?.description),
     ];
+
+    final title = room == null ? '部屋作成' : '部屋更新';
+
+    Widget submitButton = room == null
+        ? TextButton(
+            child: const Text('作成'), onPressed: () => createRoom(context, ref))
+        : TextButton(
+            child: const Text('更新'), onPressed: () => updateRoom(context, ref));
 
     return FormBuilder(
         key: formKey,
         child: AlertDialog(
-            title: const Text('部屋を作る'),
+            title: Text(title),
             content: SizedBox(
                 width: 400,
                 height: 600,
@@ -107,18 +161,16 @@ class RoomCreateDialog extends HookConsumerWidget {
                     ))),
             actions: [
               const CancelButton(),
-              TextButton(
-                  child: const Text('作成'),
-                  onPressed: () => createRoom(context, ref)),
+              submitButton,
             ]));
   }
 
-  FormBuilderField titleField() {
+  FormBuilderField titleField(String? initialValue) {
     const labelText = 'タイトル (最大${ConstService.roomTitleMax}文字)';
 
     return FormBuilderTextField(
       name: 'title',
-      initialValue: '遊び部屋',
+      initialValue: initialValue ?? '遊び部屋',
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.required(errorText: '入力してください'),
@@ -128,11 +180,12 @@ class RoomCreateDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField descriptionField() {
+  FormBuilderField descriptionField(String? initialValue) {
     const labelText = '説明 (最大${ConstService.roomDescriptionMax}文字)';
 
     return FormBuilderTextField(
       name: 'description',
+      initialValue: initialValue,
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.maxLength(ConstService.roomDescriptionMax),
@@ -143,7 +196,7 @@ class RoomCreateDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField startTimeField() {
+  FormBuilderField startTimeField(DateTime? initialValue) {
     final formatter = DateFormat('MM/dd(E) HH:mm', 'ja');
     final controller = TextEditingController();
     final focusNode = FocusNode();
@@ -152,7 +205,8 @@ class RoomCreateDialog extends HookConsumerWidget {
       name: 'startTime',
       focusNode: focusNode,
       autovalidateMode: AutovalidateMode.always,
-      initialValue: TimeService().getStepNow(ConstService.stepTime),
+      initialValue:
+          initialValue ?? TimeService().getStepNow(ConstService.stepTime),
       decoration: const InputDecoration(labelText: '開始時間'),
       format: formatter,
       firstDate: DateTime.now(),
@@ -178,7 +232,7 @@ class RoomCreateDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField maxNumberField() {
+  FormBuilderField maxNumberField(int? initialValue, int? minValue) {
     const labelText = '最大人数';
 
     return FormBuilderSlider(
@@ -189,19 +243,19 @@ class RoomCreateDialog extends HookConsumerWidget {
         FormBuilderValidators.max(ConstService.roomMaxNumber),
       ]),
       decoration: const InputDecoration(labelText: labelText),
-      initialValue: 4,
-      min: 2,
+      initialValue: initialValue?.toDouble() ?? 4,
+      min: minValue?.toDouble() ?? 2,
       max: ConstService.roomMaxNumber.toDouble(),
-      divisions: ConstService.roomMaxNumber - 2,
+      divisions: ConstService.roomMaxNumber - (minValue ?? 2),
       displayValues: DisplayValues.current,
     );
   }
 
-  FormBuilderField placeTypeField() {
+  FormBuilderField placeTypeField(PlaceType? initialValue) {
     return FormBuilderDropdown<PlaceType>(
       name: 'placeType',
       autovalidateMode: AutovalidateMode.always,
-      initialValue: PlaceType.discord,
+      initialValue: initialValue ?? PlaceType.discord,
       decoration: const InputDecoration(labelText: '遊ぶ場所'),
       items: PlaceType.values
           .map((placeType) => DropdownMenuItem(
@@ -213,11 +267,12 @@ class RoomCreateDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField enterTypeField(ValueNotifier<bool> enabledPassword) {
+  FormBuilderField enterTypeField(
+      EnterType? initialValue, ValueNotifier<bool> enabledPassword) {
     return FormBuilderDropdown<EnterType>(
       name: 'enterType',
       autovalidateMode: AutovalidateMode.always,
-      initialValue: EnterType.noLimit,
+      initialValue: initialValue ?? EnterType.noLimit,
       decoration: const InputDecoration(labelText: '入室制限'),
       items: EnterType.values
           .map((enterType) => DropdownMenuItem(
@@ -232,6 +287,7 @@ class RoomCreateDialog extends HookConsumerWidget {
   }
 
   Widget passwordField(enabledPassword) {
+    // パスワードはエンコードして見れないので、更新時もイチから入れる
     const labelText = 'パスワード (最大${ConstService.roomPasswordMax}文字)';
 
     return Visibility(

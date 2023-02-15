@@ -6,6 +6,7 @@ import '../../entity/room_private_entity.dart';
 import '../../provider/enter_room_private_provider.dart';
 import '../../provider/enter_room_provider.dart';
 import '../../provider/login_provider.dart';
+import '../../service/const_design.dart';
 import '../../service/const_service.dart';
 
 import '../../service/page_service.dart';
@@ -33,12 +34,11 @@ class RoomPagePrivate extends HookConsumerWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
+      children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text('入室者限定情報',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('参加者向け情報', style: ConstDesign.h2),
             if (user.uid == room.owner)
               IconButton(
                   icon: const Icon(Icons.edit),
@@ -50,11 +50,21 @@ class RoomPagePrivate extends HookConsumerWidget {
                       })),
           ],
         ),
-        const SizedBox(height: 8),
-        description,
-        const SizedBox(height: 16),
-        description,
-        const SizedBox(height: 24),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 8),
+              const Text('遊ぶ場所', style: ConstDesign.h3),
+              // TODO
+              description,
+              const SizedBox(height: 16),
+              const Text('参加者向け説明', style: ConstDesign.h3),
+              description,
+            ],
+          ),
+        ),
       ],
     );
   }

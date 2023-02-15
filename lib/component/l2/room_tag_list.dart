@@ -1,19 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
+import '../../entity/room_entity.dart';
 import '../../service/const_design.dart';
 import '../../service/room_service.dart';
+import '../../provider/login_provider.dart';
 import '../l1/tag.dart';
 
-class RoomTagList extends StatelessWidget {
+class RoomTagList extends ConsumerWidget {
   final RoomEntity room;
-  final UserEntity? user;
+  final bool viewEnterStatus;
 
-  const RoomTagList({super.key, required this.room, required this.user});
+  const RoomTagList(this.room, {super.key, this.viewEnterStatus = true});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final UserEntity? loginUser = ref.watch(loginUserProvider);
+
     List<Widget> widgets = room.tags
         .map((text) => Tag(
               text: text,
@@ -29,7 +33,9 @@ class RoomTagList extends StatelessWidget {
           tagColor: Colors.cyan.shade100,
         ));
 
-    if (user != null && RoomService().isJoined(room, user!.uid)) {
+    if (viewEnterStatus &&
+        loginUser != null &&
+        RoomService().isJoined(room, loginUser.uid)) {
       widgets.add(Tag(
         text: '参加済み',
         tagColor: Colors.orange.shade200,
