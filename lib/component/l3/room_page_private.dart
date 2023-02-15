@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
-import '../../entity/room_private_entity.dart';
 import '../../provider/enter_room_private_provider.dart';
 import '../../provider/enter_room_provider.dart';
 import '../../provider/login_provider.dart';
 import '../../service/const_design.dart';
-import '../../service/const_service.dart';
-
-import '../../service/page_service.dart';
+import '../../service/url_service.dart';
 import '../dialog/room_private_edit_dialog.dart';
 import '../l1/loading.dart';
 
@@ -26,7 +22,12 @@ class RoomPagePrivate extends HookConsumerWidget {
       return const Loading();
     }
 
-    // final url = roomPrivate.placeUrl
+    final Widget url = roomPrivate.placeUrl == null
+        ? const Text('URL未設定', style: TextStyle(color: Colors.black54))
+        : InkWell(
+            onTap: () => UrlService().launchUri(context, roomPrivate.placeUrl!),
+            child: Text(roomPrivate.placeUrl!, style: ConstDesign.link),
+          );
 
     final description = roomPrivate.innerDescription.isNotEmpty
         ? Text(roomPrivate.innerDescription)
@@ -57,10 +58,11 @@ class RoomPagePrivate extends HookConsumerWidget {
             children: [
               const SizedBox(height: 8),
               const Text('遊ぶ場所', style: ConstDesign.h3),
-              // TODO
-              description,
+              const SizedBox(height: 8),
+              url,
               const SizedBox(height: 16),
               const Text('参加者向け説明', style: ConstDesign.h3),
+              const SizedBox(height: 8),
               description,
             ],
           ),
