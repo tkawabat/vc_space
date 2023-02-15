@@ -11,6 +11,7 @@ typedef SnackBarType = AnimatedSnackBarType;
 
 class PageService {
   static final PageService _instance = PageService._internal();
+  bool replaced = true;
   bool initialized = false;
   BuildContext? context;
   WidgetRef? ref;
@@ -22,19 +23,21 @@ class PageService {
   PageService._internal();
 
   void init(BuildContext context, WidgetRef ref) {
+    if (replaced) {
+      this.context = context;
+      this.ref = ref;
+      replaced = false;
+    }
+
     if (initialized) return;
 
     // 一回だけ行う処理
-    this.context = context;
-    this.ref = ref;
+    ref.read(roomListProvider.notifier).getList();
+    initialized = true;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       LoginService().initializeUser(ref);
     });
-
-    ref.read(roomListProvider.notifier).getList();
-
-    initialized = true;
   }
 
   bool canBack() {
@@ -45,9 +48,18 @@ class PageService {
     if (canBack()) Navigator.pop(context!);
   }
 
-  void transition(PageNames page, [Map<String, String>? arguments]) {
+  void transition(
+    PageNames page, {
+    Map<String, String>? arguments,
+    bool replace = false,
+  }) {
     if (context == null) return;
-    Navigator.pushNamed(context!, page.path, arguments: arguments);
+    if (replace) {
+      replaced = true;
+      Navigator.pushReplacementNamed(context!, page.path, arguments: arguments);
+    } else {
+      Navigator.pushNamed(context!, page.path, arguments: arguments);
+    }
   }
 
   void snackbar(
