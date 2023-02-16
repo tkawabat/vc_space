@@ -74,7 +74,7 @@ class RoomUserCard extends ConsumerWidget {
   }
 
   Widget buildTrailing(RoomUserEntity roomUser) {
-    const kickText = '部屋からキックします。\n'
+    const kickText = '部屋から強制的に脱退させます。\n'
         'キックされたユーザーは、自分から参加することはできません。\n'
         'キックしますか？';
 
@@ -83,14 +83,17 @@ class RoomUserCard extends ConsumerWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          InkWell(
-            onTap: () async {
-              final data = ClipboardData(text: roomUser.userData.discordName);
-              Clipboard.setData(data).then((_) {
-                PageService().snackbar('Discord名をコピーしました', SnackBarType.info);
-              });
-            },
-            child: const FaIcon(FontAwesomeIcons.discord),
+          Tooltip(
+            message: 'Discord名をコピー',
+            child: InkWell(
+              onTap: () async {
+                final data = ClipboardData(text: roomUser.userData.discordName);
+                Clipboard.setData(data).then((_) {
+                  PageService().snackbar('Discord名をコピーしました', SnackBarType.info);
+                });
+              },
+              child: const FaIcon(FontAwesomeIcons.discord),
+            ),
           ),
           if (isAdmin) const SizedBox(width: 10),
           if (isAdmin)
