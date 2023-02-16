@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 
 import '../entity/room_user_entity.dart';
@@ -31,15 +32,19 @@ class RoomModel extends ModelBase {
 
   void hoge() async {
     // TODO
-    supabase
-        .rpc('insert_room_owner')
+    // supabase
+    // .rpc('insert_room_owner')
 
-        // supabase
-        //     .from('room_user')
-        //     .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
-        //     .eq('room_id', 1)
-        //     // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
-        //     .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
+    // supabase
+    //     .from('room_user')
+    //     .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
+    //     .eq('room_id', 1)
+    //     // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+    //     .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
+    supabase
+        .from('room')
+        .update({'max_number': 10})
+        .eq('room_id', 10010)
         .then((_) => debugPrint('success'))
         .catchError(ErrorService().onError(null, 'hoge'));
   }
@@ -54,13 +59,19 @@ class RoomModel extends ModelBase {
   List<RoomEntity> _getEntityList(dynamic result) {
     if (result == null) return [];
     if (result is! List) return [];
-    return result.map((e) => RoomEntity.fromJson(e)).toList();
+    return result.map((e) => _getEntity(e)!).toList();
   }
 
   RoomEntity? _getEntity(dynamic result) {
     if (result == null) return null;
     if (result is! Map<String, dynamic>) return null;
-    return RoomEntity.fromJson(result);
+    final room = RoomEntity.fromJson(result);
+    final users = room.users.sorted((a, b) {
+      if (a.roomUserType.value < b.roomUserType.value) return -1;
+      if (a.roomUserType.value > b.roomUserType.value) return 1;
+      return a.uid.compareTo(b.uid);
+    });
+    return room.copyWith(users: users);
   }
 
   Future<RoomEntity?> getById(int roomId) {
