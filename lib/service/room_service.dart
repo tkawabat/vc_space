@@ -61,7 +61,6 @@ class RoomService {
         return false;
       }
       PageService().snackbar('部屋に参加しました', SnackBarType.info);
-      // TODO ステートにも自分を追加する
     }
 
     enter(room.roomId);
@@ -77,7 +76,6 @@ class RoomService {
     } else {
       PageService().snackbar('部屋からの脱退でエラーが発生しました', SnackBarType.error);
     }
-    // TODO ステートから自分を外す
     return success;
   }
 
