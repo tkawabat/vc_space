@@ -5,11 +5,9 @@ import 'package:vc_space/entity/wait_time_entity.dart';
 
 import '../../model/room_model.dart';
 import '../../model/wait_time_model.dart';
-import '../../provider/room_list_provider.dart';
 import '../../service/const_system.dart';
 import '../../service/page_service.dart';
-import '../../service/login_service.dart';
-import '../dialog/room_create_dialog.dart';
+import '../dialog/room_edit_dialog.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
@@ -59,7 +57,7 @@ class MainPage extends HookConsumerWidget {
             },
             child: const Text("デバッグ"),
           ),
-          const RoomList(),
+          RoomList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -69,7 +67,7 @@ class MainPage extends HookConsumerWidget {
               context: context,
               barrierDismissible: true,
               builder: (_) {
-                return RoomCreateDialog();
+                return RoomEditDialog();
               });
         },
         child: const Icon(Icons.add, size: 32),

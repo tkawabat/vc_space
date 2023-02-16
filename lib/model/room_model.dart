@@ -91,14 +91,16 @@ class RoomModel extends ModelBase {
         .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
-  Future<List<RoomEntity>> getList(int start) async {
+  Future<List<RoomEntity>> getList(int page) async {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
     return supabase
         .from(tableName)
         .select(columns)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', _getStartTimeLimit())
         .order('start_time', ascending: true)
-        .range(start, start + ConstService.roomListStep)
+        .range(start, to)
         .then(_getEntityList)
         .catchError(
             ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));

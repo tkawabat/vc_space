@@ -1,6 +1,6 @@
 class ConstService {
   static const roomStartTimeLimitHours = -3;
-  static const roomListStep = 10;
+  static const listStep = 20;
 
   static const stepTime = 15;
 

@@ -1,28 +1,50 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
-import '../../provider/room_list_provider.dart';
+import '../../entity/room_entity.dart';
+import '../../model/room_model.dart';
+import '../../service/const_service.dart';
 import '../l2/room_card.dart';
 
-class RoomList extends ConsumerWidget {
-  const RoomList({Key? key}) : super(key: key);
+class RoomList extends HookConsumerWidget {
+  RoomList({Key? key}) : super(key: key);
+
+  final PagingController<int, RoomEntity> _pagingController =
+      PagingController(firstPageKey: 0);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final roomList = ref.watch(roomListProvider);
+    useEffect(
+      () {
+        _pagingController.addPageRequestListener((pageKey) {
+          RoomModel().getList(pageKey).then((list) {
+            if (list.length < ConstService.listStep) {
+              _pagingController.appendLastPage(list);
+            } else {
+              _pagingController.appendPage(list, pageKey + 1);
+            }
+          }).catchError((error) => _pagingController.error = error);
+        });
 
-    final scrollController = ScrollController();
-
-    final list = roomList.entries.map((e) => RoomCard(e.value)).toList();
+        return () {
+          _pagingController.dispose();
+        };
+      },
+      const [],
+    );
 
     return Flexible(
-      child: Scrollbar(
-        controller: scrollController,
-        child: ListView(
-          controller: scrollController,
-          children: list,
-        ),
-      ),
+      child: RefreshIndicator(
+          onRefresh: () => Future.sync(
+                () => _pagingController.refresh(),
+              ),
+          child: PagedListView(
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
+                itemBuilder: (context, item, index) => RoomCard(item),
+              ))),
     );
   }
 }
