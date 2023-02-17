@@ -1,17 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../entity/room_user_entity.dart';
-import '../../entity/room_entity.dart';
-import '../../entity/user_entity.dart';
-import '../../model/room_model.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/room_search_provider.dart';
 import '../../service/const_service.dart';
-import '../../service/page_service.dart';
-import '../../service/room_service.dart';
-import '../../service/time_service.dart';
 import '../l1/cancel_button.dart';
 import '../l2/tag_field.dart';
 
@@ -21,19 +13,26 @@ class RoomSearchDialog extends HookConsumerWidget {
   final formKey = GlobalKey<FormBuilderState>();
   final tagKey = GlobalKey<TagFieldState>();
 
+  void submit(BuildContext context, WidgetRef ref) {
+    Navigator.pop(context);
+
+    final tags = tagKey.currentState!.tagsController.getTags ?? [];
+    ref.read(roomSearchProvider.notifier).setTags(tags);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final searchRoom = ref.watch(roomSearchProvider);
+
     List<Widget> list = [
-      // titleField(),
       // placeTypeField(),
       // startTimeField(),
-      // maxNumberField(),
       // enterTypeField(enabledPassword),
-      // passwordField(enabledPassword),
       TagField(
         key: tagKey,
         samples: ConstService.sampleRoomTags,
         maxTagNumber: ConstService.maxTagLength,
+        initialTags: searchRoom.tags,
       ),
       // descriptionField(),
     ];
@@ -54,42 +53,9 @@ class RoomSearchDialog extends HookConsumerWidget {
               const CancelButton(),
               TextButton(
                   child: const Text('検索'),
-                  onPressed: () {
-                    Navigator.pop(context);
-                    // createRoom(context, ref);
-                  }),
+                  onPressed: () => submit(context, ref)),
             ]));
   }
-
-  // FormBuilderField titleField() {
-  //   const labelText = 'タイトル (最大${ConstService.roomTitleMax}文字)';
-
-  //   return FormBuilderTextField(
-  //     name: 'title',
-  //     initialValue: '遊び部屋',
-  //     autovalidateMode: AutovalidateMode.onUserInteraction,
-  //     validator: FormBuilderValidators.compose([
-  //       FormBuilderValidators.required(errorText: '入力してください'),
-  //       FormBuilderValidators.maxLength(ConstService.roomTitleMax),
-  //     ]),
-  //     decoration: const InputDecoration(labelText: labelText),
-  //   );
-  // }
-
-  // FormBuilderField descriptionField() {
-  //   const labelText = '説明 (最大${ConstService.roomDescriptionMax}文字)';
-
-  //   return FormBuilderTextField(
-  //     name: 'description',
-  //     autovalidateMode: AutovalidateMode.onUserInteraction,
-  //     validator: FormBuilderValidators.compose([
-  //       FormBuilderValidators.maxLength(ConstService.roomDescriptionMax),
-  //     ]),
-  //     decoration: const InputDecoration(labelText: labelText),
-  //     minLines: 2,
-  //     maxLines: 2,
-  //   );
-  // }
 
   // FormBuilderField startTimeField() {
   //   final formatter = DateFormat('MM/dd(E) HH:mm', 'ja');
@@ -126,25 +92,6 @@ class RoomSearchDialog extends HookConsumerWidget {
   //   );
   // }
 
-  // FormBuilderField maxNumberField() {
-  //   const labelText = '最大人数';
-
-  //   return FormBuilderSlider(
-  //     name: 'maxNumber',
-  //     autovalidateMode: AutovalidateMode.always,
-  //     validator: FormBuilderValidators.compose([
-  //       FormBuilderValidators.required(),
-  //       FormBuilderValidators.max(ConstService.roomMaxNumber),
-  //     ]),
-  //     decoration: const InputDecoration(labelText: labelText),
-  //     initialValue: 4,
-  //     min: 2,
-  //     max: ConstService.roomMaxNumber.toDouble(),
-  //     divisions: ConstService.roomMaxNumber - 2,
-  //     displayValues: DisplayValues.current,
-  //   );
-  // }
-
   // FormBuilderField placeTypeField() {
   //   return FormBuilderDropdown<PlaceType>(
   //     name: 'placeType',
@@ -176,26 +123,6 @@ class RoomSearchDialog extends HookConsumerWidget {
   //         .toList(),
   //     onChanged: (EnterType? enterType) => enabledPassword.value =
   //         enterType != null && enterType == EnterType.password,
-  //   );
-  // }
-
-  // Widget passwordField(enabledPassword) {
-  //   const labelText = 'パスワード (最大${ConstService.roomPasswordMax}文字)';
-
-  //   return Visibility(
-  //     visible: enabledPassword.value,
-  //     maintainState: true,
-  //     maintainAnimation: true,
-  //     child: FormBuilderTextField(
-  //       name: 'password',
-  //       autovalidateMode: AutovalidateMode.onUserInteraction,
-  //       validator: FormBuilderValidators.compose([
-  //         FormBuilderValidators.maxLength(ConstService.roomPasswordMax),
-  //       ]),
-  //       decoration: const InputDecoration(labelText: labelText),
-  //       enabled: enabledPassword.value,
-  //       maxLength: ConstService.roomPasswordMax,
-  //     ),
   //   );
   // }
 }

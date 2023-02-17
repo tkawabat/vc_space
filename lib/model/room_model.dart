@@ -84,7 +84,10 @@ class RoomModel extends ModelBase {
         .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
-  Future<List<RoomEntity>> getList(int page) async {
+  Future<List<RoomEntity>> getList(
+    int page, {
+    List<String>? tags,
+  }) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
     final startTime = DateTime.now()
@@ -92,11 +95,17 @@ class RoomModel extends ModelBase {
         .toUtc()
         .toIso8601String();
 
-    return supabase
+    var query = supabase
         .from(tableName)
         .select(columns)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
-        .gte('start_time', startTime)
+        .gte('start_time', startTime);
+
+    if (tags != null) {
+      query.contains('tags', tags);
+    }
+
+    return query
         .order('start_time', ascending: true)
         .range(start, to)
         .then(_getEntityList)

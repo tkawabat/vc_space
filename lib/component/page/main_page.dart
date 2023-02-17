@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:vc_space/entity/wait_time_entity.dart';
 
 import '../../model/room_model.dart';
-import '../../model/wait_time_model.dart';
-import '../../service/const_system.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_edit_dialog.dart';
 import '../l3/header.dart';
@@ -26,8 +23,19 @@ class MainPage extends HookConsumerWidget {
         children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              // LoginService().logout();
               RoomModel().hoge();
+
+              // RoomModel()
+              //     .getJoinList('5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+              //     .then((value) {
+              //   debugPrint(value.length.toString());
+              //   value.forEach((e) {
+              //     var users = e.users.map((user) => user.userData.name);
+              //     debugPrint('room: ${e.roomId} users: ${users.toString()}');
+              //   });
+              // }).catchError((error) {
+              //   debugPrint(error.toString());
+              // });
 
               // final waitTimeEntity = WaitTimeEntity(
               //     uid: '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b',
