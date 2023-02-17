@@ -40,7 +40,7 @@ class RoomEditDialog extends HookConsumerWidget {
 
     final UserEntity? loginUser = ref.read(loginUserProvider);
     if (loginUser == null) {
-      PageService().snackbar('部屋作成するにはログインが必要です', SnackBarType.error);
+      PageService().snackbar('部屋を作るにはログインが必要です', SnackBarType.error);
       return;
     }
 
@@ -64,10 +64,10 @@ class RoomEditDialog extends HookConsumerWidget {
     );
 
     await RoomModel().insert(newRoom).then((roomId) {
-      PageService().snackbar('部屋を作成しました', SnackBarType.info);
+      PageService().snackbar('部屋を作りました', SnackBarType.info);
       RoomService().enter(roomId);
     }).catchError((_) {
-      PageService().snackbar('部屋を作成に失敗しました', SnackBarType.error);
+      PageService().snackbar('部屋作成エラー', SnackBarType.error);
     });
   }
 
@@ -82,7 +82,7 @@ class RoomEditDialog extends HookConsumerWidget {
     final tags = tagKey.currentState!.tagsController.getTags ?? [];
 
     if (room == null) {
-      PageService().snackbar('部屋の更新に失敗しました', SnackBarType.error);
+      PageService().snackbar('部屋修正エラー', SnackBarType.error);
       return;
     }
 
@@ -106,9 +106,9 @@ class RoomEditDialog extends HookConsumerWidget {
     );
 
     await RoomModel().update(newRoom).then((roomId) {
-      PageService().snackbar('部屋情報を更新しました', SnackBarType.info);
+      PageService().snackbar('部屋を修正しました', SnackBarType.info);
     }).catchError((_) {
-      PageService().snackbar('部屋の更新に失敗しました', SnackBarType.error);
+      PageService().snackbar('部屋修正エラー', SnackBarType.error);
     });
   }
 
@@ -135,13 +135,13 @@ class RoomEditDialog extends HookConsumerWidget {
       descriptionField(room?.description),
     ];
 
-    final title = room == null ? '部屋作成' : '部屋更新';
+    final title = room == null ? '部屋を作る' : '部屋を修正する';
 
     Widget submitButton = room == null
         ? TextButton(
             child: const Text('作成'), onPressed: () => createRoom(context, ref))
         : TextButton(
-            child: const Text('更新'), onPressed: () => updateRoom(context, ref));
+            child: const Text('修正'), onPressed: () => updateRoom(context, ref));
 
     return FormBuilder(
         key: formKey,
