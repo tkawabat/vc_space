@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
-import 'package:vc_space/provider/room_list_join_provider.dart';
 
 import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
 import '../model/room_user_model.dart';
+import '../provider/room_list_join_provider.dart';
 import 'page_service.dart';
 
 class RoomService {

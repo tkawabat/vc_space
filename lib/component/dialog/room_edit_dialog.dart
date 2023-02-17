@@ -12,6 +12,7 @@ import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_provider.dart';
+import '../../provider/room_list_join_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/const_system.dart';
 import '../../service/page_service.dart';
@@ -65,6 +66,7 @@ class RoomEditDialog extends HookConsumerWidget {
 
     await RoomModel().insert(newRoom).then((roomId) {
       PageService().snackbar('部屋を作りました', SnackBarType.info);
+      PageService().ref!.read(roomListJoinProvider.notifier).add(newRoom);
       RoomService().enter(roomId);
     }).catchError((_) {
       PageService().snackbar('部屋作成エラー', SnackBarType.error);
