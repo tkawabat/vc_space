@@ -1,8 +1,9 @@
 class ConstService {
-  static const roomStartTimeLimitHours = -3;
   static const listStep = 20;
 
   static const stepTime = 15;
+
+  static const calendarMax = 90;
 
   static const userGreetingMax = 140;
 

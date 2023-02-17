@@ -49,13 +49,6 @@ class RoomModel extends ModelBase {
         .catchError(ErrorService().onError(null, 'hoge'));
   }
 
-  String _getStartTimeLimit() {
-    return DateTime.now()
-        .add(const Duration(hours: ConstService.roomStartTimeLimitHours))
-        .toUtc()
-        .toIso8601String();
-  }
-
   List<RoomEntity> _getEntityList(dynamic result) {
     if (result == null) return [];
     if (result is! List) return [];
@@ -94,11 +87,16 @@ class RoomModel extends ModelBase {
   Future<List<RoomEntity>> getList(int page) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
+    final startTime = DateTime.now()
+        .add(const Duration(minutes: -30))
+        .toUtc()
+        .toIso8601String();
+
     return supabase
         .from(tableName)
         .select(columns)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
-        .gte('start_time', _getStartTimeLimit())
+        .gte('start_time', startTime)
         .order('start_time', ascending: true)
         .range(start, to)
         .then(_getEntityList)
@@ -107,13 +105,18 @@ class RoomModel extends ModelBase {
   }
 
   Future<List<RoomEntity>> getJoinList(String uid) async {
+    final startTime = DateTime.now()
+        .add(const Duration(hours: -24))
+        .toUtc()
+        .toIso8601String();
+
     return supabase
         .from(tableName)
         .select('$columns, check:room_user!inner (uid)')
         .in_('check.uid', [uid])
         .lt('check.room_user_type', RoomUserType.kick.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
-        .gte('start_time', _getStartTimeLimit())
+        .gte('start_time', startTime)
         .order('start_time', ascending: true)
         .then(_getEntityList)
         .catchError(ErrorService()

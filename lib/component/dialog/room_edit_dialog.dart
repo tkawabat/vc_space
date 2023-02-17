@@ -210,25 +210,10 @@ class RoomEditDialog extends HookConsumerWidget {
       decoration: const InputDecoration(labelText: '開始時間'),
       format: formatter,
       firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 60)),
+      lastDate:
+          DateTime.now().add(const Duration(days: ConstService.calendarMax)),
       showCursor: true,
       controller: controller,
-      onChanged: (value) {
-        final DateTime time = value ?? DateTime.now();
-        final newValue =
-            TimeService().getStepDateTime(time, ConstService.stepTime);
-
-        if (time == newValue) return;
-
-        formKey.currentState?.fields['startTime']?.didChange(newValue);
-        formKey.currentState?.fields['startTime']
-            ?.invalidate('${ConstService.stepTime}分区切りに変更しました');
-        focusNode.unfocus();
-
-        Timer(const Duration(microseconds: 1), () {
-          controller.text = formatter.format(newValue);
-        });
-      },
     );
   }
 

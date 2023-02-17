@@ -13,11 +13,15 @@ class TimeService {
 
   // 区切りが良い時間を返す
   DateTime getStepDateTime(DateTime time, int step) {
-    final remain = time.minute % step;
+    DateTime returnValue = time.add(Duration(
+        seconds: -time.second,
+        milliseconds: time.microsecond,
+        microseconds: time.microsecond));
+    final remain = returnValue.minute % step;
     if (remain > step / 2) {
-      return time.add(Duration(minutes: step - remain));
+      return returnValue.add(Duration(minutes: step - remain));
     } else {
-      return time.add(Duration(minutes: -remain));
+      return returnValue.add(Duration(minutes: -remain));
     }
   }
 

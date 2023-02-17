@@ -8,6 +8,7 @@ import '../../entity/room_user_entity.dart';
 import '../../entity/wait_time_entity.dart';
 import '../../provider/room_list_join_provider.dart';
 import '../../provider/wait_time_list_provider.dart';
+import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../service/time_service.dart';
@@ -26,6 +27,12 @@ class CalendarPage extends StatefulHookConsumerWidget {
 }
 
 class CalendarPageState extends ConsumerState<CalendarPage> {
+  DateTime getStartTime(e) {
+    if (e is RoomEntity) return e.startTime;
+    if (e is WaitTimeEntity) return e.startTime;
+    throw Exception('startTime Error');
+  }
+
   Map<DateTime, List<dynamic>> getEventMap(
     List<WaitTimeEntity> waitTimeList,
     List<RoomEntity> roomList,
@@ -45,6 +52,10 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
         map[key] = [];
       }
       map[key]!.add(room);
+    }
+
+    for (final key in map.keys) {
+      map[key]!.sort((a, b) => getStartTime(a).compareTo(getStartTime(b)));
     }
 
     return map;
@@ -89,7 +100,8 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
             TableCalendar(
               headerStyle: const HeaderStyle(formatButtonVisible: false),
               firstDay: DateTime.now().add(const Duration(days: 0)),
-              lastDay: DateTime.now().add(const Duration(days: 90)),
+              lastDay: DateTime.now()
+                  .add(const Duration(days: ConstService.calendarMax)),
               focusedDay: selectedDayState.value,
               locale: 'ja_JP',
               selectedDayPredicate: (day) =>

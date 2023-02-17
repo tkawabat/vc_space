@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
@@ -19,15 +17,24 @@ class WaitTimeInput extends HookConsumerWidget {
   final formKey = GlobalKey<FormBuilderState>();
 
   void addWaitTime() {
-    PageService().showConfirmDialog('空き時間を登録しますか？', () {
-      if (!(formKey.currentState?.saveAndValidate() ?? false)) {
-        PageService().snackbar('入力値に問題があります', SnackBarType.error);
-        return;
-      }
-      // TODO 開始のほうがあとにならないように
-      final fields = formKey.currentState!.value;
-      WaitTimeService().add(uid, fields['startTime'], fields['endTime']);
-    });
+    if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      PageService().snackbar('入力値に問題があります', SnackBarType.error);
+      return;
+    }
+    final fields = formKey.currentState!.value;
+
+    DateTime start = fields['startTime'];
+    DateTime end = fields['endTime'];
+    if (!start.isBefore(end)) {
+      PageService().snackbar('終了時間は開始時間より後にしてください。', SnackBarType.error);
+      return;
+    }
+    if (end.difference(start).inHours > 8) {
+      PageService().snackbar('空き時間は最長8時間です。', SnackBarType.error);
+      return;
+    }
+
+    WaitTimeService().add(uid, fields['startTime'], fields['endTime']);
   }
 
   @override
@@ -42,18 +49,18 @@ class WaitTimeInput extends HookConsumerWidget {
     return FormBuilder(
         key: formKey,
         child: Row(children: [
-          const Text('空き時間', style: TextStyle(fontWeight: FontWeight.bold)),
+          const Text('空き\n登録', style: TextStyle(fontWeight: FontWeight.bold)),
           timeField('startTime', '開始', startTime),
           timeField('endTime', '終了', endTime),
           IconButton(
-              tooltip: '保存する',
+              tooltip: '登録する',
               icon: const Icon(Icons.check),
               onPressed: () => addWaitTime()),
         ]));
   }
 
   Widget timeField(String name, String label, DateTime initialValue) {
-    final formatter = DateFormat('HH:mm', 'ja');
+    final formatter = DateFormat('MM/dd(E) HH:mm', 'ja');
     final controller = TextEditingController();
     final focusNode = FocusNode();
 
@@ -65,25 +72,11 @@ class WaitTimeInput extends HookConsumerWidget {
         initialValue: initialValue,
         decoration: InputDecoration(labelText: label),
         format: formatter,
+        firstDate: DateTime.now(),
+        lastDate:
+            DateTime.now().add(const Duration(days: ConstService.calendarMax)),
         showCursor: true,
         controller: controller,
-        inputType: InputType.time,
-        onChanged: (value) {
-          final DateTime time = value ?? DateTime.now();
-          final newValue =
-              TimeService().getStepDateTime(time, ConstService.stepTime);
-
-          if (time == newValue) return;
-
-          formKey.currentState?.fields['startTime']?.didChange(newValue);
-          formKey.currentState?.fields['startTime']
-              ?.invalidate('${ConstService.stepTime}分区切りに変更しました');
-          focusNode.unfocus();
-
-          Timer(const Duration(microseconds: 1), () {
-            controller.text = formatter.format(newValue);
-          });
-        },
       ),
     );
   }
