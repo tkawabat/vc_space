@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:collection/collection.dart';
+import 'package:vc_space/provider/room_list_join_provider.dart';
 
 import '../route.dart';
 import '../entity/room_user_entity.dart';
@@ -61,7 +62,7 @@ class RoomService {
         return false;
       }
       PageService().snackbar('部屋に参加しました', SnackBarType.info);
-      // TODO joinedroomいじる
+      PageService().ref!.read(roomListJoinProvider.notifier).add(room);
     }
 
     enter(room.roomId);
@@ -69,12 +70,15 @@ class RoomService {
     return true;
   }
 
-  FutureOr<bool> quit(int roomId, String uid) async {
-    final success = await RoomUserModel().delete(roomId, uid);
+  FutureOr<bool> quit(RoomEntity room, String uid) async {
+    final success = await RoomUserModel().delete(room.roomId, uid);
     if (success) {
       PageService().snackbar('部屋から脱退しました', SnackBarType.info);
       PageService().transition(PageNames.home, replace: true);
-      // TODO joinedroomいじる
+      PageService()
+          .ref!
+          .read(roomListJoinProvider.notifier)
+          .delete(room.roomId);
     } else {
       PageService().snackbar('部屋からの脱退でエラーが発生しました', SnackBarType.error);
     }

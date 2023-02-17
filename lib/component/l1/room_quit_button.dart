@@ -34,7 +34,7 @@ class RoomQuitButton extends ConsumerWidget {
       onTap: canQuit(room, loginUser)
           ? () {
               PageService().showConfirmDialog('部屋から脱退します。', () {
-                RoomService().quit(room!.roomId, loginUser!.uid);
+                RoomService().quit(room!, loginUser!.uid);
                 PageService().back();
               });
             }
