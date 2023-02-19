@@ -1,3 +1,4 @@
+import '../service/const_service.dart';
 import 'model_base.dart';
 import '../service/error_service.dart';
 import '../entity/user_entity.dart';
@@ -15,6 +16,12 @@ class UserModel extends ModelBase {
 
   UserModel._internal();
 
+  List<UserEntity> _getEntityList(dynamic result) {
+    if (result == null) return [];
+    if (result is! List) return [];
+    return result.map((e) => _getEntity(e)!).toList();
+  }
+
   UserEntity? _getEntity(dynamic result) {
     if (result == null) return null;
     if (result is! Map<String, dynamic>) return null;
@@ -29,6 +36,41 @@ class UserModel extends ModelBase {
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, '$tableName.getById'));
+  }
+
+  Future<List<UserEntity>> getListByWaitTime(
+    int page,
+    DateTime time, {
+    UserEntity? searchUser,
+  }) {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+
+    final query = supabase
+        .from(tableName)
+        .select('''
+      *,
+      wait_time!inner (
+        wait_time_type,
+        start_time,
+        end_time
+      )
+      ''')
+        .eq('wait_time.wait_time_type', 10)
+        .lte('wait_time.start_time', time)
+        .gte('wait_time.end_time', time);
+
+    if (searchUser != null && searchUser.tags.isNotEmpty) {
+      query.contains('tags', searchUser.tags);
+    }
+
+    return query
+        .order('updated_at', foreignTable: 'wait_time')
+        .range(start, to)
+        .then(_getEntityList)
+        .catchError(ErrorService()
+            .onError<List<UserEntity>>([], '$tableName.getListByWaitTime'));
+    ;
   }
 
   Future<bool> update(

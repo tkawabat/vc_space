@@ -1,21 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/user_entity.dart';
-import '../../provider/login_provider.dart';
 import '../dialog/user_dialog.dart';
+import '../../service/time_service.dart';
+import '../l1/button.dart';
 import '../l1/user_icon.dart';
 import 'user_tag_list.dart';
 
-class UserCard extends ConsumerWidget {
+class UserCard extends StatelessWidget {
   final UserEntity user;
+  final void Function()? trailingOnTap;
+  final String? trailingButtonText;
 
-  const UserCard(this.user, {super.key});
+  const UserCard(
+    this.user, {
+    super.key,
+    this.trailingOnTap,
+    this.trailingButtonText,
+  });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final loginUser = ref.watch(loginUserProvider);
-
+  Widget build(BuildContext context) {
     return InkWell(
         onTap: () => showDialog(
             context: context,
@@ -40,13 +45,26 @@ class UserCard extends ConsumerWidget {
                       photo: user.photo,
                       tooltip: user.name,
                     ),
-                    title: Text(user.name),
+                    title: Wrap(children: [
+                      Text(user.name),
+                      UserTagList(user),
+                    ]),
+                    subtitle: Text(TimeService().getAgoString(user.updatedAt)),
+                    trailing: trailingButtonText != null
+                        ? SizedBox(
+                            width: 70,
+                            child: Button(
+                              onTap: trailingOnTap,
+                              text: trailingButtonText!,
+                            ),
+                          )
+                        : null,
                   ),
-                  Container(
-                    padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
-                    alignment: Alignment.topLeft,
-                    child: UserTagList(user),
-                  ),
+                  // Container(
+                  //   padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
+                  //   alignment: Alignment.topLeft,
+                  //   child: UserTagList(user),
+                  // ),
                 ],
               ),
             )));

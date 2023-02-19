@@ -61,7 +61,7 @@ class RoomDetailPageState extends ConsumerState<RoomDetailPage> {
       return const Loading();
     }
 
-    if (!RoomService().isJoined(room, user.uid)) {
+    if (!RoomService().isCompletelyJoined(room, user.uid)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         PageService().snackbar('入室していないため、ホーム画面に戻ります。', SnackBarType.error);
         PageService().transition(PageNames.home);

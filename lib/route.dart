@@ -3,13 +3,15 @@ import 'package:flutter/material.dart';
 import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
 import 'component/page/room_detail_page.dart';
+import 'component/page/room_offer_page.dart';
 import 'component/page/user_page.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
   home('/'),
-  room('/room'),
   user('/user'),
+  room('/room'),
+  roomOffer('/room/offer'),
   calendar('/calendar'),
   ;
 
@@ -44,6 +46,8 @@ Route<dynamic> _transactionPage(
     builder = (_) => _userPageTransaction();
   } else if (path == PageNames.room.path) {
     builder = (_) => _roomPageTransaction(queryParameters);
+  } else if (path == PageNames.roomOffer.path) {
+    builder = (_) => _roomOfferPageTransaction();
   } else if (path == PageNames.calendar.path) {
     builder = (_) => _calendarPageTransaction(queryParameters);
   } else {
@@ -75,6 +79,8 @@ Widget _roomPageTransaction(Map<String, String>? queryParameters) {
 
   return RoomDetailPage(roomId: roomId);
 }
+
+Widget _roomOfferPageTransaction() => const RoomOfferPage();
 
 Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {

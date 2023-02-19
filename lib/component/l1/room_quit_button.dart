@@ -17,7 +17,7 @@ class RoomQuitButton extends ConsumerWidget {
     if (user == null) return false;
     if (room == null) return false;
 
-    final roomUser = RoomService().getOwnRoomUser(room, user.uid);
+    final roomUser = RoomService().getRoomUser(room, user.uid);
     if (roomUser == null) return false;
     if (roomUser.roomUserType == RoomUserType.admin) return false;
 

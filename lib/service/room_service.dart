@@ -19,11 +19,18 @@ class RoomService {
 
   RoomService._internal();
 
-  RoomUserEntity? getOwnRoomUser(RoomEntity room, String uid) {
+  RoomUserEntity? getRoomUser(RoomEntity room, String uid) {
     return room.users.firstWhereOrNull((element) => element.uid == uid);
   }
 
   bool isJoined(RoomEntity room, String userId) {
+    return room.users.any((e) =>
+        e.uid == userId &&
+        [RoomUserType.admin, RoomUserType.member, RoomUserType.offer]
+            .contains(e.roomUserType));
+  }
+
+  bool isCompletelyJoined(RoomEntity room, String userId) {
     return room.users.any((e) =>
         e.uid == userId &&
         [RoomUserType.admin, RoomUserType.member].contains(e.roomUserType));
@@ -40,10 +47,6 @@ class RoomService {
         .first;
   }
 
-  RoomUserEntity? getRoomUser(RoomEntity room, String uid) {
-    return room.users.firstWhere((element) => element.uid == uid);
-  }
-
   void enter(int roomId) {
     if (PageService().ref == null) {
       return;
@@ -54,11 +57,11 @@ class RoomService {
 
   Future<bool> join(RoomEntity room, UserEntity user, String? password) async {
     // 未参加だったら参加する
-    if (!isJoined(room, user.uid)) {
+    if (!isCompletelyJoined(room, user.uid)) {
       final result = await RoomUserModel()
           .insert(room.roomId, user.uid, RoomUserType.member, password);
       if (!result) {
-        PageService().snackbar('参加できませんでした', SnackBarType.error);
+        PageService().snackbar('部屋への参加でエラーが発生しました', SnackBarType.error);
         return false;
       }
       PageService().snackbar('部屋に参加しました', SnackBarType.info);
@@ -80,7 +83,7 @@ class RoomService {
           .read(roomListJoinProvider.notifier)
           .delete(room.roomId);
     } else {
-      PageService().snackbar('部屋からの脱退でエラーが発生しました', SnackBarType.error);
+      PageService().snackbar('部屋の脱退でエラーが発生しました', SnackBarType.error);
     }
     return success;
   }
@@ -89,10 +92,39 @@ class RoomService {
     final newRoomUser = roomUser.copyWith(roomUserType: RoomUserType.kick);
     final success = await RoomUserModel().update(newRoomUser);
     if (success) {
-      PageService().snackbar('部屋からキックしました', SnackBarType.info);
+      PageService().snackbar(
+          '${roomUser.userData.name}さんを部屋からキックしました', SnackBarType.info);
     } else {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
     }
     return success;
+  }
+
+  FutureOr<bool> offer(RoomEntity room, UserEntity user) async {
+    if (isJoined(room, user.uid)) {
+      PageService().snackbar('${user.name}さんは既に参加しています', SnackBarType.error);
+      return false;
+    }
+
+    return RoomUserModel()
+        .insert(room.roomId, user.uid, RoomUserType.offer, '')
+        .then((_) {
+      PageService().snackbar('${user.name}さんを誘いました！', SnackBarType.info);
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('オファーでエラーが発生しました', SnackBarType.error);
+      return false;
+    });
+  }
+
+  FutureOr<bool> offerStop(RoomUserEntity roomUser) async {
+    return RoomUserModel().delete(roomUser.roomId, roomUser.uid).then((_) {
+      PageService().snackbar(
+          '${roomUser.userData.name}さんの誘いをキャンセルしました', SnackBarType.info);
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
+      return false;
+    });
   }
 }

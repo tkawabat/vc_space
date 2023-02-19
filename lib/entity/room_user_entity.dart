@@ -11,8 +11,8 @@ part 'room_user_entity.freezed.dart';
 part 'room_user_entity.g.dart';
 
 enum RoomUserType {
-  admin(10, '主催者'),
-  member(20, '参加者'),
+  admin(10, '主催'),
+  member(20, 'メンバー'),
   offer(70, 'オファー中'),
   kick(80, '除外'),
   ;

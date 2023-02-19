@@ -37,7 +37,10 @@ class RoomTagList extends ConsumerWidget {
         loginUser != null &&
         RoomService().isJoined(room, loginUser.uid)) {
       widgets.add(Tag(
-        text: '参加済み',
+        text: RoomService()
+            .getRoomUser(room, loginUser.uid)!
+            .roomUserType
+            .displayName,
         tagColor: Colors.orange.shade200,
         bold: true,
       ));

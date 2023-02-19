@@ -99,7 +99,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
           children: <Widget>[
             TableCalendar(
               headerStyle: const HeaderStyle(formatButtonVisible: false),
-              firstDay: DateTime.now().add(const Duration(days: 0)),
+              firstDay: DateTime.now().add(const Duration(days: -1)),
               lastDay: DateTime.now()
                   .add(const Duration(days: ConstService.calendarMax)),
               focusedDay: selectedDayState.value,

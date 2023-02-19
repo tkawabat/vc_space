@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../model/room_model.dart';
+import '../../model/user_model.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_edit_dialog.dart';
 import '../l3/header.dart';
@@ -23,45 +24,18 @@ class MainPage extends HookConsumerWidget {
         children: <Widget>[
           ElevatedButton(
             onPressed: () {
-              RoomModel().hoge();
+              // RoomModel().hoge();
 
-              // RoomModel()
-              //     .getJoinList('5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
-              //     .then((value) {
-              //   debugPrint(value.length.toString());
-              //   value.forEach((e) {
-              //     var users = e.users.map((user) => user.userData.name);
-              //     debugPrint('room: ${e.roomId} users: ${users.toString()}');
-              //   });
-              // }).catchError((error) {
-              //   debugPrint(error.toString());
-              // });
-
-              // final waitTimeEntity = WaitTimeEntity(
-              //     uid: '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b',
-              //     waitTimeId: ConstSystem.waitTimeBeforeInsertId,
-              //     startTime: DateTime.now(),
-              //     endTime: DateTime.now(),
-              //     updatedAt: DateTime.now());
-              // WaitTimeModel().insert(waitTimeEntity);
-
-              // RoomModel().getStream(8, (list) {
-              //   debugPrint('onData');
-              //   debugPrint(list.toString());
-              // }, (error) {
-              //   debugPrint('onError');
-              //   debugPrint(error.toString());
-              // });
-            },
-            child: const Text("デバッグ"),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              // LoginService().logout();
-              // var list = await WaitTimeModel().getList();
-              // debugPrint(list.toString());
-              // ref.read(roomListProvider.notifier).getList();
-              // PageService().snackbar('部屋を取得しました', SnackBarType.info);
+              UserModel()
+                  .getListByWaitTime(0, DateTime(2023, 1, 1))
+                  .then((value) {
+                debugPrint(value.length.toString());
+                value.forEach((e) {
+                  debugPrint('user: ${e.name}');
+                });
+              }).catchError((error) {
+                debugPrint(error.toString());
+              });
             },
             child: const Text("デバッグ"),
           ),

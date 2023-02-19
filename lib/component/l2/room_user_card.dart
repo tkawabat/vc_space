@@ -18,15 +18,19 @@ class RoomUserCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    bool isHide = roomUser.roomUserType == RoomUserType.offer && !isAdmin;
+
     return InkWell(
-        onTap: () => showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (_) {
-              return UserDialog(
-                uid: roomUser.uid,
-              );
-            }),
+        onTap: isHide
+            ? null
+            : () => showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_) {
+                  return UserDialog(
+                    uid: roomUser.uid,
+                  );
+                }),
         child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Card(
@@ -38,32 +42,29 @@ class RoomUserCard extends ConsumerWidget {
               child: Column(
                 children: [
                   ListTile(
-                    leading: roomUser.roomUserType == RoomUserType.offer
+                    leading: isHide
                         ? const UserIcon()
                         : UserIcon(
                             photo: roomUser.userData.photo,
                             tooltip: roomUser.userData.name,
                           ),
-                    title: buildTitle(roomUser),
-                    trailing: buildTrailing(roomUser),
+                    title: buildTitle(roomUser, isHide),
+                    trailing: buildTrailing(roomUser, isHide),
                   ),
                 ],
               ),
             )));
   }
 
-  Widget buildTitle(RoomUserEntity roomUser) {
+  Widget buildTitle(RoomUserEntity roomUser, bool isHide) {
     return SizedBox(
       width: 250,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
+      child: Wrap(
         children: [
-          Text(roomUser.roomUserType == RoomUserType.offer
-              ? 'オファー中'
-              : roomUser.userData.name),
-          if (roomUser.roomUserType == RoomUserType.admin)
-            const SizedBox(width: 10),
-          if (roomUser.roomUserType == RoomUserType.admin)
+          Text(isHide ? '' : roomUser.userData.name),
+          const SizedBox(width: 10),
+          if ([RoomUserType.admin, RoomUserType.offer]
+              .contains(roomUser.roomUserType))
             Tag(
               text: roomUser.roomUserType.displayName,
               bold: true,
@@ -73,46 +74,60 @@ class RoomUserCard extends ConsumerWidget {
     );
   }
 
-  Widget buildTrailing(RoomUserEntity roomUser) {
+  Widget buildTrailing(RoomUserEntity roomUser, bool isHide) {
     const kickText = '部屋から強制的に脱退させます。\n'
         'キックされたユーザーは、自分から参加することはできません。\n'
         'キックしますか？';
+
+    List<PopupMenuItem> menuList = [];
+    if (isAdmin && roomUser.roomUserType == RoomUserType.member) {
+      menuList.add(PopupMenuItem(
+        onTap: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            PageService().showConfirmDialog(kickText, () {
+              RoomService().kick(roomUser);
+            });
+          });
+        },
+        child: const Text('キックする'),
+      ));
+    }
+    if (isAdmin && roomUser.roomUserType == RoomUserType.offer) {
+      menuList.add(PopupMenuItem(
+        onTap: () {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            RoomService().offerStop(roomUser);
+          });
+        },
+        child: const Text('誘いをやめる'),
+      ));
+    }
 
     return SizedBox(
       width: 100,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Tooltip(
-            message: 'Discord名をコピー',
-            child: InkWell(
-              onTap: () async {
-                final data = ClipboardData(text: roomUser.userData.discordName);
-                Clipboard.setData(data).then((_) {
-                  PageService().snackbar('Discord名をコピーしました', SnackBarType.info);
-                });
-              },
-              child: const FaIcon(FontAwesomeIcons.discord),
+          if (!isHide)
+            Tooltip(
+              message: 'Discord名をコピー',
+              child: InkWell(
+                onTap: () async {
+                  final data =
+                      ClipboardData(text: roomUser.userData.discordName);
+                  Clipboard.setData(data).then((_) {
+                    PageService()
+                        .snackbar('Discord名をコピーしました', SnackBarType.info);
+                  });
+                },
+                child: const FaIcon(FontAwesomeIcons.discord),
+              ),
             ),
-          ),
-          if (isAdmin) const SizedBox(width: 10),
-          if (isAdmin)
+          if (menuList.isNotEmpty) const SizedBox(width: 10),
+          if (menuList.isNotEmpty)
             PopupMenuButton(
               tooltip: 'メニューを表示',
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  onTap: roomUser.roomUserType == RoomUserType.admin
-                      ? null
-                      : () {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            PageService().showConfirmDialog(kickText, () {
-                              RoomService().kick(roomUser);
-                            });
-                          });
-                        },
-                  child: const Text('キックする'),
-                ),
-              ],
+              itemBuilder: (_) => menuList,
             ),
         ],
       ),
