@@ -20,8 +20,10 @@ class Button extends StatelessWidget {
     return Align(
       alignment: alignment,
       child: ElevatedButton(
-        style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(color)),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          shape: const StadiumBorder(),
+        ),
         onPressed: onTap,
         child: Text(text),
       ),
