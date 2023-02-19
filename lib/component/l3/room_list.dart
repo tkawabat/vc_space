@@ -53,7 +53,7 @@ class RoomList extends HookConsumerWidget {
               builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
                 animateTransitions: true,
                 firstPageErrorIndicatorBuilder: (context) {
-                  return const Center(child: Text('hoge'));
+                  return const Center(child: Text('データ取得エラー'));
                 },
                 noItemsFoundIndicatorBuilder: (BuildContext context) {
                   return const Center(child: Text('部屋が存在しません。'));
