@@ -11,7 +11,7 @@ class NoticeStatusConverter implements JsonConverter<NoticeStatus, int> {
   }
 
   @override
-  int toJson(NoticeStatus NoticeStatus) {
-    return NoticeStatus.value;
+  int toJson(NoticeStatus variable) {
+    return variable.value;
   }
 }

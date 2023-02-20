@@ -11,7 +11,7 @@ class WaitTimeTypeConverter implements JsonConverter<WaitTimeType, int> {
   }
 
   @override
-  int toJson(WaitTimeType waitTimeType) {
-    return waitTimeType.value;
+  int toJson(WaitTimeType variable) {
+    return variable.value;
   }
 }

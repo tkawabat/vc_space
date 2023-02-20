@@ -11,7 +11,7 @@ class RoomUserTypeConverter implements JsonConverter<RoomUserType, int> {
   }
 
   @override
-  int toJson(RoomUserType roomUserType) {
-    return roomUserType.value;
+  int toJson(RoomUserType variable) {
+    return variable.value;
   }
 }

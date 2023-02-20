@@ -11,7 +11,7 @@ class PlaceTypeConverter implements JsonConverter<PlaceType, int> {
   }
 
   @override
-  int toJson(PlaceType placeType) {
-    return placeType.value;
+  int toJson(PlaceType variable) {
+    return variable.value;
   }
 }

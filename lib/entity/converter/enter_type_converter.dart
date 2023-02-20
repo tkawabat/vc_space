@@ -11,7 +11,7 @@ class EnterTypeConverter implements JsonConverter<EnterType, int> {
   }
 
   @override
-  int toJson(EnterType enterType) {
-    return enterType.value;
+  int toJson(EnterType variable) {
+    return variable.value;
   }
 }

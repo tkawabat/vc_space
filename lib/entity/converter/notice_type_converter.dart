@@ -11,7 +11,7 @@ class NoticeTypeConverter implements JsonConverter<NoticeType, int> {
   }
 
   @override
-  int toJson(NoticeType NoticeType) {
-    return NoticeType.value;
+  int toJson(NoticeType variable) {
+    return variable.value;
   }
 }
