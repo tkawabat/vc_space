@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
+import '../provider/login_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
 import 'login_service.dart';
@@ -105,5 +106,53 @@ class PageService {
                 }),
           ]);
         });
+  }
+
+  void transitionHome(PageNames current) {
+    if (current == PageNames.home) return;
+    PageService().transition(PageNames.home);
+  }
+
+  void transitionNotice(PageNames current) {
+    if (ref == null) return;
+    final loginUser = ref!.read(loginUserProvider);
+
+    if (loginUser == null) {
+      PageService().showConfirmDialog(
+          'お知らせを見るにはログインが必要です。'
+          '\nDiscordでログインする。',
+          () => LoginService().login());
+    } else {
+      PageService().transition(PageNames.notice);
+    }
+  }
+
+  void transitionMyCalendar(PageNames current) {
+    if (ref == null) return;
+    final loginUser = ref!.read(loginUserProvider);
+
+    if (loginUser == null) {
+      PageService().showConfirmDialog(
+          '予定表を見るにはログインが必要です。'
+          '\nDiscordでログインする。',
+          () => LoginService().login());
+    } else {
+      PageService()
+          .transition(PageNames.calendar, arguments: {'uid': loginUser.uid});
+    }
+  }
+
+  void viewCreateDialog(PageNames current) {
+    if (ref == null) return;
+    final loginUser = ref!.read(loginUserProvider);
+
+    if (loginUser == null) {
+      PageService().showConfirmDialog(
+          '予定を作るにはログインが必要です。'
+          '\nDiscordでログインする',
+          () => LoginService().login());
+    } else {
+      // TODO
+    }
   }
 }

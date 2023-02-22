@@ -8,6 +8,7 @@ import '../../entity/room_user_entity.dart';
 import '../../entity/wait_time_entity.dart';
 import '../../provider/room_list_join_provider.dart';
 import '../../provider/wait_time_list_provider.dart';
+import '../../route.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
@@ -15,6 +16,7 @@ import '../../service/time_service.dart';
 import '../l2/room_card.dart';
 import '../l2/wait_time_card.dart';
 import '../l2/wait_time_input.dart';
+import '../l3/footer.dart';
 import '../l3/header.dart';
 
 class CalendarPage extends StatefulHookConsumerWidget {
@@ -89,9 +91,8 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     eventState.value = eventMap[key] ?? [];
 
     return Scaffold(
-      appBar: const Header(
-        title: "カレンダー",
-      ),
+      appBar: const Header(PageNames.calendar, "予定表"),
+      bottomNavigationBar: const Footer(PageNames.calendar),
       body: Container(
         padding: const EdgeInsets.all(5),
         child: Column(

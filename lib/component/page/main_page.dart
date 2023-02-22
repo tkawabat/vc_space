@@ -4,8 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../model/room_model.dart';
 import '../../model/user_model.dart';
+import '../../route.dart';
 import '../../service/page_service.dart';
-import '../dialog/room_edit_dialog.dart';
+import '../dialog/room_search_dialog.dart';
+import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
@@ -17,43 +19,51 @@ class MainPage extends HookConsumerWidget {
     PageService().init(context, ref);
 
     return Scaffold(
-      appBar: Header(title: dotenv.get('TITLE')),
+      appBar: Header(PageNames.home, dotenv.get('TITLE')),
+      bottomNavigationBar: const Footer(PageNames.home),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          ElevatedButton(
-            onPressed: () {
-              // RoomModel().hoge();
+          // ElevatedButton(
+          //   onPressed: () {
+          //     // RoomModel().hoge();
 
-              UserModel()
-                  .getListByWaitTime(0, DateTime(2023, 1, 1))
-                  .then((value) {
-                debugPrint(value.length.toString());
-                value.forEach((e) {
-                  debugPrint('user: ${e.name}');
-                });
-              }).catchError((error) {
-                debugPrint(error.toString());
-              });
-            },
-            child: const Text("デバッグ"),
-          ),
+          //     UserModel()
+          //         .getListByWaitTime(0, DateTime(2023, 1, 1))
+          //         .then((value) {
+          //       debugPrint(value.length.toString());
+          //       for (var e in value) {
+          //         debugPrint('user: ${e.name}');
+          //       }
+          //     }).catchError((error) {
+          //       debugPrint(error.toString());
+          //     });
+          //   },
+          //   child: const Text("デバッグ"),
+          // ),
           RoomList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        tooltip: '部屋を作る',
-        onPressed: () {
-          showDialog(
+          tooltip: '部屋を絞り込み',
+          onPressed: () => showDialog(
               context: context,
               barrierDismissible: true,
-              builder: (_) {
-                return RoomEditDialog();
-              });
-        },
-        child: const Icon(Icons.add, size: 32),
-      ),
+              builder: (_) => RoomSearchDialog()),
+          child: const Icon(Icons.search)
+
+          //   tooltip: '部屋を作る',
+          //   onPressed: () {
+          //     showDialog(
+          //         context: context,
+          //         barrierDismissible: true,
+          //         builder: (_) {
+          //           return RoomEditDialog();
+          //         });
+          //   },
+          //   child: const Icon(Icons.add, size: 32),
+          ),
     );
   }
 }

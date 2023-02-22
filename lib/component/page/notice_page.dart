@@ -9,30 +9,30 @@ import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_offer_user_list.dart';
 
-class RoomOfferPage extends HookConsumerWidget {
-  const RoomOfferPage({Key? key}) : super(key: key);
+class NoticePage extends HookConsumerWidget {
+  const NoticePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
-    final room = ref.watch(enterRoomProvider);
+    // final room = ref.watch(enterRoomProvider);
 
-    if (room == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        PageService().snackbar('エラーのため、ホーム画面に戻ります。', SnackBarType.error);
-        PageService().transition(PageNames.home);
-      });
-      return const Loading();
-    }
+    // if (room == null) {
+    //   WidgetsBinding.instance.addPostFrameCallback((_) {
+    //     PageService().snackbar('エラーのため、ホーム画面に戻ります。', SnackBarType.error);
+    //     PageService().transition(PageNames.home);
+    //   });
+    //   return const Loading();
+    // }
 
     return Scaffold(
-      appBar: const Header(PageNames.roomOffer, '部屋に誘う'),
-      bottomNavigationBar: const Footer(PageNames.roomOffer),
+      appBar: const Header(PageNames.notice, 'お知らせ'),
+      bottomNavigationBar: const Footer(PageNames.notice),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          RoomOfferUserList(room),
+          // RoomOfferUserList(room),
         ],
       ),
     );

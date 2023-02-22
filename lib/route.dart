@@ -2,17 +2,20 @@ import 'package:flutter/material.dart';
 
 import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
+import 'component/page/notice_page.dart';
 import 'component/page/room_detail_page.dart';
 import 'component/page/room_offer_page.dart';
 import 'component/page/user_page.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
+  none(''),
   home('/'),
   user('/user'),
   room('/room'),
   roomOffer('/room/offer'),
   calendar('/calendar'),
+  notice('/notice'),
   ;
 
   const PageNames(this.path);
@@ -50,6 +53,8 @@ Route<dynamic> _transactionPage(
     builder = (_) => _roomOfferPageTransaction();
   } else if (path == PageNames.calendar.path) {
     builder = (_) => _calendarPageTransaction(queryParameters);
+  } else if (path == PageNames.notice.path) {
+    builder = (_) => _noticePageTransaction();
   } else {
     builder = (_) => _homePageTransaction();
   }
@@ -86,9 +91,11 @@ Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
     return _homePageTransaction();
   }
-  if (!queryParameters.containsKey('userId')) {
+  if (!queryParameters.containsKey('uid')) {
     return _homePageTransaction();
   }
 
-  return CalendarPage(uid: queryParameters['userId']!);
+  return CalendarPage(uid: queryParameters['uid']!);
 }
+
+Widget _noticePageTransaction() => const NoticePage();

@@ -8,6 +8,7 @@ import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../provider/login_provider.dart';
 import '../../provider/enter_room_provider.dart';
+import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_page_basic.dart';
 import '../l3/room_page_user.dart';
@@ -73,11 +74,13 @@ class RoomDetailPageState extends ConsumerState<RoomDetailPage> {
         length: tabList.length,
         child: Scaffold(
           appBar: Header(
-            title: room.title,
+            PageNames.room,
+            room.title,
             bottom: TabBar(
                 indicatorColor: Colors.black,
                 tabs: tabList.map((text) => Tab(text: text)).toList()),
           ),
+          bottomNavigationBar: const Footer(PageNames.room),
           body: TabBarView(children: [
             const RoomPageBasic(),
             VCChat(roomId: room.roomId),

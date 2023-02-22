@@ -6,15 +6,16 @@ import '../../provider/login_provider.dart';
 import '../../service/login_service.dart';
 import '../../service/page_service.dart';
 import '../../entity/user_entity.dart';
-import '../dialog/room_search_dialog.dart';
 import '../l1/user_no_login_icon.dart';
 import '../l1/user_icon.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
+  final PageNames page;
   final String title;
   final PreferredSizeWidget? bottom;
 
-  const Header({Key? key, required this.title, this.bottom}) : super(key: key);
+  const Header(this.page, this.title, {Key? key, this.bottom})
+      : super(key: key);
 
   @override
   Size get preferredSize =>
@@ -23,6 +24,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
+    final Size size = MediaQuery.of(context).size;
 
     Widget userIcon = UserNoLoginIcon(
       onTap: () {
@@ -41,6 +43,22 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           });
     }
 
+    List<Widget> actionList = [];
+    if (size.width > 700) {
+      actionList.add(IconButton(
+          tooltip: '予定を作る',
+          icon: const Icon(Icons.add_circle_outline),
+          onPressed: () => PageService().viewCreateDialog(page)));
+      actionList.add(IconButton(
+          tooltip: '予定表',
+          icon: const Icon(Icons.calendar_month),
+          onPressed: () => PageService().transitionMyCalendar(page)));
+      actionList.add(IconButton(
+          tooltip: 'お知らせ',
+          icon: const Icon(Icons.notifications),
+          onPressed: () => PageService().transitionNotice(page)));
+    }
+
     return AppBar(
       leading: PageService().canBack()
           ? IconButton(
@@ -53,33 +71,13 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
             ),
       title: Text(title),
       actions: [
-        IconButton(
-            tooltip: 'カレンダーを表示',
-            icon: const Icon(Icons.calendar_month),
-            onPressed: loginUser == null
-                ? null
-                : () {
-                    PageService().transition(PageNames.calendar,
-                        arguments: {'userId': loginUser.uid});
-                  }),
-        IconButton(
-            tooltip: '部屋をタグ検索',
-            icon: const Icon(Icons.search),
-            onPressed: () {
-              showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (_) {
-                    return RoomSearchDialog();
-                  });
-            }),
+        ...actionList,
         const Padding(padding: EdgeInsets.only(left: 8)),
         userIcon,
         const Padding(padding: EdgeInsets.only(right: 16)),
       ],
       bottom: bottom,
       elevation: 0,
-      // backgroundColor: Colors.transparent,
     );
   }
 }

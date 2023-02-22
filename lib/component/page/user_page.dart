@@ -15,6 +15,7 @@ import '../l1/button.dart';
 import '../l1/loading.dart';
 import '../l1/user_icon.dart';
 import '../l2/tag_field.dart';
+import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/user_page_basic.dart';
 
@@ -38,9 +39,8 @@ class UserPage extends HookConsumerWidget {
     }
 
     return Scaffold(
-      appBar: const Header(
-        title: "マイページ",
-      ),
+      appBar: const Header(PageNames.user, "マイページ"),
+      bottomNavigationBar: const Footer(PageNames.user),
       body: Container(
         padding: const EdgeInsets.all(16),
         child: Column(
