@@ -60,11 +60,6 @@ class UserCard extends StatelessWidget {
                           )
                         : null,
                   ),
-                  // Container(
-                  //   padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
-                  //   alignment: Alignment.topLeft,
-                  //   child: UserTagList(user),
-                  // ),
                 ],
               ),
             )));
