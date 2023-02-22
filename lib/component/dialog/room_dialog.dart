@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';

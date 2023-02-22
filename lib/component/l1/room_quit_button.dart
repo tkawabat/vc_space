@@ -7,7 +7,7 @@ import '../../entity/user_entity.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../provider/enter_room_provider.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import 'button.dart';
 
 class RoomQuitButton extends ConsumerWidget {

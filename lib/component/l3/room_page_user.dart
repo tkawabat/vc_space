@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:vc_space/service/page_service.dart';
 
 import '../../entity/room_entity.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../route.dart';
 import '../../service/room_service.dart';
 import '../l1/button.dart';

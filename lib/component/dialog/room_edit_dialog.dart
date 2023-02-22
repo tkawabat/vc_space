@@ -11,7 +11,7 @@ import '../../entity/room_user_entity.dart';
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../provider/room_list_join_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/const_system.dart';

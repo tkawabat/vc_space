@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/user_entity.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../provider/user_list_provider.dart';
 import '../../service/time_service.dart';
 import '../../service/user_service.dart';

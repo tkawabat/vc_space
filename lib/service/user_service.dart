@@ -1,6 +1,6 @@
 import '../entity/user_entity.dart';
 import '../model/user_model.dart';
-import '../provider/login_provider.dart';
+import '../provider/login_user_provider.dart';
 import 'page_service.dart';
 
 class UserService {

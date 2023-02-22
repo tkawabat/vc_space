@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../provider/enter_room_provider.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../service/const_design.dart';
 import '../dialog/room_edit_dialog.dart';
 import '../l1/room_user_number.dart';

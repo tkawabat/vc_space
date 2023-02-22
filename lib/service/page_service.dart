@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
-import '../provider/login_provider.dart';
+import '../provider/login_user_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
 import 'login_service.dart';

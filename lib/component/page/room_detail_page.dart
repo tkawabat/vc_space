@@ -6,7 +6,7 @@ import '../../provider/enter_room_private_provider.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../../provider/enter_room_provider.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';

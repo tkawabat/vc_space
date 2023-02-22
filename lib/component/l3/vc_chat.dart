@@ -9,7 +9,7 @@ import '../../entity/room_chat_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/room_chat_model.dart';
 import '../../provider/enter_room_chat_provider.dart';
-import '../../provider/login_provider.dart';
+import '../../provider/login_user_provider.dart';
 import '../l1/loading.dart';
 
 class VCChat extends HookConsumerWidget {
