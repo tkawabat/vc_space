@@ -7,6 +7,7 @@ import '../../entity/room_user_entity.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../dialog/user_dialog.dart';
+import '../l1/card_base.dart';
 import '../l1/tag.dart';
 import '../l1/user_icon.dart';
 
@@ -21,39 +22,31 @@ class RoomUserCard extends ConsumerWidget {
     bool isHide = roomUser.roomUserType == RoomUserType.offer && !isAdmin;
 
     return InkWell(
-        onTap: isHide
-            ? null
-            : () => showDialog(
-                context: context,
-                barrierDismissible: true,
-                builder: (_) {
-                  return UserDialog(
-                    uid: roomUser.uid,
-                  );
-                }),
-        child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Card(
-              elevation: 4,
-              shadowColor: Colors.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: isHide
-                        ? const UserIcon()
-                        : UserIcon(
-                            photo: roomUser.userData.photo,
-                            tooltip: roomUser.userData.name,
-                          ),
-                    title: buildTitle(roomUser, isHide),
-                    trailing: buildTrailing(roomUser, isHide),
+      onTap: isHide
+          ? null
+          : () => showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) {
+                return UserDialog(
+                  uid: roomUser.uid,
+                );
+              }),
+      child: CardBase(
+        [
+          ListTile(
+            leading: isHide
+                ? const UserIcon()
+                : UserIcon(
+                    photo: roomUser.userData.photo,
+                    tooltip: roomUser.userData.name,
                   ),
-                ],
-              ),
-            )));
+            title: buildTitle(roomUser, isHide),
+            trailing: buildTrailing(roomUser, isHide),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildTitle(RoomUserEntity roomUser, bool isHide) {

@@ -6,6 +6,7 @@ import '../../entity/wait_time_entity.dart';
 import '../../provider/login_user_provider.dart';
 import '../../service/page_service.dart';
 import '../../service/wait_time_service.dart';
+import '../l1/card_base.dart';
 
 class WaitTimeCard extends ConsumerWidget {
   final WaitTimeEntity waitTime;
@@ -24,26 +25,20 @@ class WaitTimeCard extends ConsumerWidget {
 
     final bool canDelete = user != null && user.uid == uid;
 
-    return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-        child: Card(
-            elevation: 4,
-            shadowColor: Colors.grey,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: ListTile(
-              title: Text(title),
-              trailing: canDelete
-                  ? IconButton(
-                      tooltip: '削除する',
-                      icon: const Icon(Icons.delete),
-                      onPressed: () => PageService().showConfirmDialog(
-                          '空き時間を削除しますか？',
-                          () => WaitTimeService()
-                              .delete(user.uid, waitTime.waitTimeId)),
-                    )
-                  : null,
-            )));
+    return CardBase([
+      ListTile(
+        title: Text(title),
+        trailing: canDelete
+            ? IconButton(
+                tooltip: '削除する',
+                icon: const Icon(Icons.delete),
+                onPressed: () => PageService().showConfirmDialog(
+                    '空き時間を削除しますか？',
+                    () => WaitTimeService()
+                        .delete(user.uid, waitTime.waitTimeId)),
+              )
+            : null,
+      )
+    ]);
   }
 }

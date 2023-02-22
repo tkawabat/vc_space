@@ -4,6 +4,7 @@ import '../../entity/user_entity.dart';
 import '../dialog/user_dialog.dart';
 import '../../service/time_service.dart';
 import '../l1/button.dart';
+import '../l1/card_base.dart';
 import '../l1/user_icon.dart';
 import 'user_tag_list.dart';
 
@@ -22,46 +23,38 @@ class UserCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () => showDialog(
-            context: context,
-            barrierDismissible: true,
-            builder: (_) {
-              return UserDialog(
-                uid: user.uid,
-              );
-            }),
-        child: Container(
-            margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-            child: Card(
-              elevation: 4,
-              shadowColor: Colors.grey,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: UserIcon(
-                      photo: user.photo,
-                      tooltip: user.name,
+      onTap: () => showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) {
+            return UserDialog(
+              uid: user.uid,
+            );
+          }),
+      child: CardBase(
+        [
+          ListTile(
+            leading: UserIcon(
+              photo: user.photo,
+              tooltip: user.name,
+            ),
+            title: Wrap(children: [
+              Text(user.name),
+              UserTagList(user),
+            ]),
+            subtitle: Text(TimeService().getAgoString(user.updatedAt)),
+            trailing: trailingButtonText != null
+                ? SizedBox(
+                    width: 70,
+                    child: Button(
+                      onTap: trailingOnTap,
+                      text: trailingButtonText!,
                     ),
-                    title: Wrap(children: [
-                      Text(user.name),
-                      UserTagList(user),
-                    ]),
-                    subtitle: Text(TimeService().getAgoString(user.updatedAt)),
-                    trailing: trailingButtonText != null
-                        ? SizedBox(
-                            width: 70,
-                            child: Button(
-                              onTap: trailingOnTap,
-                              text: trailingButtonText!,
-                            ),
-                          )
-                        : null,
-                  ),
-                ],
-              ),
-            )));
+                  )
+                : null,
+          ),
+        ],
+      ),
+    );
   }
 }
