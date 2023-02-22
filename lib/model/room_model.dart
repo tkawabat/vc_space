@@ -127,7 +127,7 @@ class RoomModel extends ModelBase {
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', startTime)
         .order('start_time', ascending: true)
-        .order('update_at')
+        .order('updated_at')
         .then(_getEntityList)
         .catchError(ErrorService()
             .onError<List<RoomEntity>>([], '$tableName.getJoinList'));
