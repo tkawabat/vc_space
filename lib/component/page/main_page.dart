@@ -7,6 +7,7 @@ import '../../model/user_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_search_dialog.dart';
+import '../l1/card_base.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
@@ -18,8 +19,10 @@ class MainPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
 
+    final information = dotenv.get('INFORMATION', fallback: '');
+
     return Scaffold(
-      appBar: Header(PageNames.home, dotenv.get('TITLE')),
+      appBar: Header(PageNames.home, dotenv.get('TITLE', fallback: '')),
       bottomNavigationBar: const Footer(PageNames.home),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -42,6 +45,13 @@ class MainPage extends HookConsumerWidget {
           //   },
           //   child: const Text("デバッグ"),
           // ),
+          if (information.isNotEmpty)
+            CardBase([
+              ListTile(
+                leading: const Icon(Icons.info),
+                title: Text(information),
+              ),
+            ]),
           RoomList(),
         ],
       ),
