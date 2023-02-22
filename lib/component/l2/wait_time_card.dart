@@ -25,9 +25,9 @@ class WaitTimeCard extends ConsumerWidget {
     final bool canDelete = user != null && user.uid == uid;
 
     return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
         child: Card(
-            elevation: 8,
+            elevation: 4,
             shadowColor: Colors.grey,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(8),
