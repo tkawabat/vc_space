@@ -9,8 +9,6 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'firebase_options.dart';
 import 'route.dart';
 
-import 'component/page/main_page.dart';
-
 Future main() async {
   const flavor = String.fromEnvironment('FLAVOR');
   await dotenv.load(fileName: 'assets/env.$flavor');
@@ -19,16 +17,19 @@ Future main() async {
 
   List<Future> list = [];
 
-  list.add(Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  ));
+  // メンテナンス中は呼び出さない
+  if (dotenv.get('MAINTENANCE', fallback: '').isEmpty) {
+    list.add(Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    ));
 
-  list.add(Supabase.initialize(
-    url: dotenv.get('SUPABASE_URL'),
-    anonKey: dotenv.get('SUPABASE_ANON_KEY'),
-  ));
+    list.add(Supabase.initialize(
+      url: dotenv.get('SUPABASE_URL'),
+      anonKey: dotenv.get('SUPABASE_ANON_KEY'),
+    ));
 
-  list.add(initializeDateFormatting('ja'));
+    list.add(initializeDateFormatting('ja'));
+  }
 
   await Future.wait(list);
 
@@ -46,7 +47,6 @@ class MyApp extends ConsumerWidget {
       theme: FlexThemeData.light(scheme: FlexScheme.mango),
       darkTheme: FlexThemeData.dark(scheme: FlexScheme.mango),
       themeMode: ThemeMode.system,
-      home: const MainPage(),
       onGenerateRoute: generateRoute,
     );
   }

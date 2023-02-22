@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:vc_space/component/page/maintenance_page.dart';
 
 import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
@@ -23,6 +25,14 @@ enum PageNames {
 }
 
 Route<dynamic> generateRoute(RouteSettings setting) {
+  final maintenance = dotenv.get('MAINTENANCE', fallback: '');
+  if (maintenance.isNotEmpty) {
+    return MaterialPageRoute(
+      builder: (_) => const MaintenancePage(),
+      fullscreenDialog: false,
+    );
+  }
+
   String? name = setting.name;
 
   if (name == null) {

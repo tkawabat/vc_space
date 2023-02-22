@@ -29,3 +29,18 @@ $ flutter build web --dart-define FLAVOR=production --release
 $ firebase use production
 $ firebase deploy
 ```
+
+## 運用
+* メンテモード
+    * envファイルのMAINTENANCEに値を入れてリリース
+
+    ```
+    MAINTENANCE="メンテナンス中です。\n終了見込み: 2/28 10:00"
+    ```
+
+    * メンテ終わったら値を消して再リリース
+        * ダブルコーテーションも消す
+
+    ```
+    MAINTENANCE=
+    ```
