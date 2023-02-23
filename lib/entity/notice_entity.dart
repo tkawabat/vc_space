@@ -69,6 +69,7 @@ class NoticeEntity with _$NoticeEntity {
     @NoticeStatusConverter() required NoticeType noticeStatus,
     String? idUser,
     int? idRoom,
+    String? message,
     @TimestampzConverter() required DateTime createdAt,
     @TimestampzConverter() required DateTime updatedAt,
     @JsonKey(name: 'user') required UserDataEntity userData,
