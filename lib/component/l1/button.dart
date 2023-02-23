@@ -6,12 +6,13 @@ class Button extends StatelessWidget {
   final Color? color;
   final Alignment alignment;
 
-  const Button(
-      {super.key,
-      required this.onTap,
-      required this.text,
-      this.color,
-      this.alignment = Alignment.center});
+  const Button({
+    super.key,
+    required this.onTap,
+    required this.text,
+    this.color,
+    this.alignment = Alignment.center,
+  });
 
   @override
   Widget build(BuildContext context) {
