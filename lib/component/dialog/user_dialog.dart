@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/user_entity.dart';
+import '../../entity/user_private_entity.dart';
+import '../../provider/login_user_private_provider.dart';
 import '../../provider/login_user_provider.dart';
 import '../../provider/user_list_provider.dart';
 import '../../service/time_service.dart';
@@ -21,6 +23,8 @@ class UserDialog extends HookConsumerWidget {
     ref.read(userListProvider.notifier).get(uid);
 
     final UserEntity? loginUser = ref.watch(loginUserProvider);
+    final UserPrivateEntity? loginUserPrivate =
+        ref.watch(loginUserPrivateProvider);
     final Map<String, UserEntity> userList = ref.watch(userListProvider);
 
     UserEntity user = userList[uid] ?? userOnLoad;
@@ -36,26 +40,15 @@ class UserDialog extends HookConsumerWidget {
       ));
     }
 
-    // TODO
     String blockText = 'ブロックする';
     void Function()? blockFunction;
-    if (loginUser == null || loginUser.uid == user.uid) {
+    if (loginUserPrivate == null || loginUserPrivate.uid == user.uid) {
       // 未ログイン or 自分自身 -> skip
-    } else if (UserService().isBlocked(loginUser, user.uid)) {
-      blockText = 'ブロック中';
-      blockFunction = () {
-        // UserModel().unfollow(uid).catchError((_) {
-        //   PageService().snackbar('ブロックに失敗しました', SnackBarType.error);
-        //   return false;
-        // });
-      };
+    } else if (UserService().isBlocked(loginUserPrivate, user.uid)) {
+      blockText = 'ブロック解除する';
+      blockFunction = () => UserService().unblock(loginUserPrivate, user.uid);
     } else {
-      blockFunction = () {
-        // UserModel().follow(uid).catchError((_) {
-        //   PageService().snackbar('ブロック解除に失敗しました', SnackBarType.error);
-        //   return false;
-        // });
-      };
+      blockFunction = () => UserService().block(loginUserPrivate, user.uid);
     }
 
     String followText = 'フォローする';
@@ -66,7 +59,7 @@ class UserDialog extends HookConsumerWidget {
       followText = 'フォロー中';
       followFunction = () => UserService().unfollow(user.uid);
     } else {
-      followFunction = () => UserService().follow(user.uid);
+      followFunction = () => UserService().follow(loginUser, user.uid);
     }
 
     return AlertDialog(
@@ -99,7 +92,7 @@ class UserDialog extends HookConsumerWidget {
             Container(
               padding: const EdgeInsets.fromLTRB(8, 4, 8, 8),
               alignment: Alignment.topLeft,
-              child: UserTagList(user),
+              child: UserTagList(user, viewBlock: true),
             ),
             const SizedBox(height: 16),
             const Spacer(),

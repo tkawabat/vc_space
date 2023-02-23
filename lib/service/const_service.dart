@@ -1,11 +1,12 @@
 class ConstService {
   static const listStep = 20;
-
   static const stepTime = 15;
 
-  static const calendarMax = 90;
-
   static const userGreetingMax = 140;
+  static const followMax = 50;
+  static const blockMax = 20;
+
+  static const calendarMax = 90;
 
   static const roomTitleMax = 20;
   static const roomDescriptionMax = 140;

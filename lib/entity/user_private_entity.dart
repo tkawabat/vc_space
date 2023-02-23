@@ -3,7 +3,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'converter/timestampz_converter.dart';
-import 'user_data_entity.dart';
 
 part 'user_private_entity.freezed.dart';
 part 'user_private_entity.g.dart';
@@ -15,7 +14,6 @@ class UserPrivateEntity with _$UserPrivateEntity {
     required List<String> blocks,
     @TimestampzConverter() required DateTime noticeReadTime,
     @TimestampzConverter() required DateTime updatedAt,
-    @JsonKey(name: 'users') required List<UserDataEntity> users,
   }) = _UserPrivateEntity;
 
   factory UserPrivateEntity.fromJson(Map<String, dynamic> json) =>

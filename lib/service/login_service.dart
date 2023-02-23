@@ -2,6 +2,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
 import '../model/user_model.dart';
+import '../provider/login_user_private_provider.dart';
 import '../provider/login_user_provider.dart';
 import 'page_service.dart';
 
@@ -30,6 +31,7 @@ class LoginService {
       if (user != null) {
         PageService().snackbar('ログインしました', SnackBarType.info);
         ref.read(loginUserProvider.notifier).set(user);
+        ref.read(loginUserPrivateProvider.notifier).get(user.uid);
       }
     }
   }
