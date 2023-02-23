@@ -25,6 +25,7 @@ class WaitTimeService {
     return WaitTimeModel().insert(waitTime).then((waitTime) {
       if (waitTime == null) throw Exception;
       PageService().ref!.read(waitTimeListProvider.notifier).add(waitTime);
+      PageService().snackbar('空き時間を登録しました', SnackBarType.info);
       return true;
     }).catchError((_) {
       PageService().snackbar('空き時間の登録に失敗しました', SnackBarType.error);

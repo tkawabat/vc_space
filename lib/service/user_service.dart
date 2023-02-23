@@ -35,6 +35,7 @@ class UserService {
 
     return UserModel().follow(targetUid).then((_) {
       PageService().ref!.read(loginUserProvider.notifier).follow(targetUid);
+      PageService().snackbar('フォローしました', SnackBarType.info);
       return true;
     }).catchError((_) {
       PageService().snackbar('フォローでエラーが発生しました', SnackBarType.error);
@@ -45,6 +46,7 @@ class UserService {
   Future<bool> unfollow(String targetUid) {
     return UserModel().unfollow(targetUid).then((_) {
       PageService().ref!.read(loginUserProvider.notifier).unfollow(targetUid);
+      PageService().snackbar('フォロー解除しました', SnackBarType.info);
       return true;
     }).catchError((_) {
       PageService().snackbar('フォロー解除でエラーが発生しました', SnackBarType.error);
@@ -73,6 +75,7 @@ class UserService {
 
     return UserPrivateModel().update(newObj).then((_) {
       PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      PageService().snackbar('ブロックしました', SnackBarType.info);
       return true;
     }).catchError((_) {
       PageService().snackbar('ブロックでエラーが発生しました', SnackBarType.error);
@@ -91,6 +94,7 @@ class UserService {
     final newObj = userPrivate.copyWith(blocks: blocks);
     return UserPrivateModel().update(newObj).then((_) {
       PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      PageService().snackbar('ブロック解除しました', SnackBarType.info);
       return true;
     }).catchError((_) {
       PageService().snackbar('フォロー解除でエラーが発生しました', SnackBarType.error);
