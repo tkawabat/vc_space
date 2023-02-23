@@ -66,9 +66,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
               onPressed: () {
                 PageService().back();
               })
-          : const SizedBox(
-              width: 18,
-            ),
+          : const SizedBox(),
       title: Text(title),
       actions: [
         ...actionList,

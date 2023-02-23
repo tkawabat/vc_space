@@ -77,7 +77,7 @@ class RoomService {
     final success = await RoomUserModel().delete(room.roomId, uid);
     if (success) {
       PageService().snackbar('部屋から脱退しました', SnackBarType.info);
-      PageService().transition(PageNames.home, replace: true);
+      PageService().transition(PageNames.home);
       PageService()
           .ref!
           .read(roomListJoinProvider.notifier)

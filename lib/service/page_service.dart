@@ -51,14 +51,17 @@ class PageService {
   void transition(
     PageNames page, {
     Map<String, String>? arguments,
-    bool replace = false,
+    bool push = false,
   }) {
     if (context == null) return;
-    if (replace) {
-      replaced = true;
-      Navigator.pushReplacementNamed(context!, page.path, arguments: arguments);
-    } else {
+    if (push) {
       Navigator.pushNamed(context!, page.path, arguments: arguments);
+    } else {
+      replaced = true; // context, refをPageServiceに再設定するようにする
+      while (Navigator.canPop(context!)) {
+        Navigator.pop(context!);
+      }
+      Navigator.pushReplacementNamed(context!, page.path, arguments: arguments);
     }
   }
 

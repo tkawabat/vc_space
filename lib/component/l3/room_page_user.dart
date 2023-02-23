@@ -35,7 +35,8 @@ class RoomPageUser extends ConsumerWidget {
             ...list,
             isAdmin && room.maxNumber > room.users.length
                 ? Button(
-                    onTap: () => PageService().transition(PageNames.roomOffer),
+                    onTap: () => PageService()
+                        .transition(PageNames.roomOffer, push: true),
                     text: '誰かを誘う')
                 : const SizedBox()
           ]),
