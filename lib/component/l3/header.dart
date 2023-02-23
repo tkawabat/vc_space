@@ -60,13 +60,14 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     }
 
     return AppBar(
+      centerTitle: false,
       leading: PageService().canBack()
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios),
               onPressed: () {
                 PageService().back();
               })
-          : const SizedBox(),
+          : null,
       title: Text(title),
       actions: [
         ...actionList,
