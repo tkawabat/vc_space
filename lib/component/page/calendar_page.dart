@@ -15,7 +15,6 @@ import '../../service/room_service.dart';
 import '../../service/time_service.dart';
 import '../l2/room_card.dart';
 import '../l2/wait_time_card.dart';
-import '../l2/wait_time_input.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 
@@ -124,7 +123,6 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
                 return const SizedBox();
               }),
             ),
-            WaitTimeInput(widget.uid),
             Expanded(
                 child: ListView.builder(
               itemCount: eventState.value.length,

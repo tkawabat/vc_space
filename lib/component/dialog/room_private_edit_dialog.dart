@@ -51,7 +51,7 @@ class RoomPrivateEditDialog extends HookConsumerWidget {
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
+                  children: [
                     placeUrlField(roomPrivate.placeUrl),
                     const SizedBox(height: 16),
                     innerDescriptionField(roomPrivate.innerDescription),

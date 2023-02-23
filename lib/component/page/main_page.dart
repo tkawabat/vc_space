@@ -61,19 +61,7 @@ class MainPage extends HookConsumerWidget {
               context: context,
               barrierDismissible: true,
               builder: (_) => RoomSearchDialog()),
-          child: const Icon(Icons.search)
-
-          //   tooltip: '部屋を作る',
-          //   onPressed: () {
-          //     showDialog(
-          //         context: context,
-          //         barrierDismissible: true,
-          //         builder: (_) {
-          //           return RoomEditDialog();
-          //         });
-          //   },
-          //   child: const Icon(Icons.add, size: 32),
-          ),
+          child: const Icon(Icons.search)),
     );
   }
 }

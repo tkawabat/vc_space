@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 
+import '../component/dialog/schedule_create_dialog.dart';
 import '../provider/login_user_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
@@ -152,7 +153,12 @@ class PageService {
           '\nDiscordでログインする',
           () => LoginService().login());
     } else {
-      // TODO
+      showDialog(
+          context: context!,
+          barrierDismissible: true,
+          builder: (_) {
+            return const ScheduleCreateDialog();
+          });
     }
   }
 }

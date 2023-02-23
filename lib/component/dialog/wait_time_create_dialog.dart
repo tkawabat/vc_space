@@ -1,22 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../entity/user_entity.dart';
 import '../../provider/login_user_provider.dart';
-import '../../service/page_service.dart';
 import '../../service/const_service.dart';
+import '../../service/page_service.dart';
 import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
+import '../l1/cancel_button.dart';
 
-class WaitTimeInput extends HookConsumerWidget {
-  final String uid;
-
-  WaitTimeInput(this.uid, {super.key});
+class WaitTimeCreateDialog extends HookConsumerWidget {
+  WaitTimeCreateDialog({super.key});
 
   final formKey = GlobalKey<FormBuilderState>();
 
-  void addWaitTime() {
+  void submit(BuildContext context, WidgetRef ref) async {
+    Navigator.pop(context);
+
+    final UserEntity? loginUser = ref.read(loginUserProvider);
+    if (loginUser == null) {
+      PageService().snackbar('空き時間を登録するにはログインが必要です', SnackBarType.error);
+      return;
+    }
+
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
       PageService().snackbar('入力値に問題があります', SnackBarType.error);
       return;
@@ -34,29 +42,35 @@ class WaitTimeInput extends HookConsumerWidget {
       return;
     }
 
-    WaitTimeService().add(uid, fields['startTime'], fields['endTime']);
+    WaitTimeService()
+        .add(loginUser.uid, fields['startTime'], fields['endTime']);
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final user = ref.watch(loginUserProvider);
-
-    if (user == null || user.uid != uid) return const SizedBox();
-
     final startTime = TimeService().getStepNow(ConstService.stepTime);
     final endTime = startTime.add(const Duration(hours: 1));
 
     return FormBuilder(
-        key: formKey,
-        child: Row(children: [
-          const Text('空き\n登録', style: TextStyle(fontWeight: FontWeight.bold)),
-          timeField('startTime', '開始', startTime),
-          timeField('endTime', '終了', endTime),
-          IconButton(
-              tooltip: '登録する',
-              icon: const Icon(Icons.check),
-              onPressed: () => addWaitTime()),
-        ]));
+      key: formKey,
+      child: AlertDialog(
+          title: const Text('空き時間を登録'),
+          content: SizedBox(
+              width: 400,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  timeField('startTime', '開始', startTime),
+                  timeField('endTime', '終了', endTime),
+                ],
+              )),
+          actions: [
+            const CancelButton(),
+            TextButton(
+                child: const Text('登録'), onPressed: () => submit(context, ref)),
+          ]),
+    );
   }
 
   Widget timeField(String name, String label, DateTime initialValue) {
