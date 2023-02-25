@@ -2,22 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../entity/room_entity.dart';
 import '../../model/room_model.dart';
 import '../../model/user_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
+import '../dialog/room_dialog.dart';
 import '../dialog/room_search_dialog.dart';
+import '../dialog/user_dialog.dart';
 import '../l1/card_base.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_list.dart';
 
 class MainPage extends HookConsumerWidget {
-  const MainPage({Key? key}) : super(key: key);
+  final int? roomId;
+  final String? uid;
+
+  const MainPage({Key? key, this.roomId, this.uid}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (roomId != null) {
+        showRoomDialog(roomId!, context);
+      } else if (uid != null) {
+        showUserDialog(uid!, context);
+      }
+    });
 
     final information = dotenv.get('INFORMATION', fallback: '');
 
@@ -63,5 +77,35 @@ class MainPage extends HookConsumerWidget {
               builder: (_) => RoomSearchDialog()),
           child: const Icon(Icons.search)),
     );
+  }
+
+  void showRoomDialog(int roomId, BuildContext context) {
+    RoomModel().getById(roomId).then((room) {
+      if (room == null) {
+        PageService().snackbar('部屋が見つかりませんでした', SnackBarType.error);
+        return;
+      }
+      showDialog(
+          context: context,
+          barrierDismissible: true,
+          builder: (_) {
+            return RoomDialog(
+              room: room,
+            );
+          });
+    }).catchError((_) {
+      PageService().snackbar('部屋取得エラー', SnackBarType.error);
+    });
+  }
+
+  void showUserDialog(String uid, BuildContext context) {
+    showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (_) {
+          return UserDialog(
+            uid: uid,
+          );
+        });
   }
 }

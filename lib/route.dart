@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:vc_space/component/page/maintenance_page.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
@@ -8,6 +9,7 @@ import 'component/page/notice_page.dart';
 import 'component/page/room_detail_page.dart';
 import 'component/page/room_offer_page.dart';
 import 'component/page/user_page.dart';
+import 'component/page/maintenance_page.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
@@ -40,13 +42,15 @@ Route<dynamic> generateRoute(RouteSettings setting) {
   }
 
   final uri = Uri.parse(name!);
+  html.window.history.pushState(null, '', '#/');
 
   Map<String, String> queryParameters = uri.queryParameters;
   if (queryParameters.isEmpty && setting.arguments is Map<String, String>) {
     queryParameters = setting.arguments as Map<String, String>;
   }
 
-  return _transactionPage(uri.path, queryParameters);
+  // ページ直接遷移を実装するならuri.pathを指定する
+  return _transactionPage(PageNames.home.path, queryParameters);
 }
 
 Route<dynamic> _transactionPage(
@@ -54,7 +58,7 @@ Route<dynamic> _transactionPage(
   Widget Function(BuildContext context) builder;
 
   if (path == PageNames.home.path) {
-    builder = (_) => _homePageTransaction();
+    builder = (_) => _homePageTransaction(queryParameters);
   } else if (path == PageNames.user.path) {
     builder = (_) => _userPageTransaction();
   } else if (path == PageNames.room.path) {
@@ -66,7 +70,7 @@ Route<dynamic> _transactionPage(
   } else if (path == PageNames.notice.path) {
     builder = (_) => _noticePageTransaction();
   } else {
-    builder = (_) => _homePageTransaction();
+    builder = (_) => _homePageTransaction(null);
   }
 
   screenView(path);
@@ -76,21 +80,33 @@ Route<dynamic> _transactionPage(
   );
 }
 
-Widget _homePageTransaction() => const MainPage();
+Widget _homePageTransaction(Map<String, String>? queryParameters) {
+  int? roomId;
+  String? uid;
+  if (queryParameters != null) {
+    if (queryParameters.containsKey('roomId')) {
+      roomId = int.tryParse(queryParameters['roomId']!);
+    }
+    if (queryParameters.containsKey('uid')) {
+      uid = queryParameters['uid']!;
+    }
+  }
+  return MainPage(roomId: roomId, uid: uid);
+}
 
 Widget _userPageTransaction() => UserPage();
 
 Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
-    return _homePageTransaction();
+    return _homePageTransaction(null);
   }
   if (!queryParameters.containsKey('id')) {
-    return _homePageTransaction();
+    return _homePageTransaction(null);
   }
 
   final roomId = int.tryParse(queryParameters['id']!);
 
-  if (roomId == null) return _homePageTransaction();
+  if (roomId == null) return _homePageTransaction(null);
 
   return RoomDetailPage(roomId: roomId);
 }
@@ -99,10 +115,10 @@ Widget _roomOfferPageTransaction() => const RoomOfferPage();
 
 Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {
-    return _homePageTransaction();
+    return _homePageTransaction(null);
   }
   if (!queryParameters.containsKey('uid')) {
-    return _homePageTransaction();
+    return _homePageTransaction(null);
   }
 
   return CalendarPage(uid: queryParameters['uid']!);
