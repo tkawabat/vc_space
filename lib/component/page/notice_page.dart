@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../route.dart';
 import '../../service/page_service.dart';
+import '../../service/user_service.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/notice_list.dart';
@@ -13,6 +14,10 @@ class NoticePage extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      UserService().readNotice();
+    });
 
     return Scaffold(
       appBar: const Header(PageNames.notice, 'お知らせ'),

@@ -8,6 +8,7 @@ import '../../service/page_service.dart';
 import '../../entity/user_entity.dart';
 import '../l1/user_no_login_icon.dart';
 import '../l1/user_icon.dart';
+import '../l2/notice_badge.dart';
 
 class Header extends HookConsumerWidget implements PreferredSizeWidget {
   final PageNames page;
@@ -53,10 +54,17 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           tooltip: '予定表',
           icon: const Icon(Icons.calendar_month),
           onPressed: () => PageService().transitionMyCalendar(page)));
-      actionList.add(IconButton(
-          tooltip: 'お知らせ',
-          icon: const Icon(Icons.notifications),
-          onPressed: () => PageService().transitionNotice(page)));
+      actionList.add(Container(
+        width: 32,
+        height: 32,
+        alignment: Alignment.center,
+        child: NoticeBadge(
+          child: IconButton(
+              tooltip: 'お知らせ',
+              icon: const Icon(Icons.notifications),
+              onPressed: () => PageService().transitionNotice(page)),
+        ),
+      ));
     }
 
     return AppBar(
@@ -71,7 +79,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       title: Text(title),
       actions: [
         ...actionList,
-        const Padding(padding: EdgeInsets.only(left: 8)),
+        const Padding(padding: EdgeInsets.only(left: 16)),
         userIcon,
         const Padding(padding: EdgeInsets.only(right: 16)),
       ],

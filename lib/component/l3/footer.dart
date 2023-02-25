@@ -2,14 +2,20 @@ import 'package:flutter/material.dart';
 
 import '../../route.dart';
 import '../../service/page_service.dart';
+import '../l2/notice_badge.dart';
 
 class FooterItem {
-  final IconData icon;
+  final Widget icon;
   final String label;
   final PageNames page;
   final void Function() onTap;
 
-  FooterItem(this.icon, this.label, this.page, this.onTap);
+  FooterItem({
+    required this.icon,
+    required this.label,
+    required this.page,
+    required this.onTap,
+  });
 }
 
 class Footer extends StatelessWidget {
@@ -23,14 +29,33 @@ class Footer extends StatelessWidget {
     if (size.width > 700) return const SizedBox();
 
     final List<FooterItem> list = [
-      FooterItem(Icons.home, 'ホーム', PageNames.home,
-          () => PageService().transitionHome(page)),
-      FooterItem(Icons.notifications, 'お知らせ', PageNames.notice,
-          () => PageService().transitionNotice(page)),
-      FooterItem(Icons.calendar_month, '予定表', PageNames.calendar,
-          () => PageService().transitionMyCalendar(page)),
-      FooterItem(Icons.add, '予定を作る', PageNames.none,
-          () => PageService().viewCreateDialog(page)),
+      FooterItem(
+        icon: const Icon(Icons.home),
+        label: 'ホーム',
+        page: PageNames.home,
+        onTap: () => PageService().transitionHome(page),
+      ),
+      FooterItem(
+        icon: const NoticeBadge(
+          alignment: AlignmentDirectional.topStart,
+          child: Icon(Icons.notifications),
+        ),
+        label: 'お知らせ',
+        page: PageNames.notice,
+        onTap: () => PageService().transitionNotice(page),
+      ),
+      FooterItem(
+        icon: const Icon(Icons.calendar_month),
+        label: '予定表',
+        page: PageNames.calendar,
+        onTap: () => PageService().transitionMyCalendar(page),
+      ),
+      FooterItem(
+        icon: const Icon(Icons.add),
+        label: '予定を作る',
+        page: PageNames.none,
+        onTap: () => PageService().viewCreateDialog(page),
+      ),
     ];
 
     final int currentIndex = list.indexWhere((element) => element.page == page);
@@ -40,7 +65,7 @@ class Footer extends StatelessWidget {
       onTap: (i) => list[i].onTap(),
       items: list
           .map((e) => BottomNavigationBarItem(
-                icon: Icon(e.icon),
+                icon: e.icon,
                 label: e.label,
               ))
           .toList(),

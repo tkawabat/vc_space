@@ -101,4 +101,20 @@ class UserService {
       return false;
     });
   }
+
+  FutureOr<bool> readNotice() {
+    if (PageService().ref == null) return false;
+    final loginUserPrivate = PageService().ref!.read(loginUserPrivateProvider);
+
+    if (loginUserPrivate == null) return false;
+
+    final newObj = loginUserPrivate.copyWith(noticeReadTime: DateTime.now());
+
+    return UserPrivateModel().update(newObj).then((_) {
+      PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      return true;
+    }).catchError((_) {
+      return false;
+    });
+  }
 }
