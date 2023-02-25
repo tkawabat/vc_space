@@ -31,7 +31,7 @@ class RoomOfferPage extends HookConsumerWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
+        children: [
           RoomOfferUserList(room),
         ],
       ),

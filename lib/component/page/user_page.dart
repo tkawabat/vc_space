@@ -31,7 +31,6 @@ class UserPage extends HookConsumerWidget {
 
     final UserEntity? user = ref.watch(loginUserProvider);
     if (user == null) {
-      // 未ログイン表示をする
       WidgetsBinding.instance.addPostFrameCallback((_) {
         PageService().transition(PageNames.home);
       });

@@ -15,7 +15,7 @@ class RoomList extends HookConsumerWidget {
   final PagingController<int, RoomEntity> _pagingController =
       PagingController(firstPageKey: 0);
 
-  void Function(int) factoryFetch(searchRoom) {
+  void Function(int) createFetchFunction(searchRoom) {
     return (int pageKey) {
       RoomModel().getList(pageKey, tags: searchRoom.tags).then((list) {
         if (list.length < ConstService.listStep) {
@@ -30,12 +30,12 @@ class RoomList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchRoom = ref.watch(roomSearchProvider);
-    final fetch = useState(factoryFetch(searchRoom));
+    final fetch = useState(createFetchFunction(searchRoom));
 
     useEffect(
       () {
         _pagingController.removePageRequestListener(fetch.value);
-        fetch.value = factoryFetch(searchRoom);
+        fetch.value = createFetchFunction(searchRoom);
         _pagingController.addPageRequestListener(fetch.value);
         _pagingController.refresh();
         return null;
