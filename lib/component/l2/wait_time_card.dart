@@ -25,7 +25,7 @@ class WaitTimeCard extends ConsumerWidget {
 
     final bool canDelete = user != null && user.uid == uid;
 
-    return CardBase([
+    return CardBase(children: [
       ListTile(
         title: Text(title),
         trailing: canDelete

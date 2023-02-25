@@ -18,7 +18,7 @@ class RoomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return CardBase(
       onTap: () => showDialog(
           context: context,
           barrierDismissible: true,
@@ -27,34 +27,32 @@ class RoomCard extends StatelessWidget {
               room: room,
             );
           }),
-      child: CardBase(
-        [
-          ListTile(
-            leading: UserIcon(
-              photo: RoomService().getAdminUser(room).userData.photo,
-              tooltip: '主催者を見る',
-              onTap: () => showDialog(
-                  context: context,
-                  barrierDismissible: true,
-                  builder: (_) {
-                    return UserDialog(uid: room.owner);
-                  }),
-            ),
-            title: Text(room.title),
-            trailing: buildTrailing(room),
+      children: [
+        ListTile(
+          leading: UserIcon(
+            photo: RoomService().getAdminUser(room).userData.photo,
+            tooltip: '主催者を見る',
+            onTap: () => showDialog(
+                context: context,
+                barrierDismissible: true,
+                builder: (_) {
+                  return UserDialog(uid: room.owner);
+                }),
           ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-            alignment: Alignment.topLeft,
-            child: RoomUserRow(room, hideAdmin: true),
-          ),
-          Container(
-            padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
-            alignment: Alignment.topLeft,
-            child: RoomTagList(room),
-          ),
-        ],
-      ),
+          title: Text(room.title),
+          trailing: buildTrailing(room),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          alignment: Alignment.topLeft,
+          child: RoomUserRow(room, hideAdmin: true),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
+          alignment: Alignment.topLeft,
+          child: RoomTagList(room),
+        ),
+      ],
     );
   }
 

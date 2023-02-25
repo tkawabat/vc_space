@@ -46,7 +46,7 @@ class MainPage extends HookConsumerWidget {
           //   child: const Text("デバッグ"),
           // ),
           if (information.isNotEmpty)
-            CardBase([
+            CardBase(children: [
               ListTile(
                 leading: const Icon(Icons.info),
                 title: Text(information),

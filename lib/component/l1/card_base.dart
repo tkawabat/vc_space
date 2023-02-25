@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 
 class CardBase extends StatelessWidget {
   final List<Widget> children;
+  final void Function()? onTap;
 
-  const CardBase(this.children, {super.key});
+  const CardBase({super.key, required this.children, this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    Widget widget = Container(
       margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       child: Card(
         elevation: 4,
@@ -18,5 +19,11 @@ class CardBase extends StatelessWidget {
         child: Column(children: children),
       ),
     );
+
+    if (onTap != null) {
+      widget = InkWell(onTap: onTap, child: widget);
+    }
+
+    return widget;
   }
 }

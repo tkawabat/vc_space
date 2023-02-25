@@ -21,7 +21,7 @@ class RoomUserCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     bool isHide = roomUser.roomUserType == RoomUserType.offer && !isAdmin;
 
-    return InkWell(
+    return CardBase(
       onTap: isHide
           ? null
           : () => showDialog(
@@ -32,20 +32,18 @@ class RoomUserCard extends ConsumerWidget {
                   uid: roomUser.uid,
                 );
               }),
-      child: CardBase(
-        [
-          ListTile(
-            leading: isHide
-                ? const UserIcon()
-                : UserIcon(
-                    photo: roomUser.userData.photo,
-                    tooltip: roomUser.userData.name,
-                  ),
-            title: buildTitle(roomUser, isHide),
-            trailing: buildTrailing(roomUser, isHide),
-          ),
-        ],
-      ),
+      children: [
+        ListTile(
+          leading: isHide
+              ? const UserIcon()
+              : UserIcon(
+                  photo: roomUser.userData.photo,
+                  tooltip: roomUser.userData.name,
+                ),
+          title: buildTitle(roomUser, isHide),
+          trailing: buildTrailing(roomUser, isHide),
+        ),
+      ],
     );
   }
 

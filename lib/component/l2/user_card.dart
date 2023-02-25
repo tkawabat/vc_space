@@ -22,7 +22,7 @@ class UserCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return CardBase(
       onTap: () => showDialog(
           context: context,
           barrierDismissible: true,
@@ -31,30 +31,28 @@ class UserCard extends StatelessWidget {
               uid: user.uid,
             );
           }),
-      child: CardBase(
-        [
-          ListTile(
-            leading: UserIcon(
-              photo: user.photo,
-              tooltip: user.name,
-            ),
-            title: Wrap(children: [
-              Text(user.name),
-              UserTagList(user),
-            ]),
-            subtitle: Text(TimeService().getAgoString(user.updatedAt)),
-            trailing: trailingButtonText != null
-                ? SizedBox(
-                    width: 70,
-                    child: Button(
-                      onTap: trailingOnTap,
-                      text: trailingButtonText!,
-                    ),
-                  )
-                : null,
+      children: [
+        ListTile(
+          leading: UserIcon(
+            photo: user.photo,
+            tooltip: user.name,
           ),
-        ],
-      ),
+          title: Wrap(children: [
+            Text(user.name),
+            UserTagList(user),
+          ]),
+          subtitle: Text(TimeService().getAgoString(user.updatedAt)),
+          trailing: trailingButtonText != null
+              ? SizedBox(
+                  width: 70,
+                  child: Button(
+                    onTap: trailingOnTap,
+                    text: trailingButtonText!,
+                  ),
+                )
+              : null,
+        ),
+      ],
     );
   }
 }
