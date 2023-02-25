@@ -66,14 +66,14 @@ class NoticeEntity with _$NoticeEntity {
     required int noticeId,
     required String uid,
     @NoticeTypeConverter() required NoticeType noticeType,
-    @NoticeStatusConverter() required NoticeType noticeStatus,
+    @NoticeStatusConverter() required NoticeStatus noticeStatus,
     String? idUser,
     int? idRoom,
     String? message,
     @TimestampzConverter() required DateTime createdAt,
     @TimestampzConverter() required DateTime updatedAt,
-    @JsonKey(name: 'user') required UserDataEntity userData,
-    @JsonKey(name: 'room') required RoomEntity roomData,
+    @JsonKey(name: 'user') UserDataEntity? userData,
+    @JsonKey(name: 'room') RoomEntity? roomData,
   }) = _NoticeEntity;
 
   factory NoticeEntity.fromJson(Map<String, dynamic> json) =>
