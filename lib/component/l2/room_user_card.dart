@@ -10,6 +10,7 @@ import '../dialog/user_dialog.dart';
 import '../l1/card_base.dart';
 import '../l1/tag.dart';
 import '../l1/user_icon.dart';
+import '../l1/user_no_login_icon.dart';
 
 class RoomUserCard extends ConsumerWidget {
   final RoomUserEntity roomUser;
@@ -35,7 +36,7 @@ class RoomUserCard extends ConsumerWidget {
       children: [
         ListTile(
           leading: isHide
-              ? const UserIcon()
+              ? const UserNoLoginIcon()
               : UserIcon(
                   photo: roomUser.userData.photo,
                   tooltip: roomUser.userData.name,

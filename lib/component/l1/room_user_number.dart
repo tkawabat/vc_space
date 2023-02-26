@@ -27,7 +27,7 @@ class RoomUserNumber extends StatelessWidget {
 
     return SizedBox(
         width: 80,
-        height: 18,
+        height: 20,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
