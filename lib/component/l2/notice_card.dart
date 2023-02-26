@@ -62,6 +62,7 @@ class NoticeCard extends StatelessWidget {
         title = '部屋"${notice.roomData!.title}"へのオファーが来ています！';
         onTap = showRoomDialog;
         leadingOnTap = showUserDialog;
+        noUserIcon = true;
         break;
       case NoticeType.roomKicked:
         title = '部屋"${notice.roomData!.title}"からキックされました。';
