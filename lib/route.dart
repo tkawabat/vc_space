@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
 
 import 'component/page/calendar_page.dart';
 import 'component/page/main_page.dart';
@@ -42,15 +40,13 @@ Route<dynamic> generateRoute(RouteSettings setting) {
   }
 
   final uri = Uri.parse(name!);
-  html.window.history.pushState(null, '', '#/');
 
   Map<String, String> queryParameters = uri.queryParameters;
   if (queryParameters.isEmpty && setting.arguments is Map<String, String>) {
     queryParameters = setting.arguments as Map<String, String>;
   }
 
-  // ページ直接遷移を実装するならuri.pathを指定する
-  return _transactionPage(PageNames.home.path, queryParameters);
+  return _transactionPage(uri.path, queryParameters);
 }
 
 Route<dynamic> _transactionPage(

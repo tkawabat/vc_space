@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 import '../component/dialog/schedule_create_dialog.dart';
 import '../provider/login_user_provider.dart';
@@ -37,6 +39,8 @@ class PageService {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       LoginService().initializeUser(ref);
+
+      html.window.history.pushState(null, '', '#/');
     });
   }
 
