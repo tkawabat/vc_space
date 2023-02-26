@@ -6,7 +6,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../entity/room_entity.dart';
 import '../model/room_model.dart';
 import '../model/room_user_model.dart';
+import '../route.dart';
 import '../service/error_service.dart';
+import '../service/page_service.dart';
 
 final enterRoomProvider = StateNotifierProvider<EnterRoomNotifer, RoomEntity?>(
     (ref) => EnterRoomNotifer());
@@ -24,7 +26,10 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
 
     onData(_) async {
       debugPrint('room onData');
-      state = await RoomModel().getById(roomId);
+      RoomModel().getById(roomId).then((room) => state = room).catchError((_) {
+        PageService().transition(PageNames.home);
+        PageService().snackbar('部屋情報の取得でエラーが発生しました', SnackBarType.error);
+      });
     }
 
     subscriptions['room'] = RoomModel().getStream(roomId).listen(onData,
