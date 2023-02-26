@@ -6,6 +6,7 @@ import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
+import '../entity/user_private_entity.dart';
 import '../model/room_user_model.dart';
 import '../provider/room_list_join_provider.dart';
 import 'page_service.dart';
@@ -23,17 +24,32 @@ class RoomService {
     return room.users.firstWhereOrNull((element) => element.uid == uid);
   }
 
-  bool isJoined(RoomEntity room, String userId) {
+  bool isJoined(RoomEntity room, String uid) {
     return room.users.any((e) =>
-        e.uid == userId &&
+        e.uid == uid &&
         [RoomUserType.admin, RoomUserType.member, RoomUserType.offer]
             .contains(e.roomUserType));
   }
 
-  bool isCompletelyJoined(RoomEntity room, String userId) {
+  bool isCompletelyJoined(RoomEntity room, UserEntity? user) {
+    if (user == null) return false;
     return room.users.any((e) =>
-        e.uid == userId &&
+        e.uid == user.uid &&
         [RoomUserType.admin, RoomUserType.member].contains(e.roomUserType));
+  }
+
+  bool canJoin(
+      RoomEntity room, UserEntity? user, UserPrivateEntity? userPrivate) {
+    if (user == null) return false;
+    if (isCompletelyJoined(room, user)) return false; // 正式参加済みならfalse
+    if (room.users.length >= room.maxNumber) return false;
+
+    // ブロック中のユーザーがいないかチェック
+    if (userPrivate != null &&
+        room.users.any((e) => userPrivate.blocks.contains(e.uid))) {
+      return false;
+    }
+    return true;
   }
 
   List<RoomEntity> getJoinedRoom(List<RoomEntity> roomList, String userId) {
@@ -55,22 +71,25 @@ class RoomService {
         .transition(PageNames.room, arguments: {'id': roomId.toString()});
   }
 
-  Future<bool> join(RoomEntity room, UserEntity user, String? password) async {
-    // 未参加だったら参加する
-    if (!isCompletelyJoined(room, user.uid)) {
-      final result = await RoomUserModel()
-          .insert(room.roomId, user.uid, RoomUserType.member, password);
-      if (!result) {
-        PageService().snackbar('部屋への参加でエラーが発生しました', SnackBarType.error);
-        return false;
-      }
-      PageService().snackbar('部屋に参加しました', SnackBarType.info);
-      PageService().ref!.read(roomListJoinProvider.notifier).add(room);
+  FutureOr<bool> join(
+      RoomEntity room, UserEntity user, String? password) async {
+    // 参加済みだったら部屋にはいる
+    if (isCompletelyJoined(room, user)) {
+      enter(room.roomId);
+      return true;
     }
 
-    enter(room.roomId);
-
-    return true;
+    return RoomUserModel()
+        .insert(room.roomId, user.uid, RoomUserType.member, password)
+        .then((_) {
+      PageService().snackbar('部屋に参加しました', SnackBarType.info);
+      PageService().ref!.read(roomListJoinProvider.notifier).add(room);
+      enter(room.roomId);
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('部屋へ参加できませんでした', SnackBarType.error);
+      return false;
+    });
   }
 
   FutureOr<bool> quit(RoomEntity room, String uid) async {

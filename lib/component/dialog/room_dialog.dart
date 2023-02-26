@@ -6,6 +6,8 @@ import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
+import '../../entity/user_private_entity.dart';
+import '../../provider/login_user_private_provider.dart';
 import '../../provider/login_user_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
@@ -41,6 +43,8 @@ class RoomDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
+    final UserPrivateEntity? loginUserPrivate =
+        ref.watch(loginUserPrivateProvider);
     bool isJoined =
         RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
 
@@ -55,13 +59,13 @@ class RoomDialog extends HookConsumerWidget {
 
     String submitButtonText = '参加する';
     void Function()? submitButtonOnPress;
-    if (loginUser == null) {
-      submitButtonOnPress = null;
-    } else if (isJoined) {
+    if (RoomService().canJoin(room, loginUser, loginUserPrivate)) {
+      submitButtonOnPress = () => joinRoom(context, loginUser!);
+    } else if (RoomService().isCompletelyJoined(room, loginUser)) {
       submitButtonText = '入室する';
       submitButtonOnPress = () => enterRoom(context);
     } else {
-      submitButtonOnPress = () => joinRoom(context, loginUser);
+      submitButtonOnPress = null;
     }
 
     const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
