@@ -75,7 +75,11 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
               onPressed: () {
                 PageService().back();
               })
-          : null,
+          : IconButton(
+              icon: const Icon(Icons.home),
+              onPressed: () {
+                PageService().transition(PageNames.home);
+              }),
       title: Text(title),
       actions: [
         ...actionList,
