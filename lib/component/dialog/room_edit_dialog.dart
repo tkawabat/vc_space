@@ -119,13 +119,16 @@ class RoomEditDialog extends HookConsumerWidget {
     final scrollController = ScrollController();
     final ValueNotifier<bool> enabledPassword = useState<bool>(false);
 
-    final int? roomUserNum = room == null ? null : room!.users.length;
+    int roomNumberMin = 2;
+    if (room != null && room!.users.length > 2) {
+      roomNumberMin = room!.users.length;
+    }
 
     List<Widget> list = [
       titleField(room?.title),
       placeTypeField(room?.placeType),
       startTimeField(room?.startTime),
-      maxNumberField(room?.maxNumber, roomUserNum),
+      maxNumberField(room?.maxNumber, roomNumberMin),
       enterTypeField(room?.enterType, enabledPassword),
       passwordField(enabledPassword),
       TagField(
@@ -219,7 +222,7 @@ class RoomEditDialog extends HookConsumerWidget {
     );
   }
 
-  FormBuilderField maxNumberField(int? initialValue, int? minValue) {
+  FormBuilderField maxNumberField(int? initialValue, int minValue) {
     const labelText = '最大人数';
 
     return FormBuilderSlider(
@@ -231,7 +234,7 @@ class RoomEditDialog extends HookConsumerWidget {
       ]),
       decoration: const InputDecoration(labelText: labelText),
       initialValue: initialValue?.toDouble() ?? 4,
-      min: minValue?.toDouble() ?? 2,
+      min: minValue.toDouble(),
       max: ConstService.roomMaxNumber.toDouble(),
       divisions: ConstService.roomMaxNumber - (minValue ?? 2),
       displayValues: DisplayValues.current,
