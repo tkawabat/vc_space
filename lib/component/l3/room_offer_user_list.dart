@@ -63,7 +63,7 @@ class RoomOfferUserList extends HookConsumerWidget {
                   return const Center(child: Text('データ取得エラー'));
                 },
                 noItemsFoundIndicatorBuilder: (BuildContext context) {
-                  return const Center(child: Text('条件に合うユーザーが存在しません。'));
+                  return const Center(child: Text('条件に合うユーザーが存在しません'));
                 },
                 itemBuilder: (context, item, index) => UserCard(
                   item,

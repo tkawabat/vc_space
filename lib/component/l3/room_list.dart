@@ -56,7 +56,7 @@ class RoomList extends HookConsumerWidget {
                   return const Center(child: Text('データ取得エラー'));
                 },
                 noItemsFoundIndicatorBuilder: (BuildContext context) {
-                  return const Center(child: Text('条件に合う部屋が存在しません。'));
+                  return const Center(child: Text('条件に合う部屋が存在しません'));
                 },
                 itemBuilder: (context, item, index) => RoomCard(item),
               ))),

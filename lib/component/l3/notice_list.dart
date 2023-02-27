@@ -67,7 +67,7 @@ class NoticeList extends HookConsumerWidget {
                   return const Center(child: Text('データ取得エラー'));
                 },
                 noItemsFoundIndicatorBuilder: (BuildContext context) {
-                  return const Center(child: Text('条件に合う部屋が存在しません。'));
+                  return const Center(child: Text('お知らせがありません'));
                 },
                 itemBuilder: (context, item, index) => NoticeCard(item),
               ))),
