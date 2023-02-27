@@ -57,15 +57,21 @@ class RoomDialog extends HookConsumerWidget {
 
     bool passwordEnabled = room.enterType == EnterType.password && !isJoined;
 
+    String? joinErrorMessage =
+        RoomService().getJoinErrorMessage(room, loginUser, loginUserPrivate);
     String submitButtonText = '参加する';
+    TextStyle submitButtonTextStyle = const TextStyle();
     void Function()? submitButtonOnPress;
-    if (RoomService().canJoin(room, loginUser, loginUserPrivate)) {
+    if (joinErrorMessage == null) {
       submitButtonOnPress = () => joinRoom(context, loginUser!);
     } else if (RoomService().isCompletelyJoined(room, loginUser)) {
       submitButtonText = '入室する';
       submitButtonOnPress = () => enterRoom(context);
     } else {
-      submitButtonOnPress = null;
+      submitButtonOnPress =
+          () => PageService().snackbar(joinErrorMessage, SnackBarType.error);
+      submitButtonTextStyle =
+          const TextStyle(decoration: TextDecoration.lineThrough);
     }
 
     const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
@@ -111,7 +117,7 @@ class RoomDialog extends HookConsumerWidget {
           const CancelButton(),
           TextButton(
             onPressed: submitButtonOnPress,
-            child: Text(submitButtonText),
+            child: Text(submitButtonText, style: submitButtonTextStyle),
           ),
         ],
       ),

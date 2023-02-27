@@ -39,18 +39,21 @@ class RoomService {
         [RoomUserType.admin, RoomUserType.member].contains(e.roomUserType));
   }
 
-  bool canJoin(
-      RoomEntity room, UserEntity? user, UserPrivateEntity? userPrivate) {
-    if (user == null) return false;
-    if (isCompletelyJoined(room, user)) return false; // 正式参加済みならfalse
-    if (room.users.length >= room.maxNumber) return false;
+  String? getJoinErrorMessage(
+    RoomEntity room,
+    UserEntity? user,
+    UserPrivateEntity? userPrivate,
+  ) {
+    if (user == null) return '未ログインです';
+    if (isCompletelyJoined(room, user)) return '参加済みです'; // 正式参加済みならfalse
+    if (room.users.length >= room.maxNumber) return '満員です';
 
-    // ブロック中のユーザーがいないかチェック
+    // ブロック中のユーザーチェック
     if (userPrivate != null &&
         room.users.any((e) => userPrivate.blocks.contains(e.uid))) {
-      return false;
+      return 'ブロック中のユーザーが参加しているため、参加できません';
     }
-    return true;
+    return null;
   }
 
   List<RoomEntity> getJoinedRoom(List<RoomEntity> roomList, String userId) {
