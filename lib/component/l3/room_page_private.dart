@@ -25,7 +25,7 @@ class RoomPagePrivate extends HookConsumerWidget {
     final Widget url = roomPrivate.placeUrl == null
         ? const Text('URL未設定', style: TextStyle(color: Colors.black54))
         : InkWell(
-            onTap: () => UrlService().launchUri(context, roomPrivate.placeUrl!),
+            onTap: () => UrlService().launchUri(roomPrivate.placeUrl!),
             child: Text(roomPrivate.placeUrl!, style: ConstDesign.link),
           );
 
