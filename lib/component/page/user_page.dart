@@ -14,6 +14,7 @@ import '../dialog/user_dialog.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
 import '../l1/user_icon.dart';
+import '../l1/twitter_share_icon.dart';
 import '../l2/tag_field.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
@@ -42,48 +43,56 @@ class UserPage extends HookConsumerWidget {
       bottomNavigationBar: const Footer(PageNames.user),
       body: Container(
         padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            ListTile(
-              leading: UserIcon(
-                photo: user.photo,
-                tooltip: 'ユーザー情報を見る',
-                onTap: () => showDialog(
-                    context: context,
-                    barrierDismissible: true,
-                    builder: (_) {
-                      return UserDialog(uid: user.uid);
-                    }),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              ListTile(
+                leading: UserIcon(
+                  photo: user.photo,
+                  tooltip: 'ユーザー情報を見る',
+                  onTap: () => showDialog(
+                      context: context,
+                      barrierDismissible: true,
+                      builder: (_) {
+                        return UserDialog(uid: user.uid);
+                      }),
+                ),
+                title: Text(user.name),
+                trailing: IconButton(
+                  tooltip: '名前、アイコンを再読み込み',
+                  icon: const Icon(Icons.sync),
+                  onPressed: () {
+                    PageService()
+                        .showConfirmDialog('Discordで再認証して、名前、アイコンを再読み込みする', () {
+                      LoginService().login();
+                      PageService().back();
+                    });
+                  },
+                ),
               ),
-              title: Text(user.name),
-              trailing: IconButton(
-                tooltip: '名前、アイコンを再読み込み',
-                icon: const Icon(Icons.sync),
-                onPressed: () {
-                  PageService()
-                      .showConfirmDialog('Discordで再認証して、名前、アイコンを再読み込みする', () {
-                    LoginService().login();
+              Align(
+                alignment: Alignment.centerRight,
+                child: TwitterShareIcon(
+                    text: '『きてね』やっています！\nよかったらフォローしてください！\n',
+                    url: '?uid=${user.uid}'),
+              ),
+              const SizedBox(height: 24),
+              UserPageBasic(user: user),
+              const SizedBox(height: 60),
+              Button(
+                color: Theme.of(context).colorScheme.error,
+                onTap: () {
+                  PageService().showConfirmDialog('ログアウトする', () {
+                    LoginService().logout(ref);
                     PageService().back();
                   });
                 },
+                text: 'ログアウト',
               ),
-            ),
-            const SizedBox(height: 24),
-            UserPageBasic(user: user),
-            const Spacer(),
-            Button(
-              color: Theme.of(context).colorScheme.error,
-              onTap: () {
-                PageService().showConfirmDialog('ログアウトする', () {
-                  LoginService().logout(ref);
-                  PageService().back();
-                });
-              },
-              text: 'ログアウト',
-            ),
-            const SizedBox(height: 16),
-          ],
+              const SizedBox(height: 16),
+            ],
+          ),
         ),
       ),
     );

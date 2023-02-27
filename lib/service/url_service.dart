@@ -13,9 +13,13 @@ class UrlService {
 
   UrlService._internal();
 
-  FutureOr<bool> launchUri(String url) async {
-    if (await canLaunchUrlString(url)) {
-      return launchUrlString(url);
+  Future<bool> canLaunchUrl(String url) async {
+    return canLaunchUrlString(url);
+  }
+
+  Future<bool> launchUri(String url) async {
+    if (await canLaunchUrl(url)) {
+      return launchUrlString(url, mode: LaunchMode.externalApplication);
     } else {
       PageService().snackbar('URLが開けませんでした。', SnackBarType.error);
       return false;
