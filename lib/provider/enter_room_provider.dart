@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../entity/room_entity.dart';
@@ -25,10 +24,10 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
     stopUpdate();
 
     onData(_) async {
-      debugPrint('room onData');
       RoomModel().getById(roomId).then((room) => state = room).catchError((_) {
         PageService().transition(PageNames.home);
         PageService().snackbar('部屋情報の取得でエラーが発生しました', SnackBarType.error);
+        return null;
       });
     }
 
@@ -41,8 +40,6 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
   }
 
   Future<void> stopUpdate() {
-    debugPrint('stop room update');
-
     List<Future> futureList = [];
     subscriptions.forEach((key, subscription) {
       if (subscription == null) return;

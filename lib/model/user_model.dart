@@ -70,7 +70,6 @@ class UserModel extends ModelBase {
         .then(_getEntityList)
         .catchError(ErrorService()
             .onError<List<UserEntity>>([], '$tableName.getListByWaitTime'));
-    ;
   }
 
   Future<bool> update(

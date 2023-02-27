@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
-import '../../entity/room_entity.dart';
 import '../../entity/room_user_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../service/page_service.dart';

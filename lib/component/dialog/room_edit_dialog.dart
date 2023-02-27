@@ -238,7 +238,7 @@ class RoomEditDialog extends HookConsumerWidget {
       initialValue: initialValue?.toDouble() ?? 4,
       min: minValue.toDouble(),
       max: ConstService.roomMaxNumber.toDouble(),
-      divisions: ConstService.roomMaxNumber - (minValue ?? 2),
+      divisions: ConstService.roomMaxNumber - minValue,
       displayValues: DisplayValues.current,
     );
   }
