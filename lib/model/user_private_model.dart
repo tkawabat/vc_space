@@ -38,12 +38,7 @@ class UserPrivateModel extends ModelBase {
     var json = user.toJson();
     json.remove('uid');
 
-    if (targetColumnList != null) {
-      for (var key in json.keys) {
-        if (targetColumnList.contains(key)) continue;
-        json.remove(key);
-      }
-    }
+    json = selectUpdateColumn(json, targetColumnList);
 
     return supabase
         .from(tableName)

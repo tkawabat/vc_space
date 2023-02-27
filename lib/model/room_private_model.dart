@@ -52,12 +52,7 @@ class RoomPrivateModel extends ModelBase {
     var json = roomPrivate.toJson();
     json.remove('room_id');
 
-    if (targetColumnList != null) {
-      for (final key in json.keys) {
-        if (targetColumnList.contains(key)) continue;
-        json.remove(key);
-      }
-    }
+    json = selectUpdateColumn(json, targetColumnList);
 
     return supabase
         .from(tableName)

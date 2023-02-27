@@ -83,12 +83,7 @@ class UserModel extends ModelBase {
     json.remove('photo');
     json.remove('discord_name');
 
-    if (targetColumnList != null) {
-      for (var key in json.keys) {
-        if (targetColumnList.contains(key)) continue;
-        json.remove(key);
-      }
-    }
+    json = selectUpdateColumn(json, targetColumnList);
 
     return supabase
         .from(tableName)

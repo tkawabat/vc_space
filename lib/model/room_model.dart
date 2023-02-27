@@ -72,6 +72,7 @@ class RoomModel extends ModelBase {
         .from(tableName)
         .select(columns)
         .eq('room_id', roomId)
+        .eq('deleted', false)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .single()
         .then(_getEntity)
@@ -98,6 +99,7 @@ class RoomModel extends ModelBase {
     var query = supabase
         .from(tableName)
         .select(columns)
+        .eq('deleted', false)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', startTime);
 
@@ -122,6 +124,7 @@ class RoomModel extends ModelBase {
     return supabase
         .from(tableName)
         .select('$columns, check:room_user!inner (uid)')
+        .eq('deleted', false)
         .in_('check.uid', [uid])
         .lt('check.room_user_type', RoomUserType.kick.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
@@ -159,12 +162,7 @@ class RoomModel extends ModelBase {
     json.remove('owner');
     json.remove('room_user');
 
-    if (targetColumnList != null) {
-      for (var key in json.keys) {
-        if (targetColumnList.contains(key)) continue;
-        json.remove(key);
-      }
-    }
+    json = selectUpdateColumn(json, targetColumnList);
 
     return supabase
         .from(tableName)

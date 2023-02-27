@@ -72,12 +72,7 @@ class RoomUserModel extends ModelBase {
     json.remove('uid');
     json.remove('user');
 
-    if (targetColumnList != null) {
-      for (var key in json.keys) {
-        if (targetColumnList.contains(key)) continue;
-        json.remove(key);
-      }
-    }
+    json = selectUpdateColumn(json, targetColumnList);
 
     return supabase
         .from(tableName)
