@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 
-import '../route.dart';
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
 import '../entity/user_entity.dart';
 import '../entity/user_private_entity.dart';
 import '../model/room_user_model.dart';
+import '../model/room_model.dart';
+import '../route.dart';
 import '../provider/room_list_join_provider.dart';
 import 'page_service.dart';
 
@@ -143,6 +144,18 @@ class RoomService {
       return true;
     }).catchError((_) {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
+      return false;
+    });
+  }
+
+  FutureOr<bool> delete(RoomEntity room) async {
+    final newObj = room.copyWith(deleted: true);
+    return RoomModel().update(newObj, targetColumnList: ['deleted']).then((_) {
+      PageService().snackbar('部屋を削除しました', SnackBarType.info);
+      // 入っている部屋は勝手に出ていくはず
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('部屋の削除でエラーが発生しました', SnackBarType.error);
       return false;
     });
   }

@@ -60,6 +60,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
+      deleted: false,
       updatedAt: now,
       users: [roomUserEmpty],
     );
@@ -103,6 +104,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
+      deleted: false,
       updatedAt: now,
       users: room!.users,
     );

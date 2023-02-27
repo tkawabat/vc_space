@@ -79,6 +79,7 @@ class RoomEntity with _$RoomEntity {
     String? password,
     @PlaceTypeConverter() required PlaceType placeType,
     required List<String> tags,
+    required bool deleted,
     @TimestampzConverter() required DateTime updatedAt,
     @JsonKey(name: 'room_user') required List<RoomUserEntity> users,
   }) = _RoomEntity;
@@ -98,5 +99,6 @@ final roomNotFound = RoomEntity(
   placeType: PlaceType.none,
   tags: [],
   updatedAt: DateTime.now(),
+  deleted: false,
   users: [roomUserEmpty],
 );
