@@ -23,6 +23,7 @@ class UserPageBasic extends HookConsumerWidget {
 
   Future<void> submit(WidgetRef ref) async {
     if (!(formKey.currentState?.saveAndValidate() ?? false)) {
+      PageService().snackbar('入力値に問題があります', SnackBarType.error);
       return;
     }
     var fields = formKey.currentState!.value;
