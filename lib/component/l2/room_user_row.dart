@@ -18,7 +18,7 @@ class RoomUserRow extends StatelessWidget {
     for (final roomUser in room.users) {
       if (hideAdmin && roomUser.roomUserType == RoomUserType.admin) continue;
       list.add(roomUser.roomUserType == RoomUserType.offer
-          ? const UserNoLoginIcon(tooltip: 'オファー中')
+          ? const UserNoLoginIcon(tooltip: 'お誘い中')
           : UserIcon(
               photo: roomUser.userData.photo,
               tooltip: roomUser.userData.name,

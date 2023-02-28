@@ -24,11 +24,6 @@ class RoomDialog extends HookConsumerWidget {
 
   final formKey = GlobalKey<FormBuilderState>();
 
-  Future<void> enterRoom(BuildContext context) async {
-    Navigator.pop(context);
-    RoomService().enter(room.roomId);
-  }
-
   Future<void> joinRoom(BuildContext context, UserEntity user) async {
     Navigator.pop(context);
 
@@ -45,29 +40,39 @@ class RoomDialog extends HookConsumerWidget {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
     final UserPrivateEntity? loginUserPrivate =
         ref.watch(loginUserPrivateProvider);
-    bool isJoined =
-        RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
 
     DateFormat formatter = DateFormat('M/d(E) HH:mm', "ja_JP");
-    String start = '${formatter.format(room.startTime)}〜';
+    final String start = '${formatter.format(room.startTime)}〜';
 
     final description = room.description.isNotEmpty
         ? Text(room.description)
         : const Text('部屋説明無し', style: TextStyle(color: Colors.black54));
 
-    bool passwordEnabled = room.enterType == EnterType.password && !isJoined;
+    final bool passwordEnabled = room.enterType == EnterType.password &&
+        !RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
 
     String? joinErrorMessage =
         RoomService().getJoinErrorMessage(room, loginUser, loginUserPrivate);
     String submitButtonText = '参加する';
     TextStyle submitButtonTextStyle = const TextStyle();
     void Function()? submitButtonOnPress;
-    if (joinErrorMessage == null) {
-      submitButtonOnPress = () => joinRoom(context, loginUser!);
-    } else if (RoomService().isCompletelyJoined(room, loginUser)) {
+    if (RoomService().isCompletelyJoined(room, loginUser)) {
       submitButtonText = '入室する';
-      submitButtonOnPress = () => enterRoom(context);
+      submitButtonOnPress = () {
+        Navigator.pop(context);
+        RoomService().enter(room.roomId);
+      };
+    } else if (RoomService().isOffered(room, loginUser)) {
+      submitButtonText = 'お誘いを受ける';
+      submitButtonOnPress = () {
+        Navigator.pop(context);
+        RoomService().offerOk(RoomService().getRoomUser(room, loginUser!.uid)!);
+      };
+    } else if (joinErrorMessage == null) {
+      // 普通の入室
+      submitButtonOnPress = () => joinRoom(context, loginUser!);
     } else {
+      // 入室できない
       submitButtonOnPress =
           () => PageService().snackbar(joinErrorMessage, SnackBarType.error);
       submitButtonTextStyle =

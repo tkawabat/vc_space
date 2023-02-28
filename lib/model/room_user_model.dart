@@ -49,11 +49,11 @@ class RoomUserModel extends ModelBase {
             .onError<List<RoomUserEntity>>([], '$tableName.getByRoomId'));
   }
 
-  Future<bool> insert(int roomId, String uid, RoomUserType roomUserType,
+  Future<bool> upsert(int roomId, String uid, RoomUserType roomUserType,
       String? password) async {
     return supabase
         .from(tableName)
-        .insert({
+        .upsert({
           'room_id': roomId,
           'uid': uid,
           'room_user_type': roomUserType.value,

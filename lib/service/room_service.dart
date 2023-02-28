@@ -39,6 +39,12 @@ class RoomService {
         [RoomUserType.admin, RoomUserType.member].contains(e.roomUserType));
   }
 
+  bool isOffered(RoomEntity room, UserEntity? user) {
+    if (user == null) return false;
+    return room.users.any((e) =>
+        e.uid == user.uid && [RoomUserType.offer].contains(e.roomUserType));
+  }
+
   String? getJoinErrorMessage(
     RoomEntity room,
     UserEntity? user,
@@ -84,7 +90,7 @@ class RoomService {
     }
 
     return RoomUserModel()
-        .insert(room.roomId, user.uid, RoomUserType.member, password)
+        .upsert(room.roomId, user.uid, RoomUserType.member, password)
         .then((_) {
       PageService().snackbar('部屋に参加しました', SnackBarType.info);
       PageService().ref!.read(roomListJoinProvider.notifier).add(room);
@@ -130,12 +136,12 @@ class RoomService {
     }
 
     return RoomUserModel()
-        .insert(room.roomId, user.uid, RoomUserType.offer, '')
+        .upsert(room.roomId, user.uid, RoomUserType.offer, '')
         .then((_) {
       PageService().snackbar('${user.name}さんを誘いました！', SnackBarType.info);
       return true;
     }).catchError((_) {
-      PageService().snackbar('オファーでエラーが発生しました', SnackBarType.error);
+      PageService().snackbar('お誘いでエラーが発生しました', SnackBarType.error);
       return false;
     });
   }
@@ -149,6 +155,22 @@ class RoomService {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
       return false;
     });
+  }
+
+  FutureOr<bool> offerOk(RoomUserEntity roomUser) async {
+    final newRoomUser = roomUser.copyWith(roomUserType: RoomUserType.member);
+    final success = await RoomUserModel().update(newRoomUser);
+    if (success) {
+      PageService().snackbar('部屋に参加しました', SnackBarType.info);
+      PageService()
+          .ref!
+          .read(roomListJoinProvider.notifier)
+          .modifyUser(newRoomUser);
+      enter(roomUser.roomId);
+    } else {
+      PageService().snackbar('部屋への参加でエラーが発生しました', SnackBarType.error);
+    }
+    return success;
   }
 
   FutureOr<bool> delete(RoomEntity room) async {
