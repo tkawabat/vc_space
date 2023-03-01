@@ -17,6 +17,7 @@ class Tag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget widget = Chip(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       label: Text(
         text,
         style: TextStyle(fontWeight: bold ? FontWeight.w600 : null),
