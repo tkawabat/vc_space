@@ -80,7 +80,7 @@ class PageService {
       type: type,
       mobileSnackBarPosition: MobileSnackBarPosition.bottom,
       desktopSnackBarPosition: DesktopSnackBarPosition.bottomLeft,
-      duration: const Duration(seconds: 2),
+      duration: const Duration(seconds: 3),
     ).show(context!);
   }
 
