@@ -13,6 +13,7 @@ import '../../service/page_service.dart';
 import '../../service/room_service.dart';
 import '../../service/wait_time_service.dart';
 import '../l2/user_card.dart';
+import '../l2/user_search_tag_list.dart';
 
 class RoomOfferUserList extends HookConsumerWidget {
   final RoomEntity room;
@@ -60,31 +61,48 @@ class RoomOfferUserList extends HookConsumerWidget {
           child: PagedListView(
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<WaitTimeEntity>(
-                animateTransitions: true,
-                firstPageErrorIndicatorBuilder: (context) {
-                  return const Center(child: Text('データ取得エラー'));
-                },
-                noItemsFoundIndicatorBuilder: (BuildContext context) {
-                  return const Center(child: Text('条件に合うユーザーが存在しません'));
-                },
-                itemBuilder: (context, item, index) => UserCard(
-                  item.user,
-                  trailingOnTap:
-                      RoomService().getRoomUser(room, item.uid) == null
-                          ? () async {
-                              final success =
-                                  await RoomService().offer(room, item.user);
-                              if (success) PageService().back();
-                            }
-                          : null,
-                  trailingButtonText:
-                      RoomService().isJoined(room, item.uid) ? '参加済み' : '誘う',
-                  body: Container(
-                      padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
-                      alignment: Alignment.topRight,
-                      child: Text(WaitTimeService().toDisplayText(item))),
-                ),
-              ))),
+                  animateTransitions: true,
+                  firstPageErrorIndicatorBuilder: (context) =>
+                      Column(children: [
+                        UserSearchTagList(),
+                        const SizedBox(height: 30),
+                        const Center(child: Text('データ取得エラー'))
+                      ]),
+                  noItemsFoundIndicatorBuilder: (BuildContext context) =>
+                      Column(children: [
+                        UserSearchTagList(),
+                        const SizedBox(height: 30),
+                        const Center(child: Text('条件に合うユーザーが存在しません'))
+                      ]),
+                  itemBuilder: (context, item, index) {
+                    if (index == 0) {
+                      return Column(children: [
+                        UserSearchTagList(),
+                        const SizedBox(height: 2),
+                        buildUserCard(item),
+                      ]);
+                    } else {
+                      return buildUserCard(item);
+                    }
+                  }))),
+    );
+  }
+
+  Widget buildUserCard(WaitTimeEntity waitTime) {
+    return UserCard(
+      waitTime.user,
+      trailingOnTap: RoomService().getRoomUser(room, waitTime.uid) == null
+          ? () async {
+              final success = await RoomService().offer(room, waitTime.user);
+              if (success) PageService().back();
+            }
+          : null,
+      trailingButtonText:
+          RoomService().isJoined(room, waitTime.uid) ? '参加済み' : '誘う',
+      body: Container(
+          padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
+          alignment: Alignment.topRight,
+          child: Text(WaitTimeService().toDisplayText(waitTime))),
     );
   }
 }

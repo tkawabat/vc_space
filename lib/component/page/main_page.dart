@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../entity/room_entity.dart';
 import '../../model/room_model.dart';
-import '../../model/user_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_dialog.dart';
@@ -41,7 +39,7 @@ class MainPage extends HookConsumerWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
+        children: [
           // ElevatedButton(
           //   onPressed: () {
           //     // RoomModel().hoge();

@@ -9,6 +9,8 @@ class TagField extends StatefulWidget {
   final List<String> initialTags;
   final int maxTagNumber;
   final int maxTagLength;
+  final bool viewTitle;
+  final void Function(List<String>)? onChanged;
 
   const TagField({
     super.key,
@@ -16,6 +18,8 @@ class TagField extends StatefulWidget {
     required this.maxTagNumber,
     this.initialTags = const [],
     this.maxTagLength = 10,
+    this.viewTitle = true,
+    this.onChanged,
   });
 
   @override
@@ -42,6 +46,10 @@ class TagFieldState extends State<TagField> {
   void initState() {
     super.initState();
     tagsController = TextfieldTagsController();
+    if (widget.onChanged != null) {
+      tagsController
+          .addListener(() => widget.onChanged!(tagsController.getTags ?? []));
+    }
   }
 
   String? validator(String tag) {
@@ -62,19 +70,21 @@ class TagFieldState extends State<TagField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text('タグ', style: TextStyle(fontSize: 12)),
+        widget.viewTitle
+            ? const Text('タグ', style: TextStyle(fontSize: 12))
+            : SizedBox(),
         TextFieldTags(
           textfieldTagsController: tagsController,
           initialTags: widget.initialTags,
           textSeparators: const [' ', ','],
           letterCase: LetterCase.normal,
           validator: validator,
-          inputfieldBuilder: builder,
+          inputfieldBuilder: inputFieldBuilder,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: const EdgeInsets.only(top: 0),
           child: Wrap(
-              spacing: 2,
+              crossAxisAlignment: WrapCrossAlignment.center,
               children: (widget.samples
                   .map(
                     (text) => Tag(
@@ -88,15 +98,18 @@ class TagFieldState extends State<TagField> {
     );
   }
 
-  Widget Function(BuildContext context, ScrollController sc, List<String> tags,
-          void Function(String p1) onTagDelete)
-      builder(
-          BuildContext context,
-          TextEditingController tec,
-          FocusNode fn,
-          String? error,
-          void Function(String)? onChanged,
-          void Function(String)? onSubmitted) {
+  Widget Function(
+    BuildContext context,
+    ScrollController sc,
+    List<String> tags,
+    void Function(String p1) onTagDelete,
+  ) inputFieldBuilder(
+      BuildContext context,
+      TextEditingController tec,
+      FocusNode fn,
+      String? error,
+      void Function(String)? onChanged,
+      void Function(String)? onSubmitted) {
     return ((BuildContext context, dynamic sc, List<String> tags,
         void Function(String) onTagDelete) {
       return TextField(

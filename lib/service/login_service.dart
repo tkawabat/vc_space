@@ -5,6 +5,7 @@ import '../model/user_model.dart';
 import '../provider/login_user_private_provider.dart';
 import '../provider/login_user_provider.dart';
 import '../provider/notice_list_provider.dart';
+import '../provider/room_search_provider.dart';
 import 'page_service.dart';
 
 class LoginService {
@@ -34,6 +35,9 @@ class LoginService {
         ref.read(loginUserProvider.notifier).set(user);
         ref.read(loginUserPrivateProvider.notifier).get(user.uid);
         ref.read(noticeListProvider.notifier).startUpdate(user.uid);
+        if (user.tags.isNotEmpty) {
+          ref.read(roomSearchProvider.notifier).setTags([user.tags[0]]);
+        }
       }
     }
   }
