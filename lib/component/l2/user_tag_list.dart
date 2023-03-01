@@ -40,6 +40,9 @@ class UserTagList extends ConsumerWidget {
       list.add(const Tag(text: 'なし'));
     }
 
-    return Wrap(spacing: 2, children: list);
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: list,
+    );
   }
 }

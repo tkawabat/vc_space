@@ -79,7 +79,10 @@ class NoticeCard extends StatelessWidget {
       children: [
         ListTile(
           leading: leading,
-          title: Wrap(children: [Text(title)]),
+          title: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [Text(title)],
+          ),
           subtitle: Text(TimeService().getAgoString(notice.createdAt)),
         )
       ],

@@ -46,6 +46,9 @@ class RoomTagList extends ConsumerWidget {
       ));
     }
 
-    return Wrap(spacing: 2, children: widgets);
+    return Wrap(
+      crossAxisAlignment: WrapCrossAlignment.center,
+      children: widgets,
+    );
   }
 }

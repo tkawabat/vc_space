@@ -39,10 +39,13 @@ class UserCard extends StatelessWidget {
             photo: user.photo,
             tooltip: user.name,
           ),
-          title: Wrap(children: [
-            Text(user.name),
-            UserTagList(user),
-          ]),
+          title: Wrap(
+            crossAxisAlignment: WrapCrossAlignment.center,
+            children: [
+              Text(user.name),
+              UserTagList(user),
+            ],
+          ),
           subtitle: Text(TimeService().getAgoString(user.updatedAt)),
           trailing: trailingButtonText != null
               ? SizedBox(

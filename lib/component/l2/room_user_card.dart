@@ -52,6 +52,7 @@ class RoomUserCard extends ConsumerWidget {
     return SizedBox(
       width: 250,
       child: Wrap(
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           Text(isHide ? '' : roomUser.userData.name),
           const SizedBox(width: 10),
