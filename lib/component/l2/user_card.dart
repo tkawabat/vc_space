@@ -12,12 +12,14 @@ class UserCard extends StatelessWidget {
   final UserEntity user;
   final void Function()? trailingOnTap;
   final String? trailingButtonText;
+  final Widget? body;
 
   const UserCard(
     this.user, {
     super.key,
     this.trailingOnTap,
     this.trailingButtonText,
+    this.body,
   });
 
   @override
@@ -52,6 +54,7 @@ class UserCard extends StatelessWidget {
                 )
               : null,
         ),
+        body ?? const SizedBox()
       ],
     );
   }

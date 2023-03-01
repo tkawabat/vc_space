@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
 
 import '../../entity/wait_time_entity.dart';
 import '../../provider/login_user_provider.dart';
@@ -18,16 +17,11 @@ class WaitTimeCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final user = ref.watch(loginUserProvider);
 
-    String startTime =
-        DateFormat('M/d(E) HH:mm', 'ja_JP').format(waitTime.startTime);
-    String endTime = DateFormat('HH:mm', 'ja_JP').format(waitTime.endTime);
-    final String title = '空き時間: $startTime 〜 $endTime';
-
     final bool canDelete = user != null && user.uid == uid;
 
     return CardBase(children: [
       ListTile(
-        title: Text(title),
+        title: Text(WaitTimeService().toDisplayText(waitTime)),
         trailing: canDelete
             ? IconButton(
                 tooltip: '削除する',

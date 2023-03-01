@@ -38,40 +38,6 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<List<UserEntity>> getListByWaitTime(
-    int page,
-    DateTime time, {
-    UserEntity? searchUser,
-  }) {
-    final start = page * ConstService.listStep;
-    final to = start + ConstService.listStep - 1;
-
-    final query = supabase
-        .from(tableName)
-        .select('''
-      *,
-      wait_time!inner (
-        wait_time_type,
-        start_time,
-        end_time
-      )
-      ''')
-        .eq('wait_time.wait_time_type', 10)
-        .lte('wait_time.start_time', time)
-        .gte('wait_time.end_time', time);
-
-    if (searchUser != null && searchUser.tags.isNotEmpty) {
-      query.contains('tags', searchUser.tags);
-    }
-
-    return query
-        .order('updated_at', foreignTable: 'wait_time')
-        .range(start, to)
-        .then(_getEntityList)
-        .catchError(ErrorService()
-            .onError<List<UserEntity>>([], '$tableName.getListByWaitTime'));
-  }
-
   Future<bool> update(
     UserEntity user, {
     List<String>? targetColumnList,

@@ -1,3 +1,6 @@
+import 'package:intl/intl.dart';
+
+import '../entity/user_entity.dart';
 import '../entity/wait_time_entity.dart';
 import '../model/wait_time_model.dart';
 import '../provider/wait_time_list_provider.dart';
@@ -13,14 +16,23 @@ class WaitTimeService {
 
   WaitTimeService._internal();
 
-  Future<bool> add(String uid, DateTime startTime, DateTime endTime) {
+  String toDisplayText(WaitTimeEntity waitTime) {
+    String startTime =
+        DateFormat('M/d(E) HH:mm', 'ja_JP').format(waitTime.startTime);
+    String endTime = DateFormat('HH:mm', 'ja_JP').format(waitTime.endTime);
+    return '空き時間: $startTime 〜 $endTime';
+  }
+
+  Future<bool> add(UserEntity user, DateTime startTime, DateTime endTime) {
     WaitTimeEntity waitTime = WaitTimeEntity(
-        uid: uid,
-        waitTimeId: ConstSystem.idBeforeInsert,
-        waitTimeType: WaitTimeType.valid,
-        startTime: startTime,
-        endTime: endTime,
-        updatedAt: DateTime.now());
+      uid: user.uid,
+      waitTimeId: ConstSystem.idBeforeInsert,
+      waitTimeType: WaitTimeType.valid,
+      startTime: startTime,
+      endTime: endTime,
+      updatedAt: DateTime.now(),
+      user: user,
+    );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {
       if (waitTime == null) throw Exception;
@@ -33,16 +45,18 @@ class WaitTimeService {
     });
   }
 
-  Future<bool> addNoWait(String uid) {
+  Future<bool> addNoWait(UserEntity user) {
     DateTime startTime = DateTime.now();
     DateTime endTime = startTime.add(const Duration(hours: 2));
     WaitTimeEntity waitTime = WaitTimeEntity(
-        uid: uid,
-        waitTimeId: ConstSystem.idBeforeInsert,
-        waitTimeType: WaitTimeType.valid,
-        startTime: startTime,
-        endTime: endTime,
-        updatedAt: DateTime.now());
+      uid: user.uid,
+      waitTimeId: ConstSystem.idBeforeInsert,
+      waitTimeType: WaitTimeType.valid,
+      startTime: startTime,
+      endTime: endTime,
+      updatedAt: DateTime.now(),
+      user: user,
+    );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {
       if (waitTime == null) throw Exception;

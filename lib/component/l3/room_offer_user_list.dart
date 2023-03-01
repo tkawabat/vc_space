@@ -5,11 +5,13 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../model/user_model.dart';
+import '../../entity/wait_time_entity.dart';
+import '../../model/wait_time_model.dart';
 import '../../provider/user_search_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
+import '../../service/wait_time_service.dart';
 import '../l2/user_card.dart';
 
 class RoomOfferUserList extends HookConsumerWidget {
@@ -17,13 +19,13 @@ class RoomOfferUserList extends HookConsumerWidget {
 
   RoomOfferUserList(this.room, {Key? key}) : super(key: key);
 
-  final PagingController<int, UserEntity> _pagingController =
+  final PagingController<int, WaitTimeEntity> _pagingController =
       PagingController(firstPageKey: 0);
 
   void Function(int) createFetchFunction(DateTime time, UserEntity searchUser) {
     return (int pageKey) {
-      UserModel()
-          .getListByWaitTime(pageKey, time, searchUser: searchUser)
+      WaitTimeModel()
+          .getListByStartTime(pageKey, time, searchUser: searchUser)
           .then((list) {
         if (list.length < ConstService.listStep) {
           _pagingController.appendLastPage(list);
@@ -57,7 +59,7 @@ class RoomOfferUserList extends HookConsumerWidget {
               ),
           child: PagedListView(
               pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<UserEntity>(
+              builderDelegate: PagedChildBuilderDelegate<WaitTimeEntity>(
                 animateTransitions: true,
                 firstPageErrorIndicatorBuilder: (context) {
                   return const Center(child: Text('データ取得エラー'));
@@ -66,16 +68,21 @@ class RoomOfferUserList extends HookConsumerWidget {
                   return const Center(child: Text('条件に合うユーザーが存在しません'));
                 },
                 itemBuilder: (context, item, index) => UserCard(
-                  item,
-                  trailingOnTap: RoomService().getRoomUser(room, item.uid) ==
-                          null
-                      ? () async {
-                          final success = await RoomService().offer(room, item);
-                          if (success) PageService().back();
-                        }
-                      : null,
+                  item.user,
+                  trailingOnTap:
+                      RoomService().getRoomUser(room, item.uid) == null
+                          ? () async {
+                              final success =
+                                  await RoomService().offer(room, item.user);
+                              if (success) PageService().back();
+                            }
+                          : null,
                   trailingButtonText:
                       RoomService().isJoined(room, item.uid) ? '参加済み' : '誘う',
+                  body: Container(
+                      padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
+                      alignment: Alignment.topRight,
+                      child: Text(WaitTimeService().toDisplayText(item))),
                 ),
               ))),
     );

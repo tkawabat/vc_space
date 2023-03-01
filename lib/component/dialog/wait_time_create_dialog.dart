@@ -42,8 +42,7 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
       return;
     }
 
-    WaitTimeService()
-        .add(loginUser.uid, fields['startTime'], fields['endTime']);
+    WaitTimeService().add(loginUser, fields['startTime'], fields['endTime']);
   }
 
   @override
