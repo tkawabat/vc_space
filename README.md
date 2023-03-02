@@ -17,18 +17,18 @@ $ flutter pub run build_runner build --delete-conflicting-outputs
 * 開発
 
 ```
-$ flutter build web --dart-define FLAVOR=develop --release
+$ flutter build web --dart-define FLAVOR=develop --web-renderer html --release
 $ firebase use default
 $ firebase deploy
 
 # ワンライナー
-$ flutter build web --dart-define FLAVOR=develop --release && firebase use default && firebase deploy
+$ flutter build web --dart-define FLAVOR=develop --web-renderer html --release && firebase use default && firebase deploy
 ```
 
 * 本番
 
 ```
-$ flutter build web --dart-define FLAVOR=production --release
+$ flutter build web --dart-define FLAVOR=production --web-renderer html --release
 $ firebase use production
 $ firebase deploy
 ```

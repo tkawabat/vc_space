@@ -16,6 +16,8 @@
                 "FLAVOR=develop",
                 "--web-port",
                 "51001",
+                "--web-renderer",
+                "html",
                 "--debug",
             ]
         },
@@ -31,6 +33,8 @@
                 "FLAVOR=production",
                 "--web-port",
                 "51002",
+                "--web-renderer",
+                "html",
                 "--release",
             ]
         },
