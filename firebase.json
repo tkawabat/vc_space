@@ -30,6 +30,15 @@
             "value": "max-age=300"
           }
         ]
+      },
+      {
+        "source": "**/*.@(otf)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "max-age=172800"
+          }
+        ]
       }
     ]
   }
