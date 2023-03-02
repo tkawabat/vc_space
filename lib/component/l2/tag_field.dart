@@ -72,7 +72,7 @@ class TagFieldState extends State<TagField> {
       children: [
         widget.viewTitle
             ? const Text('タグ', style: TextStyle(fontSize: 12))
-            : SizedBox(),
+            : const SizedBox(),
         TextFieldTags(
           textfieldTagsController: tagsController,
           initialTags: widget.initialTags,
@@ -82,7 +82,7 @@ class TagFieldState extends State<TagField> {
           inputfieldBuilder: inputFieldBuilder,
         ),
         Padding(
-          padding: const EdgeInsets.only(top: 0),
+          padding: const EdgeInsets.only(top: 4),
           child: Wrap(
               crossAxisAlignment: WrapCrossAlignment.center,
               children: (widget.samples

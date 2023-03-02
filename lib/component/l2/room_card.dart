@@ -43,12 +43,12 @@ class RoomCard extends StatelessWidget {
           trailing: buildTrailing(room),
         ),
         Container(
-          padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
+          padding: const EdgeInsets.fromLTRB(4, 0, 4, 0),
           alignment: Alignment.topLeft,
           child: RoomUserRow(room, hideAdmin: true),
         ),
         Container(
-          padding: const EdgeInsets.fromLTRB(8, 2, 8, 8),
+          padding: const EdgeInsets.fromLTRB(4, 2, 4, 8),
           alignment: Alignment.topLeft,
           child: RoomTagList(room),
         ),
