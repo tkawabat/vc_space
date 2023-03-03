@@ -1,4 +1,3 @@
-import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
@@ -42,7 +41,6 @@ class PageService {
       LoginService().initializeUser(ref);
 
       html.window.history.pushState(null, '', '#/');
-      FlutterNativeSplash.remove();
     });
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -14,14 +15,14 @@ Future main() async {
   await dotenv.load(fileName: 'assets/env.$flavor');
 
   WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.remove();
 
   List<Future> list = [];
 
   // メンテナンス中は呼び出さない
   if (dotenv.get('MAINTENANCE', fallback: '').isEmpty) {
-    list.add(Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
-    ));
+    Firebase.initializeApp(
+        options: DefaultFirebaseOptions.currentPlatform); // not wait
 
     list.add(Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),
