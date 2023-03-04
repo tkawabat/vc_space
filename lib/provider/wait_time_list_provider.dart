@@ -22,6 +22,15 @@ class WaitTimeListNotifer extends StateNotifier<List<WaitTimeEntity>> {
     state = newList;
   }
 
+  void addList(List<WaitTimeEntity> list) {
+    final newList = [...state];
+    for (final waitTime in list) {
+      if (state.contains(waitTime)) return;
+      newList.add(waitTime);
+    }
+    state = newList;
+  }
+
   void delete(int waitTimeId) {
     final newList = [...state];
     state = newList.where((e) => e.waitTimeId != waitTimeId).toList();

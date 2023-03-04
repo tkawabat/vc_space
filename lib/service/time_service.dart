@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class TimeService {
   static final TimeService _instance = TimeService._internal();
 
@@ -13,10 +15,11 @@ class TimeService {
 
   // 区切りが良い時間を返す
   DateTime getStepDateTime(DateTime time, int step) {
-    DateTime returnValue = time.add(Duration(
-        seconds: -time.second,
-        milliseconds: time.microsecond,
-        microseconds: time.microsecond));
+    DateTime returnValue = time.copyWith(
+      second: 0,
+      millisecond: 0,
+      microsecond: 0,
+    );
     final remain = returnValue.minute % step;
     if (remain > step / 2) {
       return returnValue.add(Duration(minutes: step - remain));
@@ -36,4 +39,7 @@ class TimeService {
     if (diff.inMinutes > 0) return '${diff.inMinutes}分前';
     return '${diff.inSeconds}秒前';
   }
+
+  String timeOfDayToString(TimeOfDay time) =>
+      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
 }

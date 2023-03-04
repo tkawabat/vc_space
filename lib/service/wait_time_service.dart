@@ -1,9 +1,11 @@
+import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 import '../entity/user_entity.dart';
 import '../entity/wait_time_entity.dart';
 import '../model/wait_time_model.dart';
 import '../provider/wait_time_list_provider.dart';
+import '../provider/wait_time_new_list_provider.dart';
 import 'const_system.dart';
 import 'page_service.dart';
 
@@ -18,9 +20,9 @@ class WaitTimeService {
 
   String toDisplayText(WaitTimeEntity waitTime) {
     String startTime =
-        DateFormat('M/d(E) HH:mm', 'ja_JP').format(waitTime.startTime);
+        DateFormat('M/d(E)  HH:mm', 'ja_JP').format(waitTime.startTime);
     String endTime = DateFormat('HH:mm', 'ja_JP').format(waitTime.endTime);
-    return '空き時間: $startTime 〜 $endTime';
+    return '誘って！ $startTime 〜 $endTime';
   }
 
   Future<bool> add(UserEntity user, DateTime startTime, DateTime endTime) {
@@ -37,6 +39,28 @@ class WaitTimeService {
     return WaitTimeModel().insert(waitTime).then((waitTime) {
       if (waitTime == null) throw Exception;
       PageService().ref!.read(waitTimeListProvider.notifier).add(waitTime);
+      PageService().snackbar('空き時間を登録しました', SnackBarType.info);
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('空き時間の登録に失敗しました', SnackBarType.error);
+      return false;
+    });
+  }
+
+  Future<bool> addList(UserEntity user, List<NewWaitTime> newWaitTimeList) {
+    final list = newWaitTimeList
+        .map((e) => WaitTimeEntity(
+            uid: user.uid,
+            waitTimeId: ConstSystem.idBeforeInsert,
+            waitTimeType: WaitTimeType.valid,
+            startTime: e.range.start,
+            endTime: e.range.end,
+            updatedAt: DateTime.now(),
+            user: user))
+        .toList();
+    return WaitTimeModel().insertList(list).then((value) {
+      PageService().ref!.read(waitTimeListProvider.notifier).addList(value);
+      PageService().ref!.read(waitTimeNewListProvider.notifier).deleteAll();
       PageService().snackbar('空き時間を登録しました', SnackBarType.info);
       return true;
     }).catchError((_) {

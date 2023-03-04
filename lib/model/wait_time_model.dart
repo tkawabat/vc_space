@@ -22,6 +22,14 @@ class WaitTimeModel extends ModelBase {
 
   WaitTimeModel._internal();
 
+  Map<String, dynamic> _getJson(WaitTimeEntity entity) {
+    var json = entity.toJson();
+    json.remove('wait_time_id');
+    json.remove('updated_at');
+    json.remove('user');
+    return json;
+  }
+
   List<WaitTimeEntity> _getEntityList(dynamic result) {
     if (result == null) return [];
     if (result is! List) return [];
@@ -66,10 +74,7 @@ class WaitTimeModel extends ModelBase {
   }
 
   Future<WaitTimeEntity?> insert(WaitTimeEntity waitTime) async {
-    var json = waitTime.toJson();
-    json.remove('wait_time_id');
-    json.remove('updated_at');
-    json.remove('user');
+    final json = _getJson(waitTime);
 
     return supabase
         .from(tableName)
@@ -78,6 +83,18 @@ class WaitTimeModel extends ModelBase {
         .single()
         .then(_getEntity)
         .catchError(ErrorService().onError(null, '$tableName.insert'));
+  }
+
+  Future<List<WaitTimeEntity>> insertList(List<WaitTimeEntity> list) async {
+    List<Map<String, dynamic>> jsonList = list.map((e) => _getJson(e)).toList();
+
+    return supabase
+        .from(tableName)
+        .insert(jsonList)
+        .select(columns)
+        .then(_getEntityList)
+        .catchError(ErrorService()
+            .onError<List<WaitTimeEntity>>([], '$tableName.insertList'));
   }
 
   Future<bool> delete(String uid, int waitTimeId) async {
