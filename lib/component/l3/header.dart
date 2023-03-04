@@ -47,7 +47,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     List<Widget> actionList = [];
     if (size.width > 700) {
       actionList.add(IconButton(
-          tooltip: '予定を作る',
+          tooltip: '部屋を作る',
           icon: const Icon(Icons.add_circle_outline),
           onPressed: () => PageService().viewCreateDialog(page)));
       actionList.add(IconButton(

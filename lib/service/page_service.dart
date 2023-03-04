@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
+import 'package:vc_space/component/dialog/room_edit_dialog.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
@@ -156,7 +157,7 @@ class PageService {
 
     if (loginUser == null) {
       PageService().showConfirmDialog(
-          '予定を作るにはログインが必要です。'
+          '部屋を作るにはログインが必要です。'
           '\nDiscordでログインする',
           () => LoginService().login());
     } else {
@@ -164,7 +165,7 @@ class PageService {
           context: context!,
           barrierDismissible: true,
           builder: (_) {
-            return const ScheduleCreateDialog();
+            return RoomEditDialog();
           });
     }
   }

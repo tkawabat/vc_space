@@ -52,7 +52,7 @@ class Footer extends StatelessWidget {
       ),
       FooterItem(
         icon: const Icon(Icons.add),
-        label: '予定を作る',
+        label: '部屋を作る',
         page: PageNames.none,
         onTap: () => PageService().viewCreateDialog(page),
       ),
