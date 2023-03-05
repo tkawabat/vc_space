@@ -134,6 +134,12 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       list.add(
         IconButton(
             onPressed: () {
+              if (WaitTimeService().isMax()) {
+                PageService().snackbar(
+                    '誘って！は${ConstService.waitTimeMax}個までしか登録できません',
+                    SnackBarType.error);
+                return;
+              }
               final stepNow = TimeService().getStepNow(ConstService.stepTime);
               DateTimeRange range;
               if (!now.isAtSameMomentAs(key)) {
@@ -252,17 +258,16 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
 
   Widget _eventMarker(int num, Color color) {
     if (num == 0) return const SizedBox();
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
+    return Container(
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
       ),
-      width: 16.0,
-      height: 16.0,
+      width: 12.0,
+      height: 12.0,
       child: Center(
         child: Text(num.toString(),
-            style: const TextStyle(color: Colors.white, fontSize: 12.0)),
+            style: const TextStyle(color: Colors.white, fontSize: 10.0)),
       ),
     );
   }

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:vc_space/service/const_service.dart';
 
 import '../entity/user_entity.dart';
 import '../entity/wait_time_entity.dart';
@@ -23,6 +23,13 @@ class WaitTimeService {
         DateFormat('M/d(E)  HH:mm', 'ja_JP').format(waitTime.startTime);
     String endTime = DateFormat('HH:mm', 'ja_JP').format(waitTime.endTime);
     return '誘って！ $startTime 〜 $endTime';
+  }
+
+  bool isMax() {
+    final waitTimeList = PageService().ref!.read(waitTimeListProvider);
+    final waitTimeNewList = PageService().ref!.read(waitTimeNewListProvider);
+    return waitTimeList.length + waitTimeNewList.length >=
+        ConstService.waitTimeMax;
   }
 
   Future<bool> add(UserEntity user, DateTime startTime, DateTime endTime) {

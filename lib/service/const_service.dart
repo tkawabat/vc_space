@@ -6,6 +6,7 @@ class ConstService {
   static const followMax = 50;
   static const blockMax = 20;
 
+  static const waitTimeMax = 50;
   static const calendarMax = 90;
 
   static const roomTitleMax = 20;
