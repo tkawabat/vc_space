@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
 import 'package:vc_space/component/dialog/room_edit_dialog.dart';
+import 'package:vc_space/provider/room_list_join_provider.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
-import '../component/dialog/schedule_create_dialog.dart';
 import '../provider/login_user_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
+import 'const_service.dart';
 import 'login_service.dart';
 
 typedef SnackBarType = AnimatedSnackBarType;
@@ -81,7 +82,7 @@ class PageService {
       type: type,
       mobileSnackBarPosition: MobileSnackBarPosition.bottom,
       desktopSnackBarPosition: DesktopSnackBarPosition.bottomLeft,
-      duration: const Duration(seconds: 3),
+      duration: const Duration(seconds: 5),
     ).show(context!);
   }
 
@@ -160,13 +161,21 @@ class PageService {
           '部屋を作るにはログインが必要です。'
           '\nDiscordでログインする',
           () => LoginService().login());
-    } else {
-      showDialog(
-          context: context!,
-          barrierDismissible: true,
-          builder: (_) {
-            return RoomEditDialog();
-          });
+      return;
     }
+
+    final joinRoomList = ref!.read(roomListJoinProvider);
+    if (joinRoomList.length >= ConstService.joinRoomMax) {
+      PageService().snackbar(
+          '参加できる部屋は${ConstService.joinRoomMax}個までです', SnackBarType.error);
+      return;
+    }
+
+    showDialog(
+        context: context!,
+        barrierDismissible: true,
+        builder: (_) {
+          return RoomEditDialog();
+        });
   }
 }

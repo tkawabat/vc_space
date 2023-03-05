@@ -86,6 +86,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
   void initState() {
     super.initState();
 
+    // 他人のページ見れるようにしたとき見直す
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(waitTimeListProvider.notifier).getList(widget.uid);
       ref.read(roomListJoinProvider.notifier).getList(widget.uid);

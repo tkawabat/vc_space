@@ -3,9 +3,11 @@ class ConstService {
   static const stepTime = 15;
 
   static const userGreetingMax = 140;
-  static const followMax = 50;
+
+  static const followMax = 100;
   static const blockMax = 20;
 
+  static const joinRoomMax = 10;
   static const waitTimeMax = 50;
   static const calendarMax = 90;
 
