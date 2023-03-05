@@ -51,35 +51,67 @@ class RoomDialog extends HookConsumerWidget {
     final bool passwordEnabled = room.enterType == EnterType.password &&
         !RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
 
+    final List<Widget> actions = [
+      const CancelButton(),
+    ];
+
     String? joinErrorMessage =
         RoomService().getJoinErrorMessage(room, loginUser, loginUserPrivate);
-    String submitButtonText = '参加する';
-    TextStyle submitButtonTextStyle = const TextStyle();
-    void Function()? submitButtonOnPress;
+
     if (RoomService().isCompletelyJoined(room, loginUser)) {
-      submitButtonText = '入室する';
-      submitButtonOnPress = () {
-        Navigator.pop(context);
-        RoomService().enter(room.roomId);
-      };
+      actions.add(
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            RoomService().enter(room.roomId);
+          },
+          child: const Text('入室する'),
+        ),
+      );
     } else if (RoomService().isOffered(room, loginUser)) {
-      submitButtonText = 'お誘いを受ける';
-      submitButtonOnPress = () {
-        Navigator.pop(context);
-        RoomService().offerOk(RoomService().getRoomUser(room, loginUser!.uid)!);
-      };
+      actions.add(
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            RoomService()
+                .offerNg(RoomService().getRoomUser(room, loginUser!.uid)!);
+          },
+          child: const Text('NG'),
+        ),
+      );
+      actions.add(
+        TextButton(
+          onPressed: () {
+            Navigator.pop(context);
+            RoomService()
+                .offerOk(RoomService().getRoomUser(room, loginUser!.uid)!);
+          },
+          child: const Text('OK'),
+        ),
+      );
     } else if (joinErrorMessage == null) {
       // 普通の入室
-      submitButtonOnPress = () => joinRoom(context, loginUser!);
+      actions.add(
+        TextButton(
+          onPressed: () {
+            joinRoom(context, loginUser!);
+          },
+          child: const Text('参加する'),
+        ),
+      );
     } else {
       // 入室できない
-      submitButtonOnPress =
-          () => PageService().snackbar(joinErrorMessage, SnackBarType.error);
-      submitButtonTextStyle =
-          const TextStyle(decoration: TextDecoration.lineThrough);
+      actions.add(
+        TextButton(
+          onPressed: () =>
+              PageService().snackbar(joinErrorMessage, SnackBarType.error),
+          child: const Text('参加する',
+              style: TextStyle(decoration: TextDecoration.lineThrough)),
+        ),
+      );
     }
 
-    const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
+    // const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
 
     return FormBuilder(
       key: formKey,
@@ -91,7 +123,7 @@ class RoomDialog extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('基本情報', style: titleStyle),
+                // const Text('基本情報', style: titleStyle),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,28 +135,25 @@ class RoomDialog extends HookConsumerWidget {
                 const SizedBox(height: 2),
                 Text('入室制限: ${room.enterType.displayName}'),
                 const SizedBox(height: 16),
-                const Text('参加者', style: titleStyle),
+                // const Text('参加者', style: titleStyle),
+                const Divider(),
                 const SizedBox(height: 8),
                 RoomUserRow(room),
                 const SizedBox(height: 8),
-                const Text('部屋説明', style: titleStyle),
+                // const Text('部屋説明', style: titleStyle),
+                const Divider(),
                 const SizedBox(height: 8),
                 description,
-                const SizedBox(height: 16),
-                const Text('タグ', style: titleStyle),
+                const SizedBox(height: 8),
+                // const Text('タグ', style: titleStyle),
+                const Divider(),
                 const SizedBox(height: 8),
                 RoomTagList(room),
                 const Spacer(),
                 passwordField(passwordEnabled),
               ],
             )),
-        actions: [
-          const CancelButton(),
-          TextButton(
-            onPressed: submitButtonOnPress,
-            child: Text(submitButtonText, style: submitButtonTextStyle),
-          ),
-        ],
+        actions: actions,
       ),
     );
   }

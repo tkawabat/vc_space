@@ -39,33 +39,38 @@ class NoticeCard extends StatelessWidget {
 
     switch (notice.noticeType) {
       case NoticeType.followed:
-        title = '${notice.userData!.name}さんがあなたをフォローしました。';
+        title = '${notice.userData!.name}さんがあなたをフォローしました';
         onTap = showUserDialog;
         break;
       case NoticeType.followerCreateRoom:
         title =
-            '${notice.userData!.name}さんが部屋"${notice.roomData!.title}"を作りました。';
+            '${notice.userData!.name}さんが部屋"${notice.roomData!.title}"を作りました';
         onTap = showRoomDialog;
         leadingOnTap = showUserDialog;
         break;
       case NoticeType.roomMemberAdded:
         title =
-            '${notice.userData!.name}さんが部屋"${notice.roomData!.title}"に参加しました。';
+            '${notice.userData!.name}さんが部屋"${notice.roomData!.title}"に参加しました';
         onTap = showRoomDialog;
         leadingOnTap = showUserDialog;
         break;
       case NoticeType.roomDeleted:
-        title = '部屋"${notice.roomData!.title}"が削除されました。';
+        title = '部屋"${notice.roomData!.title}"が削除されました';
         noUserIcon = true;
+        break;
+      case NoticeType.roomOfferNg:
+        title = '残念ながら${notice.userData!.name}さんが'
+            '部屋"${notice.roomData!.title}"へのお誘いを断りました';
+        onTap = showRoomDialog;
+        leadingOnTap = showUserDialog;
         break;
       case NoticeType.roomOffered:
         title = '部屋"${notice.roomData!.title}"へのお誘いが来ています！';
         onTap = showRoomDialog;
-        leadingOnTap = showUserDialog;
         noUserIcon = true;
         break;
       case NoticeType.roomKicked:
-        title = '部屋"${notice.roomData!.title}"からキックされました。';
+        title = '部屋"${notice.roomData!.title}"からキックされました';
         noUserIcon = true;
         break;
     }

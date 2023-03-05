@@ -103,30 +103,30 @@ class RoomService {
   }
 
   FutureOr<bool> quit(RoomEntity room, String uid) async {
-    final success = await RoomUserModel().delete(room.roomId, uid);
-    if (success) {
+    return RoomUserModel().delete(room.roomId, uid).then((_) {
       PageService().snackbar('部屋から脱退しました', SnackBarType.info);
       PageService().transition(PageNames.home);
       PageService()
           .ref!
           .read(roomListJoinProvider.notifier)
           .delete(room.roomId);
-    } else {
+      return true;
+    }).catchError((_) {
       PageService().snackbar('部屋の脱退でエラーが発生しました', SnackBarType.error);
-    }
-    return success;
+      return false;
+    });
   }
 
   FutureOr<bool> kick(RoomUserEntity roomUser) async {
     final newRoomUser = roomUser.copyWith(roomUserType: RoomUserType.kick);
-    final success = await RoomUserModel().update(newRoomUser);
-    if (success) {
+    return RoomUserModel().update(newRoomUser).then((_) {
       PageService().snackbar(
           '${roomUser.userData.name}さんを部屋からキックしました', SnackBarType.info);
-    } else {
+      return true;
+    }).catchError((_) {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
-    }
-    return success;
+      return false;
+    });
   }
 
   FutureOr<bool> offer(RoomEntity room, UserEntity user) async {
@@ -171,6 +171,21 @@ class RoomService {
       PageService().snackbar('部屋への参加でエラーが発生しました', SnackBarType.error);
     }
     return success;
+  }
+
+  FutureOr<bool> offerNg(RoomUserEntity roomUser) async {
+    return RoomUserModel().delete(roomUser.roomId, roomUser.uid).then((_) {
+      PageService().snackbar('お誘いを断りました', SnackBarType.info);
+      PageService()
+          .ref!
+          .read(roomListJoinProvider.notifier)
+          .delete(roomUser.roomId);
+      PageService().transition(PageNames.home);
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('お誘いでエラーが発生しました', SnackBarType.error);
+      return false;
+    });
   }
 
   FutureOr<bool> delete(RoomEntity room) async {

@@ -16,6 +16,7 @@ enum NoticeType {
   followerCreateRoom(200),
   roomMemberAdded(300),
   roomDeleted(301),
+  roomOfferNg(302),
   roomOffered(310),
   roomKicked(320),
   ;
@@ -33,6 +34,8 @@ enum NoticeType {
         return NoticeType.roomMemberAdded;
       case 301:
         return NoticeType.roomDeleted;
+      case 302:
+        return NoticeType.roomOfferNg;
       case 310:
         return NoticeType.roomOffered;
       case 320:

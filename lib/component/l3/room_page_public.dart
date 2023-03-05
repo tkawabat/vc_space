@@ -52,7 +52,7 @@ class RoomPagePublic extends HookConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text('基本情報', style: ConstDesign.h3),
+              // const Text('基本情報', style: ConstDesign.h3),
               const SizedBox(height: 8),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,11 +64,13 @@ class RoomPagePublic extends HookConsumerWidget {
               const SizedBox(height: 2),
               Text('入室制限: ${room.enterType.displayName}'),
               const SizedBox(height: 16),
-              const Text('部屋説明', style: ConstDesign.h3),
+              // const Text('部屋説明', style: ConstDesign.h3),
+              const Divider(),
               const SizedBox(height: 8),
               description,
-              const SizedBox(height: 16),
-              const Text('タグ', style: ConstDesign.h3),
+              const SizedBox(height: 8),
+              // const Text('タグ', style: ConstDesign.h3),
+              const Divider(),
               const SizedBox(height: 8),
               RoomTagList(room, viewEnterStatus: false),
             ],
