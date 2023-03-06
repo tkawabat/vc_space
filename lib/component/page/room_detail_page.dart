@@ -77,7 +77,10 @@ class RoomDetailPageState extends ConsumerState<RoomDetailPage> {
             PageNames.room,
             room.title,
             bottom: TabBar(
-                indicatorColor: Colors.black,
+                labelColor: Theme.of(context).textTheme.bodyMedium?.color,
+                unselectedLabelColor:
+                    Theme.of(context).textTheme.bodyMedium?.color,
+                indicatorColor: Theme.of(context).colorScheme.primary,
                 tabs: tabList.map((text) => Tab(text: text)).toList()),
           ),
           bottomNavigationBar: const Footer(PageNames.room),

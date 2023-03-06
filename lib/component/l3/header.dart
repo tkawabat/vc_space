@@ -48,11 +48,11 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     if (size.width > 700) {
       actionList.add(IconButton(
           tooltip: '部屋を作る',
-          icon: const Icon(Icons.add_circle_outline),
+          icon: const Icon(Icons.add_circle_outline, color: Colors.black54),
           onPressed: () => PageService().viewCreateDialog(page)));
       actionList.add(IconButton(
           tooltip: '予定表',
-          icon: const Icon(Icons.calendar_month),
+          icon: const Icon(Icons.calendar_month, color: Colors.black54),
           onPressed: () => PageService().transitionMyCalendar(page)));
       actionList.add(Container(
         width: 32,
@@ -61,7 +61,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
         child: NoticeBadge(
           child: IconButton(
               tooltip: 'お知らせ',
-              icon: const Icon(Icons.notifications),
+              icon: const Icon(Icons.notifications, color: Colors.black54),
               onPressed: () => PageService().transitionNotice(page)),
         ),
       ));
@@ -71,16 +71,19 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       centerTitle: false,
       leading: PageService().canBack()
           ? IconButton(
-              icon: const Icon(Icons.arrow_back_ios),
+              icon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
               onPressed: () {
                 PageService().back();
               })
           : IconButton(
-              icon: const Icon(Icons.home),
+              icon: const Icon(Icons.home, color: Colors.black54),
               onPressed: () {
                 PageService().transition(PageNames.home);
               }),
-      title: Text(title),
+      title: Text(
+        title,
+        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+      ),
       actions: [
         ...actionList,
         const Padding(padding: EdgeInsets.only(left: 16)),
@@ -89,6 +92,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       ],
       bottom: bottom,
       elevation: 0,
+      backgroundColor: Colors.transparent,
     );
   }
 }

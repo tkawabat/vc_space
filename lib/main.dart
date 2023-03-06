@@ -47,8 +47,8 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
           fontFamily: 'NotoSansJP', scheme: FlexScheme.mango),
-      darkTheme: FlexThemeData.dark(
-          fontFamily: 'NotoSansJP', scheme: FlexScheme.mango),
+      // darkTheme: FlexThemeData.dark(
+      //     fontFamily: 'NotoSansJP', scheme: FlexScheme.mango),
       themeMode: ThemeMode.system,
       onGenerateRoute: generateRoute,
     );

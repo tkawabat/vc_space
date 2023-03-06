@@ -20,7 +20,10 @@ class Tag extends StatelessWidget {
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       label: Text(
         text,
-        style: TextStyle(fontWeight: bold ? FontWeight.w600 : null),
+        style: TextStyle(
+          fontWeight: bold ? FontWeight.w600 : null,
+          color: Colors.black,
+        ),
       ),
       backgroundColor: tagColor,
     );
