@@ -40,13 +40,14 @@ class RoomOfferUserList extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final searchUser = ref.watch(userSearchProvider);
-    final fetch = useState(createFetchFunction(room.startTime, searchUser));
+    final fetchFunction =
+        useState(createFetchFunction(room.startTime, searchUser));
 
     useEffect(
       () {
-        _pagingController.removePageRequestListener(fetch.value);
-        fetch.value = createFetchFunction(room.startTime, searchUser);
-        _pagingController.addPageRequestListener(fetch.value);
+        _pagingController.removePageRequestListener(fetchFunction.value);
+        fetchFunction.value = createFetchFunction(room.startTime, searchUser);
+        _pagingController.addPageRequestListener(fetchFunction.value);
         _pagingController.refresh();
         return null;
       },
@@ -89,6 +90,7 @@ class RoomOfferUserList extends HookConsumerWidget {
   }
 
   Widget buildUserCard(WaitTimeEntity waitTime) {
+    if (RoomService().isJoined(room, waitTime.uid)) return const SizedBox();
     return UserCard(
       waitTime.user,
       trailingOnTap: RoomService().getRoomUser(room, waitTime.uid) == null
@@ -97,8 +99,7 @@ class RoomOfferUserList extends HookConsumerWidget {
               if (success) PageService().back();
             }
           : null,
-      trailingButtonText:
-          RoomService().isJoined(room, waitTime.uid) ? '参加済み' : '誘う',
+      trailingButtonText: '誘う',
       body: Container(
           padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
           alignment: Alignment.topRight,
