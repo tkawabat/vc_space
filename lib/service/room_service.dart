@@ -10,6 +10,7 @@ import '../model/room_user_model.dart';
 import '../model/room_model.dart';
 import '../route.dart';
 import '../provider/room_list_join_provider.dart';
+import 'analytics_service.dart';
 import 'page_service.dart';
 
 class RoomService {
@@ -94,6 +95,7 @@ class RoomService {
         .then((_) {
       PageService().snackbar('部屋に参加しました', SnackBarType.info);
       PageService().ref!.read(roomListJoinProvider.notifier).add(room);
+      logEvent(LogEventName.room_join, 'member', room.roomId.toString());
       enter(room.roomId);
       return true;
     }).catchError((_) {
@@ -110,6 +112,7 @@ class RoomService {
           .ref!
           .read(roomListJoinProvider.notifier)
           .delete(room.roomId);
+      logEvent(LogEventName.room_quit, 'member', room.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('部屋の脱退でエラーが発生しました', SnackBarType.error);
@@ -122,6 +125,7 @@ class RoomService {
     return RoomUserModel().update(newRoomUser).then((_) {
       PageService().snackbar(
           '${roomUser.userData.name}さんを部屋からキックしました', SnackBarType.info);
+      logEvent(LogEventName.kick, 'owner', roomUser.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
@@ -139,6 +143,7 @@ class RoomService {
         .upsert(room.roomId, user.uid, RoomUserType.offer, '')
         .then((_) {
       PageService().snackbar('${user.name}さんを誘いました！', SnackBarType.info);
+      logEvent(LogEventName.offer, 'owner', room.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('お誘いでエラーが発生しました', SnackBarType.error);
@@ -150,6 +155,7 @@ class RoomService {
     return RoomUserModel().delete(roomUser.roomId, roomUser.uid).then((_) {
       PageService().snackbar(
           '${roomUser.userData.name}さんの誘いをキャンセルしました', SnackBarType.info);
+      logEvent(LogEventName.offer_stop, 'owner', roomUser.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('キックでエラーが発生しました', SnackBarType.error);
@@ -166,6 +172,7 @@ class RoomService {
           .ref!
           .read(roomListJoinProvider.notifier)
           .modifyUser(newRoomUser);
+      logEvent(LogEventName.offer_ok, 'member', roomUser.roomId.toString());
       enter(roomUser.roomId);
     } else {
       PageService().snackbar('部屋への参加でエラーが発生しました', SnackBarType.error);
@@ -180,6 +187,7 @@ class RoomService {
           .ref!
           .read(roomListJoinProvider.notifier)
           .delete(roomUser.roomId);
+      logEvent(LogEventName.offer_ng, 'member', roomUser.roomId.toString());
       PageService().transition(PageNames.home);
       return true;
     }).catchError((_) {
@@ -193,6 +201,7 @@ class RoomService {
     return RoomModel().update(newObj, targetColumnList: ['deleted']).then((_) {
       PageService().snackbar('部屋を削除しました', SnackBarType.info);
       // 入っている部屋は勝手に出ていくはず
+      logEvent(LogEventName.room_delete, 'member', room.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('部屋の削除でエラーが発生しました', SnackBarType.error);

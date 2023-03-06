@@ -27,7 +27,7 @@ class ScheduleCreateDialog extends StatelessWidget {
                         context: context,
                         barrierDismissible: true,
                         builder: (_) {
-                          return WaitTimeCreateDialog();
+                          return const WaitTimeCreateDialog();
                         });
                   },
                   text: '空き時間',

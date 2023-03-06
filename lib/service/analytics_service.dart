@@ -4,12 +4,31 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 
 enum LogEventName {
-  create_room,
-  search_room,
   login,
-  sign_up,
-  modify_user,
-  search_user,
+  logout,
+  user_save,
+  follow,
+  unfollow,
+  block,
+  unblock,
+
+  room_create,
+  room_join,
+  room_quit,
+  kick,
+  offer,
+  offer_stop,
+  offer_ok,
+  offer_ng,
+  room_delete,
+  room_search_modify,
+  user_search_modify,
+  room_chat,
+
+  wait_time_add,
+  wait_time_add_list,
+  wait_time_delete,
+
   database_error,
   view_error,
 }

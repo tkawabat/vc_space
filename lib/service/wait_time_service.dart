@@ -5,6 +5,7 @@ import '../entity/wait_time_entity.dart';
 import '../model/wait_time_model.dart';
 import '../provider/wait_time_list_provider.dart';
 import '../provider/wait_time_new_list_provider.dart';
+import 'analytics_service.dart';
 import 'const_system.dart';
 import 'const_service.dart';
 import 'page_service.dart';
@@ -61,6 +62,7 @@ class WaitTimeService {
       if (waitTime == null) throw Exception;
       PageService().ref!.read(waitTimeListProvider.notifier).add(waitTime);
       PageService().snackbar('空き時間を登録しました', SnackBarType.info);
+      logEvent(LogEventName.wait_time_add, 'wait_time');
       return true;
     }).catchError((_) {
       PageService().snackbar('空き時間の登録に失敗しました', SnackBarType.error);
@@ -83,6 +85,7 @@ class WaitTimeService {
       PageService().ref!.read(waitTimeListProvider.notifier).addList(value);
       PageService().ref!.read(waitTimeNewListProvider.notifier).deleteAll();
       PageService().snackbar('空き時間を登録しました', SnackBarType.info);
+      logEvent(LogEventName.wait_time_add_list, 'wait_time');
       return true;
     }).catchError((_) {
       PageService().snackbar('空き時間の登録に失敗しました', SnackBarType.error);
@@ -115,6 +118,7 @@ class WaitTimeService {
   Future<bool> delete(String uid, int waitTimeId) {
     return WaitTimeModel().delete(uid, waitTimeId).then((_) {
       PageService().ref!.read(waitTimeListProvider.notifier).delete(waitTimeId);
+      logEvent(LogEventName.wait_time_delete, 'wait_time');
       return true;
     }).catchError((_) {
       PageService().snackbar('空き時間の削除に失敗しました', SnackBarType.error);

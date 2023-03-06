@@ -10,6 +10,7 @@ import '../../entity/user_entity.dart';
 import '../../model/room_chat_model.dart';
 import '../../provider/enter_room_chat_provider.dart';
 import '../../provider/login_user_provider.dart';
+import '../../service/analytics_service.dart';
 import '../l1/loading.dart';
 
 class VCChat extends HookConsumerWidget {
@@ -44,7 +45,9 @@ class VCChat extends HookConsumerWidget {
           types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
       onSendPressed: (types.PartialText text) {
-        RoomChatModel().insert(roomId, user, text.text);
+        RoomChatModel().insert(roomId, user, text.text).then((_) {
+          logEvent(LogEventName.room_chat, 'member');
+        });
       },
       showUserAvatars: true,
       showUserNames: true,

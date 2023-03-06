@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:vc_space/service/user_service.dart';
 
 import '../../entity/user_entity.dart';
-import '../../model/user_model.dart';
-import '../../provider/login_user_provider.dart';
-import '../../provider/user_list_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../l1/button.dart';
@@ -38,13 +36,7 @@ class UserPageBasic extends HookConsumerWidget {
         follows: user.follows,
         updatedAt: DateTime.now());
 
-    UserModel().update(newUser).then((_) {
-      ref.read(loginUserProvider.notifier).set(newUser);
-      ref.read(userListProvider.notifier).set(newUser);
-      PageService().snackbar('保存しました。', SnackBarType.info);
-    }).catchError((_) {
-      PageService().snackbar('保存に失敗しました。', SnackBarType.error);
-    });
+    UserService().update(newUser);
   }
 
   @override

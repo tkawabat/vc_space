@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 
 import '../../entity/room_entity.dart';
 import '../../provider/room_search_provider.dart';
+import '../../service/analytics_service.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/time_service.dart';
@@ -33,6 +34,8 @@ class RoomSearchDialog extends HookConsumerWidget {
       startTime: fields['startTime'],
       tags: tags,
     );
+
+    logEvent(LogEventName.room_search_modify, 'member');
 
     ref.read(roomSearchProvider.notifier).set(newRoom);
   }

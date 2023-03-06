@@ -10,6 +10,7 @@ import '../provider/notice_list_provider.dart';
 import '../provider/room_list_join_provider.dart';
 import '../provider/room_search_provider.dart';
 import '../provider/wait_time_list_provider.dart';
+import 'analytics_service.dart';
 import 'page_service.dart';
 import 'wait_time_service.dart';
 
@@ -62,12 +63,17 @@ class LoginService {
   }
 
   Future<void> login() async {
-    await auth.signInWithOAuth(supa.Provider.discord);
+    await auth.signInWithOAuth(supa.Provider.discord).then((value) {
+      if (value) {
+        logEvent(LogEventName.login, 'user');
+      }
+    });
   }
 
   Future<void> logout(WidgetRef ref) async {
     await auth.signOut();
 
+    logEvent(LogEventName.logout, 'user');
     ref.read(loginUserProvider.notifier).set(null);
     PageService().snackbar('ログアウトしました', SnackBarType.info);
   }
