@@ -85,16 +85,10 @@ class RoomModel extends ModelBase {
         .stream(primaryKey: ['room_id']).eq('room_id', roomId);
   }
 
-  Future<List<RoomEntity>> getList(
-    int page, {
-    List<String>? tags,
-  }) async {
+  Future<List<RoomEntity>> getList(int page, RoomEntity searchRoom) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
-    final startTime = DateTime.now()
-        .add(const Duration(minutes: -30))
-        .toUtc()
-        .toIso8601String();
+    final startTime = searchRoom.startTime.toUtc().toIso8601String();
 
     var query = supabase
         .from(tableName)
@@ -103,8 +97,8 @@ class RoomModel extends ModelBase {
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', startTime);
 
-    if (tags != null) {
-      query.contains('tags', tags);
+    if (searchRoom.tags.isNotEmpty) {
+      query.contains('tags', searchRoom.tags);
     }
 
     return query

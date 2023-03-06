@@ -18,7 +18,7 @@ class RoomList extends HookConsumerWidget {
 
   void Function(int) createFetchFunction(searchRoom) {
     return (int pageKey) {
-      RoomModel().getList(pageKey, tags: searchRoom.tags).then((list) {
+      RoomModel().getList(pageKey, searchRoom).then((list) {
         if (list.length < ConstService.listStep) {
           _pagingController.appendLastPage(list);
         } else {
