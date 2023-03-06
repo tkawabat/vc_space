@@ -29,7 +29,7 @@ class UserDialog extends HookConsumerWidget {
 
     UserEntity user = userList[uid] ?? userOnLoad;
     const double width = 400;
-    const double height = 350;
+    const double height = 300;
 
     if (userList[uid] == null) {
       return const AlertDialog(
@@ -53,10 +53,12 @@ class UserDialog extends HookConsumerWidget {
 
     String followText = 'フォローする';
     void Function()? followFunction;
+    Color? followButtonColor;
     if (loginUser == null || loginUser.uid == user.uid) {
       // 未ログイン or 自分自身 -> skip
     } else if (UserService().isFollowed(loginUser, user.uid)) {
       followText = 'フォロー中';
+      followButtonColor = Colors.grey;
       followFunction = () => UserService().unfollow(user.uid);
     } else {
       followFunction = () => UserService().follow(loginUser, user.uid);
@@ -100,6 +102,7 @@ class UserDialog extends HookConsumerWidget {
               alignment: Alignment.bottomRight,
               onTap: followFunction,
               text: followText,
+              color: followButtonColor,
             ),
           ],
         ),
