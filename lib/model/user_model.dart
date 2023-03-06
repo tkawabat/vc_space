@@ -38,6 +38,24 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
+  Future<List<UserEntity>> getList(int page, UserEntity searchUser) {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+
+    var query = supabase.from(tableName).select(columns);
+
+    if (searchUser.tags.isNotEmpty) {
+      query.contains('tags', searchUser.tags);
+    }
+
+    return query
+        .order('updated_at')
+        .range(start, to)
+        .then(_getEntityList)
+        .catchError(
+            ErrorService().onError<List<UserEntity>>([], '$tableName.getList'));
+  }
+
   Future<bool> update(
     UserEntity user, {
     List<String>? targetColumnList,
