@@ -8,7 +8,6 @@ import '../../model/user_model.dart';
 import '../../provider/login_user_provider.dart';
 import '../../provider/user_list_provider.dart';
 import '../../service/const_service.dart';
-import '../../service/const_design.dart';
 import '../../service/page_service.dart';
 import '../l1/button.dart';
 import '../l2/tag_field.dart';
@@ -59,8 +58,6 @@ class UserPageBasic extends HookConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const SizedBox(height: 2),
-              const Text('基本情報', style: ConstDesign.h2),
-              const SizedBox(height: 8),
               greetingField(user.greeting),
               const SizedBox(height: 16),
               TagField(

@@ -76,7 +76,7 @@ class RoomDialog extends HookConsumerWidget {
             RoomService()
                 .offerNg(RoomService().getRoomUser(room, loginUser!.uid)!);
           },
-          child: const Text('NG'),
+          child: const Text('お断りする'),
         ),
       );
       actions.add(
@@ -86,7 +86,7 @@ class RoomDialog extends HookConsumerWidget {
             RoomService()
                 .offerOk(RoomService().getRoomUser(room, loginUser!.uid)!);
           },
-          child: const Text('OK'),
+          child: const Text('参加する'),
         ),
       );
     } else if (joinErrorMessage == null) {
@@ -111,15 +111,13 @@ class RoomDialog extends HookConsumerWidget {
       );
     }
 
-    // const TextStyle titleStyle = TextStyle(fontWeight: FontWeight.w700);
-
     return FormBuilder(
       key: formKey,
       child: AlertDialog(
         title: Text(room.title),
         content: SizedBox(
             width: 400,
-            height: 400,
+            height: 350,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -151,6 +149,17 @@ class RoomDialog extends HookConsumerWidget {
                 RoomTagList(room),
                 const Spacer(),
                 passwordField(passwordEnabled),
+                if (RoomService().isOffered(room, loginUser))
+                  Align(
+                      alignment: Alignment.bottomRight,
+                      child: Text(
+                        '主催からのお誘いです！',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontStyle: FontStyle.italic,
+                          color: Colors.grey.shade700,
+                        ),
+                      )),
               ],
             )),
         actions: actions,
