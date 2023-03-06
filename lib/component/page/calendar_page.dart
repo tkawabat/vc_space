@@ -56,6 +56,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       if (!map.containsKey(key)) {
         map[key] = [];
       }
+      if (waitTime.waitTimeType == WaitTimeType.noWait) continue;
       map[key]!.add(waitTime);
     }
 
