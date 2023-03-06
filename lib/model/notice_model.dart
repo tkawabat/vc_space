@@ -8,25 +8,25 @@ import '../service/error_service.dart';
 class NoticeModel extends ModelBase {
   static final NoticeModel _instance = NoticeModel._internal();
   final String tableName = 'notice';
-  final String columns = '''
-      *,
-      user!notice_id_user_fkey (
-        name,
-        photo,
-        discord_name
-      ),
-      room!inner (
-        *,
-        room_user!inner (
-          *,
-          user!inner (
-            name,
-            photo,
-            discord_name
-          )
-        )
-      )
-    ''';
+  // final String columns = '''
+  //     *,
+  //     user!notice_id_user_fkey (
+  //       name,
+  //       photo,
+  //       discord_name
+  //     ),
+  //     room!inner (
+  //       *,
+  //       room_user!inner (
+  //         *,
+  //         user!inner (
+  //           name,
+  //           photo,
+  //           discord_name
+  //         )
+  //       )
+  //     )
+  //   ''';
 
   factory NoticeModel() {
     return _instance;
@@ -46,17 +46,13 @@ class NoticeModel extends ModelBase {
   //   return RoomChatEntity.fromJson(result);
   // }
 
-  Future<List<NoticeEntity>> getList(
-    int page,
-    String uid, {
-    List<String>? tags,
-  }) async {
+  Future<List<NoticeEntity>> getList(int page, String uid) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
 
     var query = supabase
-        .from(tableName)
-        .select(columns)
+        .from('v_notice')
+        .select('*')
         .eq('uid', uid)
         .order('created_at')
         .range(start, to)

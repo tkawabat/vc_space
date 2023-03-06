@@ -39,7 +39,7 @@ class NoticeCard extends StatelessWidget {
 
     switch (notice.noticeType) {
       case NoticeType.followed:
-        title = '${notice.userData!.name}さんがあなたをフォローしました';
+        title = '${notice.userData!.name}さんからフォローされました';
         onTap = showUserDialog;
         break;
       case NoticeType.followerCreateRoom:
@@ -59,7 +59,7 @@ class NoticeCard extends StatelessWidget {
         noUserIcon = true;
         break;
       case NoticeType.roomOfferNg:
-        title = '残念ながら${notice.userData!.name}さんが'
+        title = '${notice.userData!.name}さんが'
             '部屋"${notice.roomData!.title}"へのお誘いを断りました';
         onTap = showRoomDialog;
         leadingOnTap = showUserDialog;
