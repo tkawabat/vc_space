@@ -44,7 +44,7 @@ class WaitTimeNewCard extends HookConsumerWidget {
             if (replace.isBefore(end)) {
               // ok
             } else if (time.hour >= 22) {
-              end = end.copyWith(hour: 23, minute: 45);
+              end = end.copyWith(hour: 23, minute: 59);
             } else {
               end = replace.add(const Duration(hours: 2));
             }

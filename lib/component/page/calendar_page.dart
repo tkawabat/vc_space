@@ -102,7 +102,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     final waitTimeNewList = ref.watch(waitTimeNewListProvider);
     final roomList = ref.watch(roomListJoinProvider);
 
-    final now = TimeService().getDay(DateTime.now());
+    final now = TimeService().today();
     final selectedDayState = useState<DateTime>(now);
     final ValueNotifier<List> eventState = useState<List>([]);
 

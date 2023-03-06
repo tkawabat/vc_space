@@ -35,7 +35,14 @@ class TimeButton extends StatelessWidget {
       if (end != null && time.hour >= end!.hour && time.minute >= end!.minute) {
         break;
       }
-      if (time.hour == 23 && minute == 60) break;
+      if (time.hour == 23 && minute == 60) {
+        const endTime = TimeOfDay(hour: 23, minute: 59);
+        items.add(DropdownMenuItem(
+          value: endTime,
+          child: Text(TimeService().timeOfDayToString(endTime)),
+        ));
+        break;
+      }
 
       // update
       time = TimeOfDay(hour: time.hour + minute ~/ 60, minute: minute % 60);

@@ -1,5 +1,4 @@
 import 'package:intl/intl.dart';
-import 'package:vc_space/service/const_service.dart';
 
 import '../entity/user_entity.dart';
 import '../entity/wait_time_entity.dart';
@@ -7,6 +6,7 @@ import '../model/wait_time_model.dart';
 import '../provider/wait_time_list_provider.dart';
 import '../provider/wait_time_new_list_provider.dart';
 import 'const_system.dart';
+import 'const_service.dart';
 import 'page_service.dart';
 
 class WaitTimeService {
@@ -28,8 +28,22 @@ class WaitTimeService {
   bool isMax() {
     final waitTimeList = PageService().ref!.read(waitTimeListProvider);
     final waitTimeNewList = PageService().ref!.read(waitTimeNewListProvider);
-    return waitTimeList.length + waitTimeNewList.length >=
-        ConstService.waitTimeMax;
+
+    final n =
+        waitTimeList.where((e) => e.waitTimeType == WaitTimeType.valid).length;
+    return n + waitTimeNewList.length >= ConstService.waitTimeMax;
+  }
+
+  bool isViewDialog() {
+    final waitTimeList = PageService().ref!.read(waitTimeListProvider);
+    return waitTimeList.every((e) {
+      if (e.waitTimeType == WaitTimeType.noWait) return false;
+      final now = DateTime.now();
+      //　一時間ずつ猶予を入れる
+      if (now.isAfter(e.startTime.add(const Duration(hours: -1))) &&
+          now.isBefore(e.endTime.add(const Duration(hours: 1)))) return false;
+      return true;
+    });
   }
 
   Future<bool> add(UserEntity user, DateTime startTime, DateTime endTime) {
@@ -78,11 +92,11 @@ class WaitTimeService {
 
   Future<bool> addNoWait(UserEntity user) {
     DateTime startTime = DateTime.now();
-    DateTime endTime = startTime.add(const Duration(hours: 2));
+    DateTime endTime = startTime;
     WaitTimeEntity waitTime = WaitTimeEntity(
       uid: user.uid,
       waitTimeId: ConstSystem.idBeforeInsert,
-      waitTimeType: WaitTimeType.valid,
+      waitTimeType: WaitTimeType.noWait,
       startTime: startTime,
       endTime: endTime,
       updatedAt: DateTime.now(),

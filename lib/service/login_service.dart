@@ -1,13 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supa;
 
+import '../component/dialog/wait_time_create_dialog.dart';
 import '../model/user_model.dart';
 import '../provider/login_user_private_provider.dart';
 import '../provider/login_user_provider.dart';
 import '../provider/notice_list_provider.dart';
 import '../provider/room_list_join_provider.dart';
 import '../provider/room_search_provider.dart';
+import '../provider/wait_time_list_provider.dart';
 import 'page_service.dart';
+import 'wait_time_service.dart';
 
 class LoginService {
   static final LoginService _instance = LoginService._internal();
@@ -36,6 +40,19 @@ class LoginService {
         ref.read(loginUserProvider.notifier).set(user);
         ref.read(loginUserPrivateProvider.notifier).get(user.uid);
         ref.read(roomListJoinProvider.notifier).getList(user.uid);
+        ref.read(waitTimeListProvider.notifier).getList(user.uid).then((_) {
+          if (PageService().context == null) return;
+          if (PageService().canBack()) return;
+          if (!WaitTimeService().isViewDialog()) return;
+
+          WaitTimeService().addNoWait(user);
+          showDialog(
+              context: PageService().context!,
+              barrierDismissible: true,
+              builder: (_) {
+                return const WaitTimeCreateDialog();
+              });
+        });
         ref.read(noticeListProvider.notifier).startUpdate(user.uid);
         if (user.tags.isNotEmpty) {
           ref.read(roomSearchProvider.notifier).setTags([user.tags[0]]);

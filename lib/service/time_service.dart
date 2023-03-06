@@ -9,6 +9,10 @@ class TimeService {
 
   TimeService._internal();
 
+  bool isSameDay(DateTime a, DateTime b) {
+    return a.year == b.year && a.month == b.month && a.day == b.day;
+  }
+
   DateTime today() {
     return getDay(DateTime.now());
   }

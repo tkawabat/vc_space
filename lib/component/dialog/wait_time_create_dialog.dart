@@ -1,96 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../entity/user_entity.dart';
 import '../../provider/login_user_provider.dart';
+import '../../service/const_design.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 import '../l1/cancel_button.dart';
+import '../l1/time_button.dart';
 
 class WaitTimeCreateDialog extends HookConsumerWidget {
-  WaitTimeCreateDialog({super.key});
-
-  final formKey = GlobalKey<FormBuilderState>();
-
-  void submit(BuildContext context, WidgetRef ref) async {
-    Navigator.pop(context);
-
-    final UserEntity? loginUser = ref.read(loginUserProvider);
-    if (loginUser == null) {
-      PageService().snackbar('空き時間を登録するにはログインが必要です', SnackBarType.error);
-      return;
-    }
-
-    if (!(formKey.currentState?.saveAndValidate() ?? false)) {
-      PageService().snackbar('入力値に問題があります', SnackBarType.error);
-      return;
-    }
-    final fields = formKey.currentState!.value;
-
-    DateTime start = fields['startTime'];
-    DateTime end = fields['endTime'];
-    if (!start.isBefore(end)) {
-      PageService().snackbar('終了時間は開始時間より後にしてください。', SnackBarType.error);
-      return;
-    }
-    if (end.difference(start).inHours > 8) {
-      PageService().snackbar('空き時間は最長8時間です。', SnackBarType.error);
-      return;
-    }
-
-    WaitTimeService().add(loginUser, fields['startTime'], fields['endTime']);
-  }
+  const WaitTimeCreateDialog({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final startTime = TimeService().getStepNow(ConstService.stepTime);
-    final endTime = startTime.add(const Duration(hours: 1));
+    final date = TimeService().today();
+    final now = TimeService().getStepNow(ConstService.stepTime);
+    TimeOfDay start = TimeOfDay.fromDateTime(now);
+    TimeOfDay end = TimeOfDay.fromDateTime(now.add(const Duration(hours: 2)));
 
-    return FormBuilder(
-      key: formKey,
-      child: AlertDialog(
-          title: const Text('空き時間を登録'),
-          content: SizedBox(
-              width: 400,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  timeField('startTime', '開始', startTime),
-                  timeField('endTime', '終了', endTime),
-                ],
-              )),
-          actions: [
-            const CancelButton(),
-            TextButton(
-                child: const Text('登録'), onPressed: () => submit(context, ref)),
-          ]),
-    );
-  }
+    if (now.hour >= 23 && now.minute > 30) {
+      date.add(const Duration(days: 1));
+      start = const TimeOfDay(hour: 0, minute: 0);
+      end = const TimeOfDay(hour: 2, minute: 0);
+    } else if (now.hour >= 22) {
+      start = const TimeOfDay(hour: 22, minute: 0);
+      end = const TimeOfDay(hour: 23, minute: 59);
+    }
 
-  Widget timeField(String name, String label, DateTime initialValue) {
-    final formatter = DateFormat('MM/dd(E) HH:mm', 'ja');
-    final controller = TextEditingController();
-    final focusNode = FocusNode();
+    String dateText = DateFormat('M/d(E)', 'ja_JP').format(date);
+    final startState = useState(start);
+    final endState = useState(end);
 
-    return Flexible(
-      child: FormBuilderDateTimePicker(
-        name: name,
-        focusNode: focusNode,
-        autovalidateMode: AutovalidateMode.always,
-        initialValue: initialValue,
-        decoration: InputDecoration(labelText: label),
-        format: formatter,
-        firstDate: DateTime.now(),
-        lastDate:
-            DateTime.now().add(const Duration(days: ConstService.calendarMax)),
-        showCursor: true,
-        controller: controller,
-      ),
-    );
+    return AlertDialog(
+        title: const Text('"誘って！"を登録しませんか？'),
+        content: SizedBox(
+            width: 400,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Text(dateText),
+                    const SizedBox(width: 2),
+                    TimeButton(
+                      initialValue: start,
+                      onChanged: (time) {
+                        if (time == null) return;
+                        startState.value = time;
+                      },
+                    ),
+                    const Text('〜'),
+                    TimeButton(
+                      initialValue: end,
+                      onChanged: (time) {
+                        if (time == null) return;
+                        endState.value = time;
+                      },
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                const Align(
+                  alignment: Alignment.centerRight,
+                  child: Text(
+                    '登録すると部屋の主催者の\n誘うリストに表示されます',
+                    style: ConstDesign.caution,
+                  ),
+                )
+              ],
+            )),
+        actions: [
+          const CancelButton(),
+          TextButton(
+              child: const Text('登録'),
+              onPressed: () {
+                Navigator.pop(context);
+
+                final UserEntity? loginUser = ref.read(loginUserProvider);
+                if (loginUser == null) {
+                  PageService()
+                      .snackbar('空き時間を登録するにはログインが必要です', SnackBarType.error);
+                  return;
+                }
+                final startTime =
+                    date.copyWith(hour: start.hour, minute: start.minute);
+                final endTime =
+                    date.copyWith(hour: end.hour, minute: end.minute);
+                WaitTimeService().add(loginUser, startTime, endTime);
+              }),
+        ]);
   }
 }

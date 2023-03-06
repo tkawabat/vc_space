@@ -67,7 +67,7 @@ class WaitTimeModel extends ModelBase {
     return supabase
         .from(tableName)
         .select(columns)
-        .eq('wait_time_type', 10)
+        .eq('wait_time_type', WaitTimeType.valid.value)
         .lte('start_time', time)
         .gte('end_time', time)
         .order('updated_at')
