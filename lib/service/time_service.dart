@@ -9,6 +9,10 @@ class TimeService {
 
   TimeService._internal();
 
+  DateTime today() {
+    return getDay(DateTime.now());
+  }
+
   DateTime getDay(DateTime time) {
     return DateTime(time.year, time.month, time.day);
   }

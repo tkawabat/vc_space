@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../entity/user_entity.dart';
 import '../service/const_service.dart';
+import '../service/time_service.dart';
 import 'model_base.dart';
 import '../entity/wait_time_entity.dart';
 import '../service/error_service.dart';
@@ -43,10 +44,13 @@ class WaitTimeModel extends ModelBase {
   }
 
   Future<List<WaitTimeEntity>> getListByUid(String uid) async {
+    final startTime = TimeService().today().toUtc().toIso8601String();
+
     return supabase
         .from(tableName)
         .select(columns)
         .eq('uid', uid)
+        .gte('start_time', startTime)
         .then(_getEntityList)
         .catchError(ErrorService()
             .onError<List<WaitTimeEntity>>([], '$tableName.getListByUid'));

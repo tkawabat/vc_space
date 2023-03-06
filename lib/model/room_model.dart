@@ -7,6 +7,7 @@ import '../entity/room_entity.dart';
 import '../service/const_service.dart';
 import '../service/const_system.dart';
 import '../service/error_service.dart';
+import '../service/time_service.dart';
 import 'model_base.dart';
 
 class RoomModel extends ModelBase {
@@ -110,10 +111,7 @@ class RoomModel extends ModelBase {
   }
 
   Future<List<RoomEntity>> getJoinList(String uid) async {
-    final startTime = DateTime.now()
-        .add(const Duration(hours: -24))
-        .toUtc()
-        .toIso8601String();
+    final startTime = TimeService().today().toUtc().toIso8601String();
 
     return supabase
         .from(tableName)
