@@ -7,6 +7,7 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 
 import '../../entity/room_private_entity.dart';
 import '../../model/room_private_model.dart';
+import '../../service/analytics_service.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../l1/cancel_button.dart';
@@ -34,6 +35,7 @@ class RoomPrivateEditDialog extends HookConsumerWidget {
         updatedAt: DateTime.now());
 
     RoomPrivateModel().update(newObject).then((_) {
+      logEvent(LogEventName.room_update, 'owner', newObject.roomId.toString());
       PageService().snackbar('保存しました。', SnackBarType.info);
     }).catchError((_) {
       PageService().snackbar('保存に失敗しました。', SnackBarType.error);

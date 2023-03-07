@@ -13,6 +13,7 @@ enum LogEventName {
   unblock,
 
   room_create,
+  room_update,
   room_join,
   room_quit,
   kick,

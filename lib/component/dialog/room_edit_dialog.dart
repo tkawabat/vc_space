@@ -13,6 +13,7 @@ import '../../entity/user_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/login_user_provider.dart';
 import '../../provider/room_list_join_provider.dart';
+import '../../service/analytics_service.dart';
 import '../../service/const_service.dart';
 import '../../service/const_system.dart';
 import '../../service/page_service.dart';
@@ -68,6 +69,7 @@ class RoomEditDialog extends HookConsumerWidget {
     await RoomModel().insert(newRoom).then((roomId) {
       PageService().snackbar('部屋を作りました', SnackBarType.info);
       PageService().ref!.read(roomListJoinProvider.notifier).add(newRoom);
+      logEvent(LogEventName.room_create, 'owner', newRoom.roomId.toString());
       RoomService().enter(roomId);
     }).catchError((_) {
       PageService().snackbar('部屋作成エラー', SnackBarType.error);
@@ -111,6 +113,7 @@ class RoomEditDialog extends HookConsumerWidget {
 
     await RoomModel().update(newRoom).then((roomId) {
       PageService().snackbar('部屋を修正しました', SnackBarType.info);
+      logEvent(LogEventName.room_update, 'owner', newRoom.roomId.toString());
     }).catchError((_) {
       PageService().snackbar('部屋修正エラー', SnackBarType.error);
     });
