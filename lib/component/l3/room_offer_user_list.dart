@@ -26,7 +26,7 @@ class RoomOfferUserList extends HookConsumerWidget {
   void Function(int) createFetchFunction(DateTime time, UserEntity searchUser) {
     return (int pageKey) {
       WaitTimeModel()
-          .getListByStartTime(pageKey, time, searchUser: searchUser)
+          .getListByStartTime(pageKey, time, searchUser)
           .then((list) {
         if (list.length < ConstService.listStep) {
           _pagingController.appendLastPage(list);

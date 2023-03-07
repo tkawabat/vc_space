@@ -58,18 +58,24 @@ class WaitTimeModel extends ModelBase {
 
   Future<List<WaitTimeEntity>> getListByStartTime(
     int page,
-    DateTime time, {
-    UserEntity? searchUser,
-  }) async {
+    DateTime time,
+    UserEntity searchUser,
+  ) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
 
-    return supabase
+    final query = supabase
         .from(tableName)
         .select(columns)
         .eq('wait_time_type', WaitTimeType.valid.value)
         .lte('start_time', time)
-        .gte('end_time', time)
+        .gte('end_time', time);
+
+    if (searchUser.tags.isNotEmpty) {
+      query.contains('tags', searchUser.tags);
+    }
+
+    return query
         .order('updated_at')
         .range(start, to)
         .then(_getEntityList)

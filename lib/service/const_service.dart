@@ -27,6 +27,7 @@ class ConstService {
     '麻雀',
     'マダミス',
     'ボドゲ',
+    'Minecraft',
     'AmongUs',
     'Apex',
     'マリカ',
@@ -34,9 +35,11 @@ class ConstService {
     'スマブラ',
     '1hくらい',
     '2hくらい',
-    '初見歓迎',
+    '誰でもきてね',
+    '初見もきてね',
     '10代',
     '20才以上',
+    '配信あり',
   ];
 
   static const sampleUserTags = [
@@ -44,6 +47,7 @@ class ConstService {
     '声劇',
     '麻雀',
     'マダミス',
+    'Minecraft',
     'AmongUs',
     'ボドゲ',
     'Apex',
@@ -52,7 +56,7 @@ class ConstService {
     'スマブラ',
     '1hくらい',
     '2hくらい',
-    '誰でも誘って',
+    'お初でも誘って',
     '10代',
     '20代',
     '30代',
