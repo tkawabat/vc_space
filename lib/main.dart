@@ -21,8 +21,13 @@ Future main() async {
 
   // メンテナンス中は呼び出さない
   if (dotenv.get('MAINTENANCE', fallback: '').isEmpty) {
-    Firebase.initializeApp(
-        options: DefaultFirebaseOptions.currentPlatform); // not wait
+    if (flavor == 'production') {
+      Firebase.initializeApp(
+          options: ProdFirebaseOptions.currentPlatform); // not wait
+    } else {
+      Firebase.initializeApp(
+          options: DevFirebaseOptions.currentPlatform); // not wait
+    }
 
     list.add(Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),

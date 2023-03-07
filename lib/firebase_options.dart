@@ -14,18 +14,27 @@ import 'package:flutter/foundation.dart'
 ///   options: DefaultFirebaseOptions.currentPlatform,
 /// );
 /// ```
-class DefaultFirebaseOptions {
+class DevFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
       return web;
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        return android;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -52,32 +61,53 @@ class DefaultFirebaseOptions {
     storageBucket: 'vc-space-dev.appspot.com',
     measurementId: 'G-KEFW9TXS2Y',
   );
+}
 
-  static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDHOocjyKCqI-1mGu_IFknz7yQ8BKiTnhc',
-    appId: '1:180668270503:android:aa7e4f25188772ea2f1882',
-    messagingSenderId: '180668270503',
-    projectId: 'vc-space-dev',
-    storageBucket: 'vc-space-dev.appspot.com',
-  );
+class ProdFirebaseOptions {
+  static FirebaseOptions get currentPlatform {
+    if (kIsWeb) {
+      return web;
+    }
+    switch (defaultTargetPlatform) {
+      case TargetPlatform.android:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for android - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.iOS:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.macOS:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.windows:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      case TargetPlatform.linux:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for linux - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+      default:
+        throw UnsupportedError(
+          'DefaultFirebaseOptions are not supported for this platform.',
+        );
+    }
+  }
 
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyChuRj8oe5-3jENyO4YGtk_eUdVkRYIg2w',
-    appId: '1:180668270503:ios:2b2c34a82e5548602f1882',
-    messagingSenderId: '180668270503',
-    projectId: 'vc-space-dev',
-    storageBucket: 'vc-space-dev.appspot.com',
-    iosClientId: '180668270503-mmv3djum5orcsnr3dqbcni6ips1nt5m1.apps.googleusercontent.com',
-    iosBundleId: 'com.example.vcSpace',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyChuRj8oe5-3jENyO4YGtk_eUdVkRYIg2w',
-    appId: '1:180668270503:ios:2b2c34a82e5548602f1882',
-    messagingSenderId: '180668270503',
-    projectId: 'vc-space-dev',
-    storageBucket: 'vc-space-dev.appspot.com',
-    iosClientId: '180668270503-mmv3djum5orcsnr3dqbcni6ips1nt5m1.apps.googleusercontent.com',
-    iosBundleId: 'com.example.vcSpace',
+  static const FirebaseOptions web = FirebaseOptions(
+    apiKey: 'AIzaSyDqYX7JqTTv8UNz1Hbxpo2lpLyDmStjegY',
+    appId: '1:247037295656:web:e7520d92087a972a67091d',
+    messagingSenderId: '247037295656',
+    projectId: 'vc-space',
+    authDomain: 'vc-space.firebaseapp.com',
+    storageBucket: 'vc-space.appspot.com',
+    measurementId: 'G-V03Y9JPEDV',
   );
 }
