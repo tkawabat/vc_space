@@ -72,7 +72,7 @@ class WaitTimeModel extends ModelBase {
         .gte('end_time', time);
 
     if (searchUser.tags.isNotEmpty) {
-      query.contains('tags', searchUser.tags);
+      query.contains('user.tags', searchUser.tags);
     }
 
     return query
