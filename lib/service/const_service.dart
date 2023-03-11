@@ -21,7 +21,7 @@ class ConstService {
 
   static const maxTagLength = 10;
 
-  static const sampleRoomTags = [
+  static const sampleTagsPlay = [
     '雑談',
     '声劇',
     '麻雀',
@@ -33,6 +33,11 @@ class ConstService {
     'マリカ',
     'スプラトゥーン',
     'スマブラ',
+    '呑み',
+  ];
+
+  static const sampleTagsRoom = [
+    ...sampleTagsPlay,
     '1hくらい',
     '2hくらい',
     '誰でもきてね',
@@ -42,18 +47,8 @@ class ConstService {
     '配信あり',
   ];
 
-  static const sampleUserTags = [
-    '雑談',
-    '声劇',
-    '麻雀',
-    'マダミス',
-    'Minecraft',
-    'AmongUs',
-    'ボドゲ',
-    'Apex',
-    'マリカ',
-    'スプラトゥーン',
-    'スマブラ',
+  static const sampleTagsUser = [
+    ...sampleTagsPlay,
     '1hくらい',
     '2hくらい',
     'お初でも誘って',

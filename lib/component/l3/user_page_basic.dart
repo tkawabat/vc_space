@@ -54,7 +54,7 @@ class UserPageBasic extends HookConsumerWidget {
               const SizedBox(height: 16),
               TagField(
                 key: tagKey,
-                samples: ConstService.sampleUserTags,
+                samples: ConstService.sampleTagsUser,
                 initialTags: user.tags,
                 maxTagNumber: ConstService.maxTagLength,
               ),

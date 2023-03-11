@@ -124,6 +124,7 @@ class PageService {
   }
 
   void transitionNotice(PageNames current) {
+    if (current == PageNames.notice) return;
     if (ref == null) return;
     final loginUser = ref!.read(loginUserProvider);
 
@@ -150,6 +151,13 @@ class PageService {
       PageService()
           .transition(PageNames.calendar, arguments: {'uid': loginUser.uid});
     }
+  }
+
+  void transitionAnalyticsTag(PageNames current) {
+    if (current == PageNames.analyticsTag) return;
+    if (ref == null) return;
+
+    PageService().transition(PageNames.analyticsTag);
   }
 
   void viewCreateDialog(PageNames current) {

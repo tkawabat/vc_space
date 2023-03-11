@@ -16,7 +16,7 @@ class RoomSearchTagList extends HookConsumerWidget {
 
     return TagField(
       key: tagKey,
-      samples: ConstService.sampleRoomTags,
+      samples: ConstService.sampleTagsPlay,
       maxTagNumber: ConstService.maxTagLength,
       initialTags: searchRoom.tags,
       viewTitle: false,

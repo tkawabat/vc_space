@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// import '../../model/function_model.dart';
 import '../../model/room_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
@@ -42,18 +43,24 @@ class MainPage extends HookConsumerWidget {
         children: [
           // ElevatedButton(
           //   onPressed: () {
-          //     // RoomModel().hoge();
+          //     FunctionModel()
+          //         .selectTagCount(
+          //           'b',
+          //           DateTime(2023, 4, 1),
+          //           DateTime(2023, 4, 1, 23, 59),
+          //         )
+          //         .then((value) => debugPrint(value.toString()));
 
-          //     UserModel()
-          //         .getListByWaitTime(0, DateTime(2023, 1, 1))
-          //         .then((value) {
-          //       debugPrint(value.length.toString());
-          //       for (var e in value) {
-          //         debugPrint('user: ${e.name}');
-          //       }
-          //     }).catchError((error) {
-          //       debugPrint(error.toString());
-          //     });
+          //     //     UserModel()
+          //     //         .getListByWaitTime(0, DateTime(2023, 1, 1))
+          //     //         .then((value) {
+          //     //       debugPrint(value.length.toString());
+          //     //       for (var e in value) {
+          //     //         debugPrint('user: ${e.name}');
+          //     //       }
+          //     //     }).catchError((error) {
+          //     //       debugPrint(error.toString());
+          //     //     });
           //   },
           //   child: const Text("デバッグ"),
           // ),

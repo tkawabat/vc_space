@@ -139,7 +139,7 @@ class RoomEditDialog extends HookConsumerWidget {
       TagField(
         key: tagKey,
         initialTags: room?.tags ?? [],
-        samples: ConstService.sampleRoomTags,
+        samples: ConstService.sampleTagsRoom,
         maxTagNumber: ConstService.maxTagLength,
       ),
       descriptionField(room?.description),
