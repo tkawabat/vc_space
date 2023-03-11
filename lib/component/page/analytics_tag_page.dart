@@ -9,6 +9,7 @@ import 'package:table_calendar/table_calendar.dart';
 import '../../entity/tag_count_entity.dart';
 import '../../model/function_model.dart';
 import '../../route.dart';
+import '../../service/analytics_service.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/time_service.dart';
@@ -90,7 +91,10 @@ class AnalyticsTagPage extends HookConsumerWidget {
     int max = 0;
 
     Future<dynamic>? result;
-    if (tag != null) result = FunctionModel().selectTagCount(tag, start, end);
+    if (tag != null) {
+      logEvent(LogEventName.analytics_tag, 'analytics', tag);
+      result = FunctionModel().selectTagCount(tag, start, end);
+    }
 
     return FutureBuilder(
         future: result,

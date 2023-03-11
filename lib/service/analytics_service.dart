@@ -30,6 +30,8 @@ enum LogEventName {
   wait_time_add_list,
   wait_time_delete,
 
+  analytics_tag,
+
   database_error,
   view_error,
 }
