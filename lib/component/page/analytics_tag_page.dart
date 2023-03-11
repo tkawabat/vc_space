@@ -24,6 +24,7 @@ class AnalyticsTagPage extends HookConsumerWidget {
     PageService().init(context, ref);
 
     final now = TimeService().today();
+    final format = useState<CalendarFormat>(CalendarFormat.twoWeeks);
     final selectedDayState = useState<DateTime>(now);
     final selectedTagList = useState<String?>(null);
 
@@ -36,7 +37,13 @@ class AnalyticsTagPage extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TableCalendar(
-              headerStyle: const HeaderStyle(formatButtonVisible: false),
+              availableCalendarFormats: const {
+                // 押したら切り替えるため逆になっている
+                CalendarFormat.twoWeeks: '１ヶ月',
+                CalendarFormat.month: '２週間',
+              },
+              calendarFormat: format.value,
+              onFormatChanged: (value) => format.value = value,
               firstDay: DateTime.now().add(const Duration(days: -1)),
               lastDay: DateTime.now()
                   .add(const Duration(days: ConstService.calendarMax)),
