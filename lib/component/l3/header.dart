@@ -73,7 +73,8 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
 
     return AppBar(
       centerTitle: false,
-      leading: PageService().canBack()
+      // フォローボタンの押下、クエリパラメータ付きアクセスで予期せぬcanBack()=trueが発生する
+      leading: PageService().canBack() && [PageNames.roomOffer].contains(page)
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
               onPressed: () {
