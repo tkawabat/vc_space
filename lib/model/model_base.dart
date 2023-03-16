@@ -20,6 +20,6 @@ class ModelBase {
   }
 
   String encodePassword(String? password) {
-    return base64.encode(sha256.convert(base64.decode(password ?? '')).bytes);
+    return sha256.convert(utf8.encode(password ?? '')).toString();
   }
 }
