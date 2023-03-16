@@ -122,7 +122,9 @@ class RoomEditDialog extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final scrollController = ScrollController();
-    final ValueNotifier<bool> enabledPassword = useState<bool>(false);
+
+    final ValueNotifier<bool> enabledPassword =
+        useState<bool>(room != null && room!.enterType == EnterType.password);
 
     int roomNumberMin = 2;
     if (room != null && room!.users.length > 2) {
