@@ -44,14 +44,44 @@ class VCChat extends HookConsumerWidget {
       user:
           types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
-      onSendPressed: (types.PartialText text) {
-        RoomChatModel().insert(roomId, user, text.text).then((_) {
-          logEvent(LogEventName.room_chat, 'member');
-        });
-      },
+      onSendPressed: (_) {},
+      customBottomWidget: textInput(user),
       showUserAvatars: true,
       showUserNames: true,
       l10n: const _ChatL10nJa(),
+    );
+  }
+
+  Widget textInput(UserEntity user) {
+    final TextEditingController controller = TextEditingController();
+
+    return Row(
+      children: [
+        Expanded(
+          child: TextFormField(
+            keyboardType: TextInputType.text,
+            maxLines: null,
+            autofocus: true,
+            controller: controller,
+            decoration: const InputDecoration(
+              hintText: 'メッセージを入力してください',
+              border: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: EdgeInsets.all(8),
+            ),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            final text = controller.text;
+            controller.text = '';
+            RoomChatModel().insert(roomId, user, text).then((_) {
+              logEvent(LogEventName.room_chat, 'member');
+            });
+          },
+          icon: const Icon(Icons.send),
+        ),
+      ],
     );
   }
 }
