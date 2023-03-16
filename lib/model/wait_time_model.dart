@@ -63,13 +63,14 @@ class WaitTimeModel extends ModelBase {
   ) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
+    final dbTime = time.toUtc().toIso8601String();
 
     final query = supabase
         .from(tableName)
         .select(columns)
         .eq('wait_time_type', WaitTimeType.valid.value)
-        .lte('start_time', time)
-        .gte('end_time', time);
+        .lte('start_time', dbTime)
+        .gte('end_time', dbTime);
 
     if (searchUser.tags.isNotEmpty) {
       query.contains('user.tags', searchUser.tags);
