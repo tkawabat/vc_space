@@ -8,7 +8,7 @@ import '../model/room_user_model.dart';
 import '../route.dart';
 import '../service/error_service.dart';
 import '../service/page_service.dart';
-import 'user_search_provider.dart';
+// import 'user_search_provider.dart';
 
 final enterRoomProvider = StateNotifierProvider<EnterRoomNotifer, RoomEntity?>(
     (ref) => EnterRoomNotifer());
@@ -27,12 +27,14 @@ class EnterRoomNotifer extends StateNotifier<RoomEntity?> {
     onData(_) async {
       RoomModel().getById(roomId).then((room) {
         state = room;
-        if (room != null && room.tags.isNotEmpty) {
-          PageService()
-              .ref
-              ?.read(userSearchProvider.notifier)
-              .setTags([room.tags[0]]);
-        }
+
+        // 人増えるまでコメントアウト
+        // if (room != null && room.tags.isNotEmpty) {
+        //   PageService()
+        //       .ref
+        //       ?.read(userSearchProvider.notifier)
+        //       .setTags([room.tags[0]]);
+        // }
       }).catchError((_) {
         PageService().transition(PageNames.home);
         PageService().snackbar('部屋情報の取得でエラーが発生しました', SnackBarType.error);

@@ -8,7 +8,7 @@ import '../provider/login_user_private_provider.dart';
 import '../provider/login_user_provider.dart';
 import '../provider/notice_list_provider.dart';
 import '../provider/room_list_join_provider.dart';
-import '../provider/room_search_provider.dart';
+// import '../provider/room_search_provider.dart';
 import '../provider/wait_time_list_provider.dart';
 import 'analytics_service.dart';
 import 'page_service.dart';
@@ -55,9 +55,11 @@ class LoginService {
               });
         });
         ref.read(noticeListProvider.notifier).startUpdate(user.uid);
-        if (user.tags.isNotEmpty) {
-          ref.read(roomSearchProvider.notifier).setTags([user.tags[0]]);
-        }
+
+        // 人増えるまではなし
+        // if (user.tags.isNotEmpty) {
+        //   ref.read(roomSearchProvider.notifier).setTags([user.tags[0]]);
+        // }
       }
     }
   }
