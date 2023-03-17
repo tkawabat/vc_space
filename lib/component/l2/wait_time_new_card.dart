@@ -12,17 +12,20 @@ class WaitTimeNewCard extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return CardBase(children: [
-      ListTile(
-        title: buildTitle(newWaitTime, ref),
-        trailing: IconButton(
-          tooltip: '削除する',
-          icon: const Icon(Icons.delete),
-          onPressed: () =>
-              ref.read(waitTimeNewListProvider.notifier).delete(newWaitTime.id),
-        ),
-      )
-    ]);
+    return CardBase(
+        color: Theme.of(context).colorScheme.errorContainer,
+        children: [
+          ListTile(
+            title: buildTitle(newWaitTime, ref),
+            trailing: IconButton(
+              tooltip: '削除する',
+              icon: const Icon(Icons.delete),
+              onPressed: () => ref
+                  .read(waitTimeNewListProvider.notifier)
+                  .delete(newWaitTime.id),
+            ),
+          )
+        ]);
   }
 
   Widget buildTitle(NewWaitTime newWaitTime, WidgetRef ref) {

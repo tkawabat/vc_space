@@ -134,7 +134,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     if (loginUser != null && loginUser.uid == widget.uid) {
       list.add(const SizedBox(height: 10));
       list.add(
-        IconButton(
+        ElevatedButton.icon(
             onPressed: () {
               if (WaitTimeService().isMax()) {
                 PageService().snackbar(
@@ -158,7 +158,12 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
               }
               ref.read(waitTimeNewListProvider.notifier).add(range);
             },
-            icon: const Icon(Icons.add_outlined)),
+            style: ElevatedButton.styleFrom(
+              shape: const StadiumBorder(),
+              backgroundColor: Theme.of(context).colorScheme.secondary,
+            ),
+            icon: const Icon(Icons.add_outlined),
+            label: const Text('誘って！')),
       );
       if (waitTimeNewList.isNotEmpty) {
         list.add(Padding(
@@ -179,50 +184,50 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       bottomNavigationBar: const Footer(PageNames.calendar),
       body: Container(
         padding: const EdgeInsets.all(5),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            TableCalendar(
-              // headerStyle: const HeaderStyle(formatButtonVisible: false),
-              availableCalendarFormats: const {
-                // 押したら切り替えるため逆になっている
-                CalendarFormat.twoWeeks: '１ヶ月',
-                CalendarFormat.month: '２週間',
-              },
-              calendarFormat: _calendarFormat,
-              onFormatChanged: (format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              },
-              firstDay: DateTime.now().add(const Duration(days: -1)),
-              lastDay: DateTime.now()
-                  .add(const Duration(days: ConstService.calendarMax)),
-              focusedDay: selectedDayState.value,
-              locale: 'ja_JP',
-              selectedDayPredicate: (day) =>
-                  isSameDay(selectedDayState.value, day),
-              onDaySelected: (selectedDay, _) {
-                selectedDayState.value = selectedDay;
-                final key = TimeService().getDay(selectedDay); // timezoneの差を吸収
-                eventState.value = eventMap[key] ?? [];
-              },
-              eventLoader: (date) {
-                final key = TimeService().getDay(date); // timezoneの差を吸収
-                return eventMap[key] ?? [];
-              },
-              calendarBuilders:
-                  CalendarBuilders(markerBuilder: (context, date, events) {
-                if (events.isNotEmpty) {
-                  return _buildEventsMarker(date, events);
-                }
-                return const SizedBox();
-              }),
-            ),
-            Expanded(
-              child: ListView(children: list),
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                TableCalendar(
+                  // headerStyle: const HeaderStyle(formatButtonVisible: false),
+                  availableCalendarFormats: const {
+                    // 押したら切り替えるため逆になっている
+                    CalendarFormat.twoWeeks: '１ヶ月',
+                    CalendarFormat.month: '２週間',
+                  },
+                  calendarFormat: _calendarFormat,
+                  onFormatChanged: (format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  },
+                  firstDay: DateTime.now().add(const Duration(days: -1)),
+                  lastDay: DateTime.now()
+                      .add(const Duration(days: ConstService.calendarMax)),
+                  focusedDay: selectedDayState.value,
+                  locale: 'ja_JP',
+                  selectedDayPredicate: (day) =>
+                      isSameDay(selectedDayState.value, day),
+                  onDaySelected: (selectedDay, _) {
+                    selectedDayState.value = selectedDay;
+                    final key =
+                        TimeService().getDay(selectedDay); // timezoneの差を吸収
+                    eventState.value = eventMap[key] ?? [];
+                  },
+                  eventLoader: (date) {
+                    final key = TimeService().getDay(date); // timezoneの差を吸収
+                    return eventMap[key] ?? [];
+                  },
+                  calendarBuilders:
+                      CalendarBuilders(markerBuilder: (context, date, events) {
+                    if (events.isNotEmpty) {
+                      return _buildEventsMarker(date, events);
+                    }
+                    return const SizedBox();
+                  }),
+                ),
+                ...list,
+              ]),
         ),
       ),
     );
