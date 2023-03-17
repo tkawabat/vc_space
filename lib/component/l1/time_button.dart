@@ -48,16 +48,14 @@ class TimeButton extends StatelessWidget {
       time = TimeOfDay(hour: time.hour + minute ~/ 60, minute: minute % 60);
     }
 
-    return Expanded(
-      child: Align(
-        alignment: alignment,
-        child: DropdownButton<TimeOfDay>(
-          items: items,
-          value: initialValue,
-          isDense: true,
-          iconSize: 16,
-          onChanged: onChanged,
-        ),
+    return Align(
+      alignment: alignment,
+      child: DropdownButton<TimeOfDay>(
+        items: items,
+        value: initialValue,
+        isDense: true,
+        iconSize: 16,
+        onChanged: onChanged,
       ),
     );
   }
