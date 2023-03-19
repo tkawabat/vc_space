@@ -55,7 +55,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.calendar_month, color: Colors.black54),
           onPressed: () => PageService().transitionMyCalendar(page)));
       actionList.add(IconButton(
-          tooltip: 'タグ分析',
+          tooltip: '誘って分析',
           icon: const Icon(Icons.analytics, color: Colors.black54),
           onPressed: () => PageService().transitionAnalyticsTag(page)));
       actionList.add(Container(

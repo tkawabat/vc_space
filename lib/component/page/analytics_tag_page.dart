@@ -7,7 +7,9 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../entity/tag_count_entity.dart';
+import '../../entity/user_entity.dart';
 import '../../model/function_model.dart';
+import '../../provider/login_user_provider.dart';
 import '../../route.dart';
 import '../../service/analytics_service.dart';
 import '../../service/const_service.dart';
@@ -24,13 +26,19 @@ class AnalyticsTagPage extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
 
+    final UserEntity? loginUser = ref.watch(loginUserProvider);
+    String? tag;
+    if (loginUser != null && loginUser.tags.isNotEmpty) {
+      tag = loginUser.tags.first;
+    }
+
     final now = TimeService().today();
     final format = useState<CalendarFormat>(CalendarFormat.twoWeeks);
     final selectedDayState = useState<DateTime>(now);
-    final selectedTagList = useState<String?>(null);
+    final selectedTag = useState<String?>(tag);
 
     return Scaffold(
-      appBar: const Header(PageNames.analyticsTag, "タグ分析"),
+      appBar: const Header(PageNames.analyticsTag, "誘って分析"),
       bottomNavigationBar: const Footer(PageNames.analyticsTag),
       body: Container(
         padding: const EdgeInsets.all(5),
@@ -62,20 +70,20 @@ class AnalyticsTagPage extends HookConsumerWidget {
                   samples: ConstService.sampleTagsPlay,
                   maxTagNumber: 1,
                   viewTitle: false,
+                  initialTags:
+                      selectedTag.value != null ? [selectedTag.value!] : [],
                   onChanged: (tagList) {
                     if (tagList.isEmpty) {
-                      selectedTagList.value = null;
+                      selectedTag.value = null;
                     } else {
-                      selectedTagList.value = tagList[0];
+                      selectedTag.value = tagList[0];
                     }
                   },
                 ),
                 const SizedBox(height: 8),
-                const Text('誘って！',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text('人数', style: TextStyle(fontWeight: FontWeight.bold)),
                 const SizedBox(height: 8),
-                buildChart(
-                    context, selectedTagList.value, selectedDayState.value),
+                buildChart(context, selectedTag.value, selectedDayState.value),
               ]),
             ),
           ],

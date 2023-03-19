@@ -58,7 +58,7 @@ class Footer extends StatelessWidget {
       ),
       FooterItem(
         icon: const Icon(Icons.analytics),
-        label: 'タグ分析',
+        label: '誘って分析',
         page: PageNames.analyticsTag,
         onTap: () => PageService().transitionAnalyticsTag(page),
       ),
