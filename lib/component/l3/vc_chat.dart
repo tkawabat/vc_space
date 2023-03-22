@@ -1,6 +1,7 @@
 // ignore_for_file: unused_element
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_chat_ui/flutter_chat_ui.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -27,6 +28,8 @@ class VCChat extends HookConsumerWidget {
       return const Loading();
     }
 
+    final TextEditingController controller = useTextEditingController();
+
     final List<types.Message> messages = roomChatList
         .map((chat) => types.TextMessage(
               author: types.User(
@@ -45,16 +48,14 @@ class VCChat extends HookConsumerWidget {
           types.User(id: user.uid, imageUrl: user.photo, firstName: user.name),
       messages: messages,
       onSendPressed: (_) {},
-      customBottomWidget: textInput(user),
+      customBottomWidget: textInput(user, controller),
       showUserAvatars: true,
       showUserNames: true,
       l10n: const _ChatL10nJa(),
     );
   }
 
-  Widget textInput(UserEntity user) {
-    final TextEditingController controller = TextEditingController();
-
+  Widget textInput(UserEntity user, TextEditingController controller) {
     return Row(
       children: [
         Expanded(
@@ -74,6 +75,7 @@ class VCChat extends HookConsumerWidget {
         IconButton(
           onPressed: () {
             final text = controller.text;
+            if (text.isEmpty) return;
             controller.text = '';
             RoomChatModel().insert(roomId, user, text).then((_) {
               logEvent(LogEventName.room_chat, 'member');
