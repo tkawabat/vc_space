@@ -8,4 +8,6 @@ class ConstSystem {
 
   static int idBeforeInsert = -10;
   static int idNotFound = -20;
+
+  static int fcmTokenNum = 3;
 }

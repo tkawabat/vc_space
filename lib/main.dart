@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
@@ -21,13 +22,22 @@ Future main() async {
 
   // メンテナンス中は呼び出さない
   if (dotenv.get('MAINTENANCE', fallback: '').isEmpty) {
-    if (flavor == 'production') {
-      Firebase.initializeApp(
-          options: ProdFirebaseOptions.currentPlatform); // not wait
-    } else {
-      Firebase.initializeApp(
-          options: DevFirebaseOptions.currentPlatform); // not wait
-    }
+    final option = flavor == 'production'
+        ? ProdFirebaseOptions.currentPlatform
+        : DevFirebaseOptions.currentPlatform;
+
+    list.add(Firebase.initializeApp(options: option).then((_) async {
+      FirebaseMessaging messaging = FirebaseMessaging.instance;
+      messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
+      );
+    }));
 
     list.add(Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),

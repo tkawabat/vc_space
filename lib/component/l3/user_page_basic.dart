@@ -44,7 +44,6 @@ class UserPageBasic extends HookConsumerWidget {
     return FormBuilder(
       key: formKey,
       child: Container(
-          height: 400,
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

@@ -13,6 +13,8 @@ class UserPrivateEntity with _$UserPrivateEntity {
     required String uid,
     required List<String> blocks,
     @TimestampzConverter() required DateTime noticeReadTime,
+    required List<int> noPushList,
+    required List<String> fcmTokens,
     @TimestampzConverter() required DateTime updatedAt,
   }) = _UserPrivateEntity;
 

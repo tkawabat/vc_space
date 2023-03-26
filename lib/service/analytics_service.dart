@@ -11,6 +11,8 @@ enum LogEventName {
   unfollow,
   block,
   unblock,
+  push_token_add,
+  push_token_delete,
 
   room_create,
   room_update,

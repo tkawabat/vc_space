@@ -19,6 +19,7 @@ import '../l2/tag_field.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/user_page_basic.dart';
+import '../l3/user_page_notice.dart';
 
 class UserPage extends HookConsumerWidget {
   UserPage({Key? key}) : super(key: key);
@@ -79,6 +80,8 @@ class UserPage extends HookConsumerWidget {
               ),
               const SizedBox(height: 24),
               UserPageBasic(user: user),
+              const SizedBox(height: 16),
+              const UserPageNotice(),
               const SizedBox(height: 60),
               Button(
                 color: Theme.of(context).colorScheme.error,

@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 import '../entity/user_entity.dart';
 import '../entity/user_private_entity.dart';
 import '../model/user_model.dart';
@@ -9,6 +12,7 @@ import '../provider/login_user_provider.dart';
 import '../provider/user_list_provider.dart';
 import 'analytics_service.dart';
 import 'const_service.dart';
+import 'const_system.dart';
 import 'page_service.dart';
 
 class UserService {
@@ -131,6 +135,63 @@ class UserService {
 
     return UserPrivateModel().update(newObj).then((_) {
       PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      return true;
+    }).catchError((_) {
+      return false;
+    });
+  }
+
+  FutureOr<bool> addFcmToken() async {
+    if (PageService().ref == null) return false;
+
+    String? token = await FirebaseMessaging.instance
+        .getToken(vapidKey: dotenv.get('FCM_VAPID_KEY', fallback: ''))
+        .catchError((error) {
+      return null;
+    });
+    if (token == null) {
+      PageService().snackbar('このデバイスでは通知は設定できません', SnackBarType.error);
+      return false;
+    }
+
+    final loginUserPrivate = PageService().ref!.read(loginUserPrivateProvider);
+
+    if (loginUserPrivate == null) return false;
+
+    // 追加済み
+    if (loginUserPrivate.fcmTokens.contains(token)) {
+      PageService().snackbar('このデバイスはすでに登録済みです', SnackBarType.error);
+      return false;
+    }
+
+    // update
+    final tokens = [...loginUserPrivate.fcmTokens];
+    while (tokens.length >= ConstSystem.fcmTokenNum) {
+      tokens.removeAt(0);
+    }
+    tokens.add(token);
+    final newObj = loginUserPrivate.copyWith(fcmTokens: tokens);
+
+    return UserPrivateModel().update(newObj).then((_) {
+      PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      PageService().snackbar('プッシュ通知のデバイス登録をしました', SnackBarType.info);
+      logEvent(LogEventName.push_token_add, 'user');
+      return true;
+    }).catchError((_) {
+      return false;
+    });
+  }
+
+  FutureOr<bool> deleteFcmTokens() {
+    final loginUserPrivate = PageService().ref!.read(loginUserPrivateProvider);
+    if (loginUserPrivate == null) return false;
+
+    final newObj = loginUserPrivate.copyWith(fcmTokens: []);
+
+    return UserPrivateModel().update(newObj).then((_) {
+      PageService().ref!.read(loginUserPrivateProvider.notifier).set(newObj);
+      PageService().snackbar('プッシュ通知のデバイスを削除しました', SnackBarType.info);
+      logEvent(LogEventName.push_token_delete, 'user');
       return true;
     }).catchError((_) {
       return false;
