@@ -49,7 +49,7 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
                     Text(dateText),
                     const SizedBox(width: 2),
                     TimeButton(
-                      initialValue: start,
+                      initialValue: startState.value,
                       onChanged: (time) {
                         if (time == null) return;
                         startState.value = time;
@@ -57,7 +57,8 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
                     ),
                     const Text('〜'),
                     TimeButton(
-                      initialValue: end,
+                      initialValue: endState.value,
+                      start: startState.value,
                       onChanged: (time) {
                         if (time == null) return;
                         endState.value = time;
@@ -69,7 +70,7 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
                 const Align(
                   alignment: Alignment.centerRight,
                   child: Text(
-                    '登録すると部屋の主催者の\n誘うリストに表示されます',
+                    '翌日以降の登録は予定表ページから',
                     style: ConstDesign.caution,
                   ),
                 )
@@ -88,10 +89,11 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
                       .snackbar('空き時間を登録するにはログインが必要です', SnackBarType.error);
                   return;
                 }
-                final startTime =
-                    date.copyWith(hour: start.hour, minute: start.minute);
-                final endTime =
-                    date.copyWith(hour: end.hour, minute: end.minute);
+                final startTime = date.copyWith(
+                    hour: startState.value.hour,
+                    minute: startState.value.minute);
+                final endTime = date.copyWith(
+                    hour: endState.value.hour, minute: endState.value.minute);
                 WaitTimeService().add(loginUser, startTime, endTime);
               }),
         ]);
