@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../route.dart';
 import '../../provider/login_user_provider.dart';
+import '../../service/const_design.dart';
 import '../../service/login_service.dart';
 import '../../service/page_service.dart';
 import '../../entity/user_entity.dart';
@@ -45,7 +46,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     }
 
     List<Widget> actionList = [];
-    if (size.width > 700) {
+    if (size.width > ConstDesign.pcSize) {
       actionList.add(IconButton(
           tooltip: '部屋を作る',
           icon: const Icon(Icons.add_circle_outline, color: Colors.black54),

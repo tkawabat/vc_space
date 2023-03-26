@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class ConstDesign {
+  static const int pcSize = 700;
+
   static Color validTagColor = Colors.lightGreen.shade100;
   static Color errorTagColor = Colors.red.shade200;
   static Color colorNewWaitTime = Colors.yellow.shade700;
