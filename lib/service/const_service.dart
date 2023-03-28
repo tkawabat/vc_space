@@ -49,6 +49,8 @@ class ConstService {
 
   static const sampleTagsUser = [
     ...sampleTagsPlay,
+    '♂',
+    '♀',
     '1hくらい',
     '2hくらい',
     'お初でも誘って',
