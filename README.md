@@ -1,12 +1,43 @@
 ### 環境構築
 * 設定ファイルの作成
 
-```
-$ cp asset/.env.{sample,develop}
-$ cp asset/.env.{sample,production}
+    ```
+    $ cp asset/.env.{sample,develop}
+    $ cp asset/.env.{sample,production}
+    ```
 
-# 各ファイルに必要な情報を書き込む
-```
+    * 各ファイルに必要な情報を書き込む
+        * .env.develop
+        * .env.production
+
+* firebaseのSDK設定ファイル作成
+    * web/js/firebase.js
+
+    ```
+    const hostname = location.hostname;
+    if (hostname == 'vc-space.web.app') { // production
+        const firebase_config = {
+            apiKey: "xxxxxxxxxxxxxxxxxxxxxxxx",
+            authDomain: "vc-space.firebaseapp.com",
+            projectId: "vc-space",
+            storageBucket: "vc-space.appspot.com",
+            messagingSenderId: "xxxxxxxxxxxxxxx",
+            appId: "xxxxxxxxxxxxxxx",
+            measurementId: "xxxxxxxxxxxxxxx"
+        };
+    } else {
+        const firebase_config = {
+            apiKey: "xxxxxxxxxxxxxxxxxxxxxxxx",
+            authDomain: "vc-space-dev.firebaseapp.com",
+            projectId: "vc-space-dev",
+            storageBucket: "vc-space-dev.appspot.com",
+            messagingSenderId: "xxxxxxxxxxxxxxx",
+            appId: "xxxxxxxxxxxxxxx",
+            measurementId: "xxxxxxxxxxxxxxx"
+        };
+    }
+    ```
+
 
 ## Freezedビルド
 ```

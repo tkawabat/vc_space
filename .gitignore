@@ -45,6 +45,7 @@ app.*.map.json
 
 assets/env.*
 !assets/env.sample
+web/js/firebase.js
 
 .firebase
 
