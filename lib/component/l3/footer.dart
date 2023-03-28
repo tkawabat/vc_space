@@ -46,9 +46,9 @@ class Footer extends StatelessWidget {
       ),
       FooterItem(
         icon: const Icon(Icons.add),
-        label: '部屋を作る',
+        label: '誘って',
         page: PageNames.none,
-        onTap: () => PageService().viewCreateDialog(page),
+        onTap: () => PageService().viewCreateWaitTimeDialog(),
       ),
       FooterItem(
         icon: const Icon(Icons.calendar_month),

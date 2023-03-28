@@ -14,7 +14,9 @@ import '../l1/cancel_button.dart';
 import '../l1/time_button.dart';
 
 class WaitTimeCreateDialog extends HookConsumerWidget {
-  const WaitTimeCreateDialog({super.key});
+  final String? title;
+
+  const WaitTimeCreateDialog({super.key, this.title});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +39,7 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
     final endState = useState(end);
 
     return AlertDialog(
-        title: const Text('"誘って！"を登録しませんか？'),
+        title: Text(title ?? '誘って！　登録'),
         content: SizedBox(
             width: 400,
             child: Column(

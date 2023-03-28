@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-// import '../../model/function_model.dart';
 import '../../model/room_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_dialog.dart';
-import '../dialog/room_search_dialog.dart';
+import '../dialog/room_edit_dialog.dart';
 import '../dialog/user_dialog.dart';
 import '../l1/card_base.dart';
 import '../l3/footer.dart';
@@ -75,12 +74,12 @@ class MainPage extends HookConsumerWidget {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-          tooltip: '部屋を絞り込み',
+          tooltip: '部屋を作る',
           onPressed: () => showDialog(
               context: context,
               barrierDismissible: true,
-              builder: (_) => RoomSearchDialog()),
-          child: const Icon(Icons.search)),
+              builder: (_) => RoomEditDialog()),
+          child: const Icon(Icons.add)),
     );
   }
 

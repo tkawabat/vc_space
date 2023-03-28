@@ -51,7 +51,7 @@ class LoginService {
               context: PageService().context!,
               barrierDismissible: true,
               builder: (_) {
-                return const WaitTimeCreateDialog();
+                return const WaitTimeCreateDialog(title: '"誘って！"を登録しませんか？');
               });
         });
         ref.read(noticeListProvider.notifier).startUpdate(user.uid);

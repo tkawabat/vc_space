@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:animated_snack_bar/animated_snack_bar.dart';
-import 'package:vc_space/component/dialog/room_edit_dialog.dart';
-import 'package:vc_space/provider/room_list_join_provider.dart';
 // ignore: avoid_web_libraries_in_flutter
 import 'dart:html' as html;
 
+import '../component/dialog/room_edit_dialog.dart';
+import '../component/dialog/wait_time_create_dialog.dart';
 import '../provider/login_user_provider.dart';
+import '../provider/room_list_join_provider.dart';
+import '../provider/wait_time_list_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
 import 'const_service.dart';
@@ -160,6 +162,34 @@ class PageService {
     PageService().transition(PageNames.analyticsTag);
   }
 
+  void viewCreateWaitTimeDialog() {
+    if (ref == null) return;
+    final loginUser = ref!.read(loginUserProvider);
+
+    if (loginUser == null) {
+      PageService().showConfirmDialog(
+          '誘って！　を登録するにはログインが必要です。'
+          '\nDiscordでログインする',
+          () => LoginService().login());
+      return;
+    }
+
+    final waitTimeList = ref!.read(waitTimeListProvider);
+    if (waitTimeList.length >= ConstService.waitTimeMax) {
+      PageService().snackbar(
+          '誘って！は${ConstService.joinRoomMax}個までです', SnackBarType.error);
+      return;
+    }
+
+    showDialog(
+        context: context!,
+        barrierDismissible: true,
+        builder: (_) {
+          return const WaitTimeCreateDialog();
+        });
+  }
+
+  // 一旦使わなくなっている
   void viewCreateDialog(PageNames current) {
     if (ref == null) return;
     final loginUser = ref!.read(loginUserProvider);
