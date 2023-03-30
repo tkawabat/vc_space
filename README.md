@@ -15,8 +15,8 @@
 
     ```
     const hostname = location.hostname;
-    if (hostname == 'vc-space.web.app') { // production
-        const firebase_config = {
+    const firebase_config = hostname == 'vc-space.web.app' ?
+        { // production
             apiKey: "xxxxxxxxxxxxxxxxxxxxxxxx",
             authDomain: "vc-space.firebaseapp.com",
             projectId: "vc-space",
@@ -24,18 +24,16 @@
             messagingSenderId: "xxxxxxxxxxxxxxx",
             appId: "xxxxxxxxxxxxxxx",
             measurementId: "xxxxxxxxxxxxxxx"
-        };
-    } else {
-        const firebase_config = {
+        } : { // development
             apiKey: "xxxxxxxxxxxxxxxxxxxxxxxx",
             authDomain: "vc-space-dev.firebaseapp.com",
             projectId: "vc-space-dev",
             storageBucket: "vc-space-dev.appspot.com",
             messagingSenderId: "xxxxxxxxxxxxxxx",
             appId: "xxxxxxxxxxxxxxx",
-            measurementId: "xxxxxxxxxxxxxxx"
-        };
-    }
+            measurementId: "xxxxxxxxxxxxxxx"   
+        }
+    :
     ```
 
 
