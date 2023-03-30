@@ -150,7 +150,7 @@ class UserService {
       return null;
     });
     if (token == null) {
-      PageService().snackbar('このデバイスでは通知は設定できません', SnackBarType.error);
+      PageService().snackbar('プッシュ通知登録エラー', SnackBarType.error);
       return false;
     }
 
