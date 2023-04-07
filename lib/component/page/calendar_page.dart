@@ -5,10 +5,12 @@ import 'package:table_calendar/table_calendar.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/room_user_entity.dart';
+import '../../entity/user_entity.dart';
 import '../../entity/wait_time_entity.dart';
+import '../../model/room_model.dart';
+import '../../model/user_model.dart';
+import '../../model/wait_time_model.dart';
 import '../../provider/login_user_provider.dart';
-import '../../provider/room_list_join_provider.dart';
-import '../../provider/wait_time_list_provider.dart';
 import '../../provider/wait_time_new_list_provider.dart';
 import '../../route.dart';
 import '../../service/const_design.dart';
@@ -19,23 +21,17 @@ import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 import '../l1/button.dart';
 import '../l1/fade.dart';
+import '../l1/twitter_share_icon.dart';
 import '../l2/room_card.dart';
 import '../l2/wait_time_card.dart';
 import '../l2/wait_time_new_card.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 
-class CalendarPage extends StatefulHookConsumerWidget {
+class CalendarPage extends HookConsumerWidget {
   final String uid;
 
   const CalendarPage({Key? key, required this.uid}) : super(key: key);
-
-  @override
-  CalendarPageState createState() => CalendarPageState();
-}
-
-class CalendarPageState extends ConsumerState<CalendarPage> {
-  CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
 
   DateTime getStartTime(e) {
     if (e is RoomEntity) return e.startTime;
@@ -84,33 +80,67 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // 他人のページ見れるようにしたとき見直す
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(waitTimeListProvider.notifier).getList(widget.uid);
-      ref.read(roomListJoinProvider.notifier).getList(widget.uid);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
 
+    // ========= provider & state ===========
     final loginUser = ref.watch(loginUserProvider);
-    final waitTimeList = ref.watch(waitTimeListProvider);
     final waitTimeNewList = ref.watch(waitTimeNewListProvider);
-    final roomList = ref.watch(roomListJoinProvider);
+
+    final user = useState<UserEntity?>(null);
+    final waitTimeList = useState<List<WaitTimeEntity>>([]);
+    final roomList = useState<List<RoomEntity>>([]);
+
+    // true/falseを切り替えるとデータを読み込み直す
+    final updateState = useState<bool>(false);
 
     final now = TimeService().today();
     final selectedDayState = useState<DateTime>(now);
+    final format = useState<CalendarFormat>(CalendarFormat.twoWeeks);
     final ValueNotifier<List> eventState = useState<List>([]);
 
+    // ========= データ取得 =============
+    useEffect(() {
+      UserModel()
+          .getById(uid)
+          .then((value) => user.value = value)
+          .catchError((_) {
+        PageService().snackbar('"ユーザーデータ取得エラー', SnackBarType.error);
+        return null;
+      });
+      return null;
+    }, []);
+    useEffect(() {
+      WaitTimeModel()
+          .getListByUid(uid)
+          .then((result) => waitTimeList.value = result)
+          .catchError((_) {
+        PageService().snackbar('"誘って！"取得エラー', SnackBarType.error);
+        return [] as List<WaitTimeEntity>;
+      });
+      RoomModel()
+          .getJoinList(uid)
+          .then((result) => roomList.value = result)
+          .catchError((_) {
+        PageService().snackbar('部屋取得エラー', SnackBarType.error);
+        return [] as List<RoomEntity>;
+      });
+      return null;
+    }, [updateState]);
+
+    // ========= データ整形 ============
+    final title = user.value == null ? '予定表' : '予定表 - ${user.value!.name}';
+    final isViewShare = loginUser != null &&
+        user.value != null &&
+        loginUser.uid == user.value!.uid;
+    final shareText = user.value == null
+        ? '誘ってね！\n\n'
+        : '${user.value!.name}の予定表です。誘ってね！\n\n';
+
     final eventMap = getEventMap(
-      waitTimeList,
+      waitTimeList.value,
       waitTimeNewList.values.toList(),
-      roomList,
+      roomList.value,
     );
 
     // 初期選択状態を入れる
@@ -120,7 +150,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     final List<Widget> list = [];
     for (final event in eventState.value) {
       if (event is WaitTimeEntity) {
-        list.add(WaitTimeCard(event, widget.uid));
+        list.add(WaitTimeCard(event, uid));
       }
       if (event is NewWaitTime) {
         list.add(WaitTimeNewCard(event));
@@ -130,8 +160,8 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       }
     }
 
-    // 更新用Widgetを追加
-    if (loginUser != null && loginUser.uid == widget.uid) {
+    // ======= 自分の予定表のとき、更新用Widgetを追加 ===========
+    if (loginUser != null && loginUser.uid == uid) {
       list.add(const SizedBox(height: 10));
       list.add(
         ElevatedButton.icon(
@@ -171,8 +201,11 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
           child: Fade(
             child: Button(
                 alignment: Alignment.centerRight,
-                onTap: () => WaitTimeService()
-                    .addList(loginUser, waitTimeNewList.values.toList()),
+                onTap: () {
+                  WaitTimeService()
+                      .addList(loginUser, waitTimeNewList.values.toList());
+                  updateState.value = !updateState.value;
+                },
                 text: '保存'),
           ),
         ));
@@ -180,7 +213,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     }
 
     return Scaffold(
-      appBar: const Header(PageNames.calendar, "予定表"),
+      appBar: Header(PageNames.calendar, title),
       bottomNavigationBar: const Footer(PageNames.calendar),
       body: Container(
         padding: const EdgeInsets.all(5),
@@ -188,6 +221,15 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
+                if (isViewShare)
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TwitterShareIcon(
+                      text: shareText,
+                      url: 'calendar?uid=$uid',
+                      hashtags: const ['予定表'],
+                    ),
+                  ),
                 TableCalendar(
                   // headerStyle: const HeaderStyle(formatButtonVisible: false),
                   availableCalendarFormats: const {
@@ -195,11 +237,9 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
                     CalendarFormat.twoWeeks: '１ヶ月',
                     CalendarFormat.month: '２週間',
                   },
-                  calendarFormat: _calendarFormat,
-                  onFormatChanged: (format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
+                  calendarFormat: format.value,
+                  onFormatChanged: (value) {
+                    format.value = value;
                   },
                   firstDay: DateTime.now().add(const Duration(days: -1)),
                   lastDay: DateTime.now()
@@ -242,7 +282,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       if (event is NewWaitTime) newWaitTimeNumber++;
       if (event is WaitTimeEntity) waitTimeNumber++;
       if (event is RoomEntity) {
-        final roomUser = RoomService().getRoomUser(event, widget.uid);
+        final roomUser = RoomService().getRoomUser(event, uid);
         if (roomUser == null) continue;
         if (roomUser.roomUserType == RoomUserType.offer) {
           offerRoomNumber++;

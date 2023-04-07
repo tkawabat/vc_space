@@ -6,6 +6,8 @@ import '../../entity/user_private_entity.dart';
 import '../../provider/login_user_private_provider.dart';
 import '../../provider/login_user_provider.dart';
 import '../../provider/user_list_provider.dart';
+import '../../route.dart';
+import '../../service/page_service.dart';
 import '../../service/time_service.dart';
 import '../../service/user_service.dart';
 import '../l1/button.dart';
@@ -98,11 +100,24 @@ class UserDialog extends HookConsumerWidget {
             ),
             const SizedBox(height: 16),
             const Spacer(),
-            Button(
-              alignment: Alignment.bottomRight,
-              onTap: followFunction,
-              text: followText,
-              color: followButtonColor,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton.icon(
+                  onPressed: () {
+                    PageService().transition(PageNames.calendar,
+                        arguments: {'uid': uid});
+                  },
+                  icon: const Icon(Icons.calendar_month),
+                  label: const Text('予定表'),
+                ),
+                Button(
+                  // alignment: Alignment.bottomRight,
+                  onTap: followFunction,
+                  text: followText,
+                  color: followButtonColor,
+                ),
+              ],
             ),
           ],
         ),
