@@ -5,8 +5,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/user_entity.dart';
-import '../../entity/wait_time_entity.dart';
-import '../../model/wait_time_model.dart';
+import '../../entity/user_search_entity.dart';
+import '../../model/function_model.dart';
 import '../../provider/user_search_provider.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
@@ -20,14 +20,12 @@ class RoomOfferUserList extends HookConsumerWidget {
 
   RoomOfferUserList(this.room, {Key? key}) : super(key: key);
 
-  final PagingController<int, WaitTimeEntity> _pagingController =
+  final PagingController<int, UserSearchEntity> _pagingController =
       PagingController(firstPageKey: 0);
 
   void Function(int) createFetchFunction(DateTime time, UserEntity searchUser) {
     return (int pageKey) {
-      WaitTimeModel()
-          .getListByStartTime(pageKey, time, searchUser)
-          .then((list) {
+      FunctionModel().searchUser(pageKey, searchUser.tags, time).then((list) {
         if (list.length < ConstService.listStep) {
           _pagingController.appendLastPage(list);
         } else {
@@ -61,7 +59,7 @@ class RoomOfferUserList extends HookConsumerWidget {
               ),
           child: PagedListView(
               pagingController: _pagingController,
-              builderDelegate: PagedChildBuilderDelegate<WaitTimeEntity>(
+              builderDelegate: PagedChildBuilderDelegate<UserSearchEntity>(
                   animateTransitions: true,
                   firstPageErrorIndicatorBuilder: (context) =>
                       Column(children: [
@@ -89,21 +87,28 @@ class RoomOfferUserList extends HookConsumerWidget {
     );
   }
 
-  Widget buildUserCard(WaitTimeEntity waitTime) {
-    if (RoomService().isJoined(room, waitTime.uid)) return const SizedBox();
+  Widget buildUserCard(UserSearchEntity userSearch) {
+    if (RoomService().isJoined(room, userSearch.user.uid)) {
+      return const SizedBox();
+    }
+
     return UserCard(
-      waitTime.user,
-      trailingOnTap: RoomService().getRoomUser(room, waitTime.uid) == null
+      userSearch.user,
+      trailingOnTap: RoomService().getRoomUser(room, userSearch.user.uid) ==
+              null
           ? () async {
-              final success = await RoomService().offer(room, waitTime.user);
+              final success = await RoomService().offer(room, userSearch.user);
               if (success) PageService().back();
             }
           : null,
       trailingButtonText: '誘う',
-      body: Container(
-          padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
-          alignment: Alignment.topRight,
-          child: Text(WaitTimeService().toDisplayText(waitTime))),
+      body: (userSearch.waitTime != null)
+          ? Container(
+              padding: const EdgeInsets.fromLTRB(0, 4, 16, 4),
+              alignment: Alignment.topRight,
+              child:
+                  Text(WaitTimeService().toDisplayText(userSearch.waitTime!)))
+          : null,
     );
   }
 }

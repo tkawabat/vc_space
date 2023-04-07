@@ -55,7 +55,6 @@ class WaitTimeService {
       startTime: startTime,
       endTime: endTime,
       updatedAt: DateTime.now(),
-      user: user,
     );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {
@@ -73,13 +72,13 @@ class WaitTimeService {
   Future<bool> addList(UserEntity user, List<NewWaitTime> newWaitTimeList) {
     final list = newWaitTimeList
         .map((e) => WaitTimeEntity(
-            uid: user.uid,
-            waitTimeId: ConstSystem.idBeforeInsert,
-            waitTimeType: WaitTimeType.valid,
-            startTime: e.range.start,
-            endTime: e.range.end,
-            updatedAt: DateTime.now(),
-            user: user))
+              uid: user.uid,
+              waitTimeId: ConstSystem.idBeforeInsert,
+              waitTimeType: WaitTimeType.valid,
+              startTime: e.range.start,
+              endTime: e.range.end,
+              updatedAt: DateTime.now(),
+            ))
         .toList();
     return WaitTimeModel().insertList(list).then((value) {
       PageService().ref!.read(waitTimeListProvider.notifier).addList(value);
@@ -103,7 +102,6 @@ class WaitTimeService {
       startTime: startTime,
       endTime: endTime,
       updatedAt: DateTime.now(),
-      user: user,
     );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {

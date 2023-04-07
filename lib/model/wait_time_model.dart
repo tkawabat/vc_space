@@ -11,10 +11,7 @@ class WaitTimeModel extends ModelBase {
   static final WaitTimeModel _instance = WaitTimeModel._internal();
   final String tableName = 'wait_time';
   final String columns = '''
-      *,
-      user!inner (
-        *
-      )
+      *
     ''';
 
   factory WaitTimeModel() {

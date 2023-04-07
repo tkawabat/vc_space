@@ -4,7 +4,6 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'converter/timestampz_converter.dart';
 import 'converter/wait_time_type_converter.dart';
-import 'user_entity.dart';
 
 part 'wait_time_entity.freezed.dart';
 part 'wait_time_entity.g.dart';
@@ -37,7 +36,6 @@ class WaitTimeEntity with _$WaitTimeEntity {
     @TimestampzConverter() required DateTime startTime,
     @TimestampzConverter() required DateTime endTime,
     @TimestampzConverter() required DateTime updatedAt,
-    required UserEntity user,
   }) = _WaitTimeEntity;
 
   factory WaitTimeEntity.fromJson(Map<String, dynamic> json) =>
