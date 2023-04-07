@@ -13,7 +13,7 @@ part 'room_user_entity.g.dart';
 enum RoomUserType {
   admin(10, '主催'),
   member(20, 'メンバー'),
-  offer(70, 'お誘い'),
+  offer(70, '返答待ち'),
   kick(80, '除外'),
   ;
 
