@@ -2,13 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:vc_space/model/user_model.dart';
 
 import '../../entity/room_entity.dart';
 import '../../entity/room_user_entity.dart';
+import '../../entity/user_entity.dart';
 import '../../entity/wait_time_entity.dart';
+import '../../model/room_model.dart';
+import '../../model/wait_time_model.dart';
 import '../../provider/login_user_provider.dart';
-import '../../provider/room_list_join_provider.dart';
-import '../../provider/wait_time_list_provider.dart';
 import '../../provider/wait_time_new_list_provider.dart';
 import '../../route.dart';
 import '../../service/const_design.dart';
@@ -25,17 +27,10 @@ import '../l2/wait_time_new_card.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 
-class CalendarPage extends StatefulHookConsumerWidget {
+class CalendarPage extends HookConsumerWidget {
   final String uid;
 
   const CalendarPage({Key? key, required this.uid}) : super(key: key);
-
-  @override
-  CalendarPageState createState() => CalendarPageState();
-}
-
-class CalendarPageState extends ConsumerState<CalendarPage> {
-  CalendarFormat _calendarFormat = CalendarFormat.twoWeeks;
 
   DateTime getStartTime(e) {
     if (e is RoomEntity) return e.startTime;
@@ -84,33 +79,55 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-
-    // 他人のページ見れるようにしたとき見直す
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(waitTimeListProvider.notifier).getList(widget.uid);
-      ref.read(roomListJoinProvider.notifier).getList(widget.uid);
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     PageService().init(context, ref);
 
+    // ========= provider & state ===========
     final loginUser = ref.watch(loginUserProvider);
-    final waitTimeList = ref.watch(waitTimeListProvider);
     final waitTimeNewList = ref.watch(waitTimeNewListProvider);
-    final roomList = ref.watch(roomListJoinProvider);
+
+    final user = useState<UserEntity?>(null);
+    final waitTimeList = useState<List<WaitTimeEntity>>([]);
+    final roomList = useState<List<RoomEntity>>([]);
+
+    // true/falseを切り替えるとデータを読み込み直す
+    final updateState = useState<bool>(false);
 
     final now = TimeService().today();
     final selectedDayState = useState<DateTime>(now);
+    final format = useState<CalendarFormat>(CalendarFormat.twoWeeks);
     final ValueNotifier<List> eventState = useState<List>([]);
 
+    // ========= データ取得 =============
+    useEffect(() {
+      UserModel()
+          .getById(uid)
+          .then((value) => user.value = value)
+          .catchError((_) {
+        PageService().snackbar('"ユーザーデータ取得エラー', SnackBarType.error);
+      });
+    }, []);
+    useEffect(() {
+      WaitTimeModel()
+          .getListByUid(uid)
+          .then((result) => waitTimeList.value = result)
+          .catchError((_) {
+        PageService().snackbar('"誘って！"取得エラー', SnackBarType.error);
+      });
+      RoomModel()
+          .getJoinList(uid)
+          .then((result) => roomList.value = result)
+          .catchError((_) {
+        PageService().snackbar('部屋取得エラー', SnackBarType.error);
+      });
+      return null;
+    }, [updateState]);
+
+    // ========= データ整形 ============
     final eventMap = getEventMap(
-      waitTimeList,
+      waitTimeList.value,
       waitTimeNewList.values.toList(),
-      roomList,
+      roomList.value,
     );
 
     // 初期選択状態を入れる
@@ -120,7 +137,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
     final List<Widget> list = [];
     for (final event in eventState.value) {
       if (event is WaitTimeEntity) {
-        list.add(WaitTimeCard(event, widget.uid));
+        list.add(WaitTimeCard(event, uid));
       }
       if (event is NewWaitTime) {
         list.add(WaitTimeNewCard(event));
@@ -130,8 +147,8 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       }
     }
 
-    // 更新用Widgetを追加
-    if (loginUser != null && loginUser.uid == widget.uid) {
+    // ======= 自分の予定表のとき、更新用Widgetを追加 ===========
+    if (loginUser != null && loginUser.uid == uid) {
       list.add(const SizedBox(height: 10));
       list.add(
         ElevatedButton.icon(
@@ -171,8 +188,11 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
           child: Fade(
             child: Button(
                 alignment: Alignment.centerRight,
-                onTap: () => WaitTimeService()
-                    .addList(loginUser, waitTimeNewList.values.toList()),
+                onTap: () {
+                  WaitTimeService()
+                      .addList(loginUser, waitTimeNewList.values.toList());
+                  updateState.value = !updateState.value;
+                },
                 text: '保存'),
           ),
         ));
@@ -195,11 +215,9 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
                     CalendarFormat.twoWeeks: '１ヶ月',
                     CalendarFormat.month: '２週間',
                   },
-                  calendarFormat: _calendarFormat,
-                  onFormatChanged: (format) {
-                    setState(() {
-                      _calendarFormat = format;
-                    });
+                  calendarFormat: format.value,
+                  onFormatChanged: (value) {
+                    format.value = value;
                   },
                   firstDay: DateTime.now().add(const Duration(days: -1)),
                   lastDay: DateTime.now()
@@ -242,7 +260,7 @@ class CalendarPageState extends ConsumerState<CalendarPage> {
       if (event is NewWaitTime) newWaitTimeNumber++;
       if (event is WaitTimeEntity) waitTimeNumber++;
       if (event is RoomEntity) {
-        final roomUser = RoomService().getRoomUser(event, widget.uid);
+        final roomUser = RoomService().getRoomUser(event, uid);
         if (roomUser == null) continue;
         if (roomUser.roomUserType == RoomUserType.offer) {
           offerRoomNumber++;
