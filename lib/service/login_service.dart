@@ -44,6 +44,7 @@ class LoginService {
         ref.read(waitTimeListProvider.notifier).getList(user.uid).then((_) {
           if (PageService().context == null) return;
           if (PageService().canBack()) return;
+          if (DateTime.now().hour <= 5) return;
           if (!WaitTimeService().isViewDialog()) return;
 
           WaitTimeService().addNoWait(user);
