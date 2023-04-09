@@ -11,6 +11,7 @@ import '../../model/room_model.dart';
 import '../../model/user_model.dart';
 import '../../model/wait_time_model.dart';
 import '../../provider/login_user_provider.dart';
+import '../../provider/wait_time_list_provider.dart';
 import '../../provider/wait_time_new_list_provider.dart';
 import '../../route.dart';
 import '../../service/const_design.dart';
@@ -86,13 +87,12 @@ class CalendarPage extends HookConsumerWidget {
     // ========= provider & state ===========
     final loginUser = ref.watch(loginUserProvider);
     final waitTimeNewList = ref.watch(waitTimeNewListProvider);
+    // データの再読み込みのタイミングのため
+    final waitTime = ref.watch(waitTimeListProvider);
 
     final user = useState<UserEntity?>(null);
     final waitTimeList = useState<List<WaitTimeEntity>>([]);
     final roomList = useState<List<RoomEntity>>([]);
-
-    // true/falseを切り替えるとデータを読み込み直す
-    final updateState = useState<bool>(false);
 
     final now = TimeService().today();
     final selectedDayState = useState<DateTime>(now);
@@ -126,7 +126,7 @@ class CalendarPage extends HookConsumerWidget {
         return [] as List<RoomEntity>;
       });
       return null;
-    }, [updateState]);
+    }, [waitTime]);
 
     // ========= データ整形 ============
     final title = user.value == null ? '予定表' : '予定表 - ${user.value!.name}';
@@ -204,7 +204,6 @@ class CalendarPage extends HookConsumerWidget {
                 onTap: () {
                   WaitTimeService()
                       .addList(loginUser, waitTimeNewList.values.toList());
-                  updateState.value = !updateState.value;
                 },
                 text: '保存'),
           ),
@@ -216,7 +215,7 @@ class CalendarPage extends HookConsumerWidget {
       appBar: Header(PageNames.calendar, title),
       bottomNavigationBar: const Footer(PageNames.calendar),
       body: Container(
-        padding: const EdgeInsets.all(5),
+        padding: const EdgeInsets.all(4),
         child: SingleChildScrollView(
           child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
