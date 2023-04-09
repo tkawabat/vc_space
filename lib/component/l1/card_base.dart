@@ -10,7 +10,7 @@ class CardBase extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget widget = Container(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
       child: Card(
         elevation: 4,
         color: color,
