@@ -1,12 +1,13 @@
 // ignore_for_file: invalid_annotation_target
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:vc_space/entity/room_user_entity.dart';
 
 import 'converter/timestampz_converter.dart';
 import 'converter/enter_type_converter.dart';
+import 'converter/room_status_converter.dart';
 import 'converter/place_type_converter.dart';
 import '../service/const_system.dart';
+import 'room_user_entity.dart';
 
 part 'room_entity.freezed.dart';
 part 'room_entity.g.dart';
@@ -66,6 +67,29 @@ enum EnterType {
   }
 }
 
+enum RoomStatus {
+  open(10, '募集中'),
+  close(60, '募集終了'),
+  deleted(80, '削除済み'),
+  ;
+
+  const RoomStatus(this.value, this.displayName);
+  final int value;
+  final String displayName;
+
+  factory RoomStatus.fromValue(int value) {
+    switch (value) {
+      case 10:
+        return RoomStatus.open;
+      case 60:
+        return RoomStatus.close;
+      case 80:
+        return RoomStatus.deleted;
+    }
+    throw Exception('RoomStatusType error. value=$value');
+  }
+}
+
 @freezed
 class RoomEntity with _$RoomEntity {
   const factory RoomEntity({
@@ -79,7 +103,7 @@ class RoomEntity with _$RoomEntity {
     String? password,
     @PlaceTypeConverter() required PlaceType placeType,
     required List<String> tags,
-    required bool deleted,
+    @RoomStatusConverter() required RoomStatus roomStatus,
     @TimestampzConverter() required DateTime updatedAt,
     @JsonKey(name: 'room_user') required List<RoomUserEntity> users,
   }) = _RoomEntity;
@@ -99,6 +123,6 @@ final roomNotFound = RoomEntity(
   placeType: PlaceType.none,
   tags: [],
   updatedAt: DateTime.now(),
-  deleted: false,
+  roomStatus: RoomStatus.deleted,
   users: [roomUserEmpty],
 );

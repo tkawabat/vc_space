@@ -11,6 +11,7 @@ import '../dialog/user_dialog.dart';
 import '../l1/card_base.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
+import '../l3/past_room_list.dart';
 import '../l3/room_list.dart';
 
 class MainPage extends HookConsumerWidget {
@@ -36,41 +37,43 @@ class MainPage extends HookConsumerWidget {
     return Scaffold(
       appBar: Header(PageNames.home, dotenv.get('TITLE', fallback: '')),
       bottomNavigationBar: const Footer(PageNames.home),
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // ElevatedButton(
-          //   onPressed: () {
-          //     FunctionModel()
-          //         .selectTagCount(
-          //           'b',
-          //           DateTime(2023, 4, 1),
-          //           DateTime(2023, 4, 1, 23, 59),
-          //         )
-          //         .then((value) => debugPrint(value.toString()));
+      body: CustomScrollView(
+        slivers: [
+          SliverList(
+              delegate: SliverChildListDelegate([
+            // ElevatedButton(
+            //   onPressed: () {
+            //     FunctionModel()
+            //         .selectTagCount(
+            //           'b',
+            //           DateTime(2023, 4, 1),
+            //           DateTime(2023, 4, 1, 23, 59),
+            //         )
+            //         .then((value) => debugPrint(value.toString()));
 
-          //     //     UserModel()
-          //     //         .getListByWaitTime(0, DateTime(2023, 1, 1))
-          //     //         .then((value) {
-          //     //       debugPrint(value.length.toString());
-          //     //       for (var e in value) {
-          //     //         debugPrint('user: ${e.name}');
-          //     //       }
-          //     //     }).catchError((error) {
-          //     //       debugPrint(error.toString());
-          //     //     });
-          //   },
-          //   child: const Text("デバッグ"),
-          // ),
-          if (information.isNotEmpty)
-            CardBase(children: [
-              ListTile(
-                leading: const Icon(Icons.info),
-                title: Text(information),
-              ),
-            ]),
+            //     //     UserModel()
+            //     //         .getListByWaitTime(0, DateTime(2023, 1, 1))
+            //     //         .then((value) {
+            //     //       debugPrint(value.length.toString());
+            //     //       for (var e in value) {
+            //     //         debugPrint('user: ${e.name}');
+            //     //       }
+            //     //     }).catchError((error) {
+            //     //       debugPrint(error.toString());
+            //     //     });
+            //   },
+            //   child: const Text("デバッグ"),
+            // ),
+            if (information.isNotEmpty)
+              CardBase(children: [
+                ListTile(
+                  leading: const Icon(Icons.info),
+                  title: Text(information),
+                ),
+              ]),
+          ])),
           RoomList(),
+          const PastRoomList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -98,7 +101,7 @@ class MainPage extends HookConsumerWidget {
             );
           });
     }).catchError((_) {
-      PageService().snackbar('部屋取得エラー', SnackBarType.error);
+      PageService().snackbar('部屋は既に削除されています。', SnackBarType.error);
     });
   }
 

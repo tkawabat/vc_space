@@ -61,7 +61,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
-      deleted: false,
+      roomStatus: RoomStatus.open,
       updatedAt: now,
       users: [roomUserEmpty],
     );
@@ -106,7 +106,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
-      deleted: false,
+      roomStatus: room!.roomStatus,
       updatedAt: now,
       users: room!.users,
     );

@@ -1,4 +1,6 @@
 class ConstService {
+  static const roomSearchDefaultHour = -3;
+
   static const listStep = 20;
   static const stepTime = 15;
 

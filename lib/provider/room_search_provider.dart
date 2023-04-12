@@ -11,7 +11,8 @@ class RoomSearchNotifer extends StateNotifier<RoomEntity> {
   RoomSearchNotifer()
       : super(roomNotFound.copyWith(
             startTime: TimeService().getStepDateTime(
-                DateTime.now().add(const Duration(hours: -3)),
+                DateTime.now().add(
+                    const Duration(hours: ConstService.roomSearchDefaultHour)),
                 ConstService.stepTime)));
 
   set(RoomEntity room) => state = room;

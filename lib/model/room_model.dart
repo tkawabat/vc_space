@@ -73,7 +73,7 @@ class RoomModel extends ModelBase {
         .from(tableName)
         .select(columns)
         .eq('room_id', roomId)
-        .eq('deleted', false)
+        .lt('room_status', RoomStatus.deleted.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .single()
         .then(_getEntity)
@@ -94,7 +94,7 @@ class RoomModel extends ModelBase {
     var query = supabase
         .from(tableName)
         .select(columns)
-        .eq('deleted', false)
+        .lt('room_status', RoomStatus.deleted.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', startTime);
 
@@ -110,14 +110,39 @@ class RoomModel extends ModelBase {
             ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));
   }
 
+  Future<List<RoomEntity>> getPastList(int page, RoomEntity searchRoom) async {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+    final startTime = DateTime.now()
+        .add(const Duration(hours: ConstService.roomSearchDefaultHour));
+
+    var query = supabase
+        .from(tableName)
+        .select(columns)
+        .lt('room_status', RoomStatus.deleted.value)
+        .lt('room_user.room_user_type', RoomUserType.kick.value)
+        .lt('start_time', startTime);
+
+    if (searchRoom.tags.isNotEmpty) {
+      query.contains('tags', searchRoom.tags);
+    }
+
+    return query
+        .order('start_time', ascending: false)
+        .range(start, to)
+        .then(_getEntityList)
+        .catchError(
+            ErrorService().onError<List<RoomEntity>>([], '$tableName.getList'));
+  }
+
   Future<List<RoomEntity>> getJoinList(String uid) async {
     final startTime = TimeService().today().toUtc().toIso8601String();
 
     return supabase
         .from(tableName)
         .select('$columns, check:room_user!inner (uid)')
-        .eq('deleted', false)
         .in_('check.uid', [uid])
+        .lt('room_status', RoomStatus.deleted.value)
         .lt('check.room_user_type', RoomUserType.kick.value)
         .lt('room_user.room_user_type', RoomUserType.kick.value)
         .gte('start_time', startTime)

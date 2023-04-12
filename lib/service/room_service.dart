@@ -26,6 +26,21 @@ class RoomService {
     return room.users.firstWhereOrNull((element) => element.uid == uid);
   }
 
+  bool isEnd(RoomEntity room) {
+    final date = DateTime.now().add(const Duration(days: -1));
+    if (room.startTime.isBefore(date)) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isClosed(RoomEntity room) {
+    if (room.roomStatus.value >= RoomStatus.close.value) {
+      return true;
+    }
+    return false;
+  }
+
   bool isJoined(RoomEntity room, String uid) {
     return room.users.any((e) =>
         e.uid == uid &&
@@ -51,6 +66,8 @@ class RoomService {
     UserEntity? user,
     UserPrivateEntity? userPrivate,
   ) {
+    if (isEnd(room)) return '開始時間から１日以上経過すると参加できません';
+    if (isClosed(room)) return '募集終了です';
     if (user == null) return '未ログインです';
     if (isCompletelyJoined(room, user)) return '参加済みです'; // 正式参加済みならfalse
     if (room.users.length >= room.maxNumber) return '満員です';
@@ -196,12 +213,28 @@ class RoomService {
     });
   }
 
+  FutureOr<bool> updateStatus(RoomEntity room, RoomStatus status) async {
+    final newObj = room.copyWith(roomStatus: status);
+    return RoomModel()
+        .update(newObj, targetColumnList: ['room_status']).then((_) {
+      PageService().snackbar('部屋のステータスを更新しました', SnackBarType.info);
+      // 入っている部屋は勝手に出ていくはず
+      logEvent(
+          LogEventName.room_update_status, 'owner', room.roomId.toString());
+      return true;
+    }).catchError((_) {
+      PageService().snackbar('部屋の更新でエラーが発生しました', SnackBarType.error);
+      return false;
+    });
+  }
+
   FutureOr<bool> delete(RoomEntity room) async {
-    final newObj = room.copyWith(deleted: true);
-    return RoomModel().update(newObj, targetColumnList: ['deleted']).then((_) {
+    final newObj = room.copyWith(roomStatus: RoomStatus.deleted);
+    return RoomModel()
+        .update(newObj, targetColumnList: ['room_status']).then((_) {
       PageService().snackbar('部屋を削除しました', SnackBarType.info);
       // 入っている部屋は勝手に出ていくはず
-      logEvent(LogEventName.room_delete, 'member', room.roomId.toString());
+      logEvent(LogEventName.room_delete, 'owner', room.roomId.toString());
       return true;
     }).catchError((_) {
       PageService().snackbar('部屋の削除でエラーが発生しました', SnackBarType.error);

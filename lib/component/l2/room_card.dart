@@ -19,6 +19,7 @@ class RoomCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CardBase(
+      color: RoomService().isEnd(room) ? Colors.grey.shade200 : null,
       onTap: () => showDialog(
           context: context,
           barrierDismissible: true,

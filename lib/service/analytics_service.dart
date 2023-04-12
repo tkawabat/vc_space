@@ -23,6 +23,7 @@ enum LogEventName {
   offer_stop,
   offer_ok,
   offer_ng,
+  room_update_status,
   room_delete,
   room_search_modify,
   user_search_modify,

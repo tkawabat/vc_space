@@ -18,25 +18,32 @@ class RoomTagList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
 
-    List<Widget> widgets = room.tags
-        .map((text) => Tag(
-              text: text,
-              tagColor: ConstDesign.validTagColor,
-              onTap: () {},
-            ))
-        .toList();
+    List<Widget> list = [];
 
-    widgets.insert(
-        0,
-        Tag(
-          text: room.placeType.displayName,
-          tagColor: Colors.cyan.shade100,
-        ));
+    if (room.roomStatus.value >= RoomStatus.close.value) {
+      list.add(Tag(
+        text: room.roomStatus.displayName,
+        tagColor: Colors.grey.shade400,
+      ));
+    }
+
+    list.add(Tag(
+      text: room.placeType.displayName,
+      tagColor: Colors.cyan.shade100,
+    ));
+
+    for (final tag in room.tags) {
+      list.add(Tag(
+        text: tag,
+        tagColor: ConstDesign.validTagColor,
+        onTap: () {},
+      ));
+    }
 
     if (viewEnterStatus &&
         loginUser != null &&
         RoomService().isJoined(room, loginUser.uid)) {
-      widgets.add(Tag(
+      list.add(Tag(
         text: RoomService()
             .getRoomUser(room, loginUser.uid)!
             .roomUserType
@@ -48,7 +55,7 @@ class RoomTagList extends ConsumerWidget {
 
     return Wrap(
       crossAxisAlignment: WrapCrossAlignment.center,
-      children: widgets,
+      children: list,
     );
   }
 }

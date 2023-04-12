@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:vc_space/entity/room_entity.dart';
 
 import '../../entity/room_user_entity.dart';
 import '../../entity/user_entity.dart';
@@ -17,9 +18,8 @@ class RoomQuitButton extends ConsumerWidget {
     final UserEntity? loginUser = ref.watch(loginUserProvider);
     final room = ref.read(enterRoomProvider);
 
-    final color = Theme.of(context).colorScheme.error;
     final disabledButton = Button(
-      color: color,
+      color: Theme.of(context).colorScheme.error,
       onTap: null,
       text: '脱退する',
     );
@@ -29,26 +29,53 @@ class RoomQuitButton extends ConsumerWidget {
 
     final roomUser = RoomService().getRoomUser(room, loginUser.uid);
     if (roomUser == null) return disabledButton;
-    if (roomUser.roomUserType == RoomUserType.admin) {
+
+    // member
+    if (roomUser.roomUserType != RoomUserType.admin) {
       return Button(
-          color: color,
+          color: Theme.of(context).colorScheme.error,
           onTap: () {
-            PageService().showConfirmDialog('一度削除した部屋は戻せません。本当に部屋を削除しますか？', () {
-              RoomService().delete(room);
-              PageService().back();
-            });
-          },
-          text: '部屋を削除する');
-    } else {
-      return Button(
-          color: color,
-          onTap: () {
-            PageService().showConfirmDialog('部屋から脱退します。', () {
+            PageService().showConfirmDialog('部屋から脱退します', () {
               RoomService().quit(room, loginUser.uid);
               PageService().back();
             });
           },
           text: '脱退する');
     }
+
+    // owner
+    if (room.roomStatus == RoomStatus.close) {
+      return Button(
+          color: Theme.of(context).colorScheme.tertiary,
+          onTap: () {
+            PageService().showConfirmDialog('メンバーの募集を再開します。', () {
+              RoomService().updateStatus(room, RoomStatus.open);
+            });
+          },
+          text: '募集を再開する');
+    }
+    if (room.roomStatus == RoomStatus.open && room.users.length > 1) {
+      return Button(
+          color: Theme.of(context).colorScheme.tertiary,
+          onTap: () {
+            PageService().showConfirmDialog('メンバーの募集を終了します。', () {
+              RoomService().updateStatus(room, RoomStatus.close);
+            });
+          },
+          text: '募集を終了する');
+    }
+    if (room.roomStatus == RoomStatus.open && room.users.length <= 1) {
+      return Button(
+          color: Theme.of(context).colorScheme.error,
+          onTap: () {
+            PageService().showConfirmDialog('一度削除した部屋は戻せません。本当に部屋を削除しますか？', () {
+              RoomService().delete(room);
+            });
+          },
+          text: '部屋を削除する');
+    }
+
+    // イレギュラー
+    return disabledButton;
   }
 }
