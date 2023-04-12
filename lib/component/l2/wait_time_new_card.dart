@@ -16,6 +16,7 @@ class WaitTimeNewCard extends HookConsumerWidget {
         color: Theme.of(context).colorScheme.errorContainer,
         children: [
           ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 8),
             title: buildTitle(newWaitTime, ref),
             trailing: IconButton(
               tooltip: '削除する',

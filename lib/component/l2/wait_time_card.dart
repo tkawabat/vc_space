@@ -21,6 +21,7 @@ class WaitTimeCard extends ConsumerWidget {
 
     return CardBase(children: [
       ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
         title: Text(WaitTimeService().toDisplayText(waitTime)),
         trailing: canDelete
             ? IconButton(
