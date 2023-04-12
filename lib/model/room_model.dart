@@ -114,7 +114,9 @@ class RoomModel extends ModelBase {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
     final startTime = DateTime.now()
-        .add(const Duration(hours: ConstService.roomSearchDefaultHour));
+        .add(const Duration(hours: ConstService.roomSearchDefaultHour))
+        .toUtc()
+        .toIso8601String();
 
     var query = supabase
         .from(tableName)
