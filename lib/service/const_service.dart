@@ -27,6 +27,7 @@ class ConstService {
     '雑談',
     '声劇',
     '麻雀',
+    'TRPG',
     'マダミス',
     'ボドゲ',
     'Minecraft',
