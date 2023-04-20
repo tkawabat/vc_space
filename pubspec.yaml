@@ -62,6 +62,7 @@ dependencies:
   flutter_native_splash: ^2.2.18
   fl_chart: ^0.61.0
   firebase_messaging: ^14.3.0
+  google_fonts: ^4.0.3
 
 dev_dependencies:
   flutter_test:
