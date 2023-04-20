@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -61,7 +62,9 @@ class MyApp extends ConsumerWidget {
       title: dotenv.get('TITLE'),
       debugShowCheckedModeBanner: false,
       theme: FlexThemeData.light(
-          fontFamily: 'NotoSansJP', scheme: FlexScheme.mango),
+          fontFamily: GoogleFonts.zenKakuGothicAntique().fontFamily,
+          // fontFamily: GoogleFonts.bizUDGothic().fontFamily,
+          scheme: FlexScheme.mango),
       // darkTheme: FlexThemeData.dark(
       //     fontFamily: 'NotoSansJP', scheme: FlexScheme.mango),
       themeMode: ThemeMode.system,
