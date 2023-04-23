@@ -44,35 +44,31 @@ class RoomList extends HookConsumerWidget {
       [searchRoom],
     );
 
-    return SliverList(
-        delegate: SliverChildListDelegate([
-      PagedListView(
-          shrinkWrap: true,
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
-              animateTransitions: true,
-              firstPageErrorIndicatorBuilder: (context) => Column(children: [
-                    RoomSearchTagList(),
-                    const SizedBox(height: 30),
-                    const Center(child: Text('データ取得エラー'))
-                  ]),
-              noItemsFoundIndicatorBuilder: (BuildContext context) =>
-                  Column(children: [
-                    RoomSearchTagList(),
-                    const SizedBox(height: 30),
-                    const Center(child: Text('条件に合う部屋が存在しません'))
-                  ]),
-              itemBuilder: (context, item, index) {
-                if (index == 0) {
-                  return Column(children: [
-                    RoomSearchTagList(),
-                    const SizedBox(height: 2),
-                    RoomCard(item),
-                  ]);
-                } else {
-                  return RoomCard(item);
-                }
-              }))
-    ]));
+    return PagedSliverList(
+        pagingController: _pagingController,
+        builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
+            animateTransitions: true,
+            firstPageErrorIndicatorBuilder: (context) => Column(children: [
+                  RoomSearchTagList(),
+                  const SizedBox(height: 30),
+                  const Center(child: Text('データ取得エラー'))
+                ]),
+            noItemsFoundIndicatorBuilder: (BuildContext context) =>
+                Column(children: [
+                  RoomSearchTagList(),
+                  const SizedBox(height: 30),
+                  const Center(child: Text('条件に合う部屋が存在しません'))
+                ]),
+            itemBuilder: (context, item, index) {
+              if (index == 0) {
+                return Column(children: [
+                  RoomSearchTagList(),
+                  const SizedBox(height: 2),
+                  RoomCard(item),
+                ]);
+              } else {
+                return RoomCard(item);
+              }
+            }));
   }
 }
