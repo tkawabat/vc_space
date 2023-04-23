@@ -155,11 +155,19 @@ class PageService {
     }
   }
 
+  // 一旦使わなくなっている
   void transitionAnalyticsTag(PageNames current) {
     if (current == PageNames.analyticsTag) return;
     if (ref == null) return;
 
     PageService().transition(PageNames.analyticsTag);
+  }
+
+  void transitionRoomOffer(PageNames current) {
+    if (current == PageNames.roomOffer) return;
+    if (ref == null) return;
+
+    PageService().transition(PageNames.roomOffer);
   }
 
   void viewCreateWaitTimeDialog() {

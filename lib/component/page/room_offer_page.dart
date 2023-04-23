@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../provider/enter_room_provider.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
-import '../l1/loading.dart';
+import '../dialog/user_search_dialog.dart';
 import '../l3/footer.dart';
 import '../l3/header.dart';
 import '../l3/room_offer_user_list.dart';
@@ -17,16 +17,8 @@ class RoomOfferPage extends HookConsumerWidget {
     PageService().init(context, ref);
     final room = ref.watch(enterRoomProvider);
 
-    if (room == null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        PageService().snackbar('エラーのため、ホーム画面に戻ります。', SnackBarType.error);
-        PageService().transition(PageNames.home);
-      });
-      return const Loading();
-    }
-
     return Scaffold(
-      appBar: const Header(PageNames.roomOffer, '部屋に誘う'),
+      appBar: const Header(PageNames.roomOffer, '待ちリスト'),
       bottomNavigationBar: const Footer(PageNames.roomOffer),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -35,6 +27,13 @@ class RoomOfferPage extends HookConsumerWidget {
           RoomOfferUserList(room),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+          tooltip: '条件変更',
+          onPressed: () => showDialog(
+              context: context,
+              barrierDismissible: true,
+              builder: (_) => UserSearchDialog()),
+          child: const Icon(Icons.search)),
     );
   }
 }

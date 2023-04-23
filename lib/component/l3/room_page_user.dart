@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:vc_space/service/page_service.dart';
 
 import '../../entity/room_entity.dart';
 import '../../provider/login_user_provider.dart';
+import '../../provider/user_search_provider.dart';
 import '../../route.dart';
 import '../../service/room_service.dart';
+import '../../service/page_service.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
 import '../l2/room_user_card.dart';
@@ -35,8 +36,12 @@ class RoomPageUser extends ConsumerWidget {
             ...list,
             isAdmin && room.maxNumber > room.users.length
                 ? Button(
-                    onTap: () => PageService()
-                        .transition(PageNames.roomOffer, push: true),
+                    onTap: () {
+                      ref
+                          .read(userSearchProvider.notifier)
+                          .setTime(room.startTime);
+                      PageService().transition(PageNames.roomOffer, push: true);
+                    },
                     text: '誰かを誘う')
                 : const SizedBox()
           ]),

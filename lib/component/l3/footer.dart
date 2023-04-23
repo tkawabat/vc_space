@@ -57,10 +57,10 @@ class Footer extends StatelessWidget {
         onTap: () => PageService().transitionMyCalendar(page),
       ),
       FooterItem(
-        icon: const Icon(Icons.analytics),
-        label: '誘って分析',
-        page: PageNames.analyticsTag,
-        onTap: () => PageService().transitionAnalyticsTag(page),
+        icon: const Icon(Icons.person),
+        label: '待ちリスト',
+        page: PageNames.roomOffer,
+        onTap: () => PageService().transitionRoomOffer(page),
       ),
     ];
 

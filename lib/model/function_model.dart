@@ -2,6 +2,7 @@ import 'dart:async';
 
 import '../entity/tag_count_entity.dart';
 import '../entity/user_search_entity.dart';
+import '../entity/user_search_input_entity.dart';
 import '../service/const_service.dart';
 import '../service/error_service.dart';
 import 'model_base.dart';
@@ -36,16 +37,13 @@ class FunctionModel extends ModelBase {
   }
 
   Future<List<UserSearchEntity>> searchUser(
-    int page,
-    List<String> tags,
-    DateTime time,
-  ) async {
+      int page, UserSearchInputEntity searchUser) async {
     final from = page * ConstService.listStep;
     final to = from + ConstService.listStep - 1;
-    final timeUtc = time.toUtc().toIso8601String();
+    final timeUtc = searchUser.time.toUtc().toIso8601String();
     return supabase
         .rpc('search_user', params: {
-          'p_tags': tags,
+          'p_tags': searchUser.tags,
           'p_time': timeUtc,
         })
         .range(from, to)
