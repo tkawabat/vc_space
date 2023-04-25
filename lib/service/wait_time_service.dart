@@ -55,6 +55,7 @@ class WaitTimeService {
       startTime: startTime,
       endTime: endTime,
       updatedAt: DateTime.now(),
+      user: userNotFound,
     );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {
@@ -78,6 +79,7 @@ class WaitTimeService {
               startTime: e.range.start,
               endTime: e.range.end,
               updatedAt: DateTime.now(),
+              user: userNotFound,
             ))
         .toList();
     return WaitTimeModel().insertList(list).then((value) {
@@ -102,6 +104,7 @@ class WaitTimeService {
       startTime: startTime,
       endTime: endTime,
       updatedAt: DateTime.now(),
+      user: userNotFound,
     );
 
     return WaitTimeModel().insert(waitTime).then((waitTime) {

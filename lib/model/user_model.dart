@@ -1,3 +1,4 @@
+import '../entity/search_input_entity.dart';
 import '../service/const_service.dart';
 import 'model_base.dart';
 import '../service/error_service.dart';
@@ -38,14 +39,14 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<List<UserEntity>> getList(int page, UserEntity searchUser) {
+  Future<List<UserEntity>> getList(int page, SearchInputEntity searchInput) {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
 
     var query = supabase.from(tableName).select(columns);
 
-    if (searchUser.tags.isNotEmpty) {
-      query.contains('tags', searchUser.tags);
+    if (searchInput.tags.isNotEmpty) {
+      query.contains('tags', searchInput.tags);
     }
 
     return query

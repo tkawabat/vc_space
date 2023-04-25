@@ -1,17 +1,20 @@
 import 'dart:async';
 
-import '../entity/user_entity.dart';
-import '../service/const_service.dart';
-import '../service/time_service.dart';
 import 'model_base.dart';
 import '../entity/wait_time_entity.dart';
+import '../entity/search_input_entity.dart';
+import '../service/const_service.dart';
+import '../service/time_service.dart';
 import '../service/error_service.dart';
 
 class WaitTimeModel extends ModelBase {
   static final WaitTimeModel _instance = WaitTimeModel._internal();
   final String tableName = 'wait_time';
   final String columns = '''
-      *
+      *,
+      user!inner (
+        *
+      )
     ''';
 
   factory WaitTimeModel() {
@@ -53,32 +56,33 @@ class WaitTimeModel extends ModelBase {
             .onError<List<WaitTimeEntity>>([], '$tableName.getListByUid'));
   }
 
-  Future<List<WaitTimeEntity>> getListByStartTime(
+  Future<List<WaitTimeEntity>> getList(
     int page,
-    DateTime time,
-    UserEntity searchUser,
+    SearchInputEntity input,
   ) async {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
-    final dbTime = time.toUtc().toIso8601String();
+    final startTime = input.startTime.toUtc().toIso8601String();
+    final endTime = input.startTime.toUtc().toIso8601String();
 
     final query = supabase
         .from(tableName)
         .select(columns)
         .eq('wait_time_type', WaitTimeType.valid.value)
-        .lte('start_time', dbTime)
-        .gte('end_time', dbTime);
+        .gte('start_time', startTime)
+        .gte('end_time', endTime);
 
-    if (searchUser.tags.isNotEmpty) {
-      query.contains('user.tags', searchUser.tags);
+    if (input.tags.isNotEmpty) {
+      query.contains('user.tags', input.tags);
     }
 
     return query
+        .order('start_time', ascending: true)
         .order('updated_at')
         .range(start, to)
         .then(_getEntityList)
         .catchError(ErrorService()
-            .onError<List<WaitTimeEntity>>([], '$tableName.getListByStatTime'));
+            .onError<List<WaitTimeEntity>>([], '$tableName.getList'));
   }
 
   Future<WaitTimeEntity?> insert(WaitTimeEntity waitTime) async {
