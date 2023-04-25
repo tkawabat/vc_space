@@ -21,6 +21,7 @@ import '../../service/room_service.dart';
 import '../../service/time_service.dart';
 import '../../service/wait_time_service.dart';
 import '../l1/button.dart';
+import '../l1/calendar_maker.dart';
 import '../l1/fade.dart';
 import '../l1/twitter_share_icon.dart';
 import '../l2/room_card.dart';
@@ -294,27 +295,12 @@ class CalendarPage extends HookConsumerWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _eventMarker(newWaitTimeNumber, ConstDesign.colorNewWaitTime),
-        _eventMarker(waitTimeNumber, Colors.black45),
-        _eventMarker(joinRoomNumber, Colors.blueAccent),
-        _eventMarker(offerRoomNumber, Colors.red[300]!),
+        CalendarMaker(
+            num: newWaitTimeNumber, color: ConstDesign.colorNewWaitTime),
+        CalendarMaker(num: waitTimeNumber, color: Colors.black45),
+        CalendarMaker(num: joinRoomNumber, color: Colors.blueAccent),
+        CalendarMaker(num: offerRoomNumber, color: Colors.red[300]!),
       ],
-    );
-  }
-
-  Widget _eventMarker(int num, Color color) {
-    if (num == 0) return const SizedBox();
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
-      width: 12.0,
-      height: 12.0,
-      child: Center(
-        child: Text(num.toString(),
-            style: const TextStyle(color: Colors.white, fontSize: 10.0)),
-      ),
     );
   }
 }
