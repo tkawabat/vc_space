@@ -43,24 +43,20 @@ class MainPage extends HookConsumerWidget {
               delegate: SliverChildListDelegate([
             // ElevatedButton(
             //   onPressed: () {
-            //     FunctionModel()
-            //         .selectTagCount(
-            //           'b',
-            //           DateTime(2023, 4, 1),
-            //           DateTime(2023, 4, 1, 23, 59),
-            //         )
-            //         .then((value) => debugPrint(value.toString()));
+            //     FunctionModel().selectWaitTimeCount(
+            //       [],
+            //       DateTime(2023, 1, 1),
+            //       DateTime(2023, 4, 1, 23, 59),
+            //     ).then((value) => debugPrint(value.toString()));
 
-            //     //     UserModel()
-            //     //         .getListByWaitTime(0, DateTime(2023, 1, 1))
-            //     //         .then((value) {
-            //     //       debugPrint(value.length.toString());
-            //     //       for (var e in value) {
-            //     //         debugPrint('user: ${e.name}');
-            //     //       }
-            //     //     }).catchError((error) {
-            //     //       debugPrint(error.toString());
-            //     //     });
+            //     // RoomModel().hoge().then((value) {
+            //     //   debugPrint(value.length.toString());
+            //     //   for (var e in value) {
+            //     //     debugPrint('user: ${e.name}');
+            //     //   }
+            //     // }).catchError((error) {
+            //     //   debugPrint(error.toString());
+            //     // });
             //   },
             //   child: const Text("デバッグ"),
             // ),
@@ -72,7 +68,7 @@ class MainPage extends HookConsumerWidget {
                 ),
               ]),
           ])),
-          RoomList(),
+          const RoomList(),
           const PastRoomList(),
         ],
       ),

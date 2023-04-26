@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:collection/collection.dart';
-import 'package:flutter/material.dart';
 
 import '../entity/room_user_entity.dart';
 import '../entity/room_entity.dart';
@@ -31,23 +30,17 @@ class RoomModel extends ModelBase {
 
   RoomModel._internal();
 
-  void hoge() async {
+  Future hoge() async {
     // TODO
     // supabase
     // .rpc('insert_room_owner')
 
     // supabase
-    //     .from('room_user')
-    //     .update({'uid': '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b'})
-    //     .eq('room_id', 1)
-    //     // .eq('uid', '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
-    //     .eq('uid', 'b9c4b219-5bf9-4b68-b983-7b648f3a5758')
-    supabase
-        .from('room')
-        .update({'max_number': 10})
-        .eq('room_id', 10010)
-        .then((_) => debugPrint('success'))
-        .catchError(ErrorService().onError(null, 'hoge'));
+    //     .from('room')
+    //     .update({'max_number': 10})
+    //     .eq('room_id', 10010)
+    //     .then((_) => debugPrint('success'))
+    //     .catchError(ErrorService().onError(null, 'hoge'));
   }
 
   List<RoomEntity> _getEntityList(dynamic result) {

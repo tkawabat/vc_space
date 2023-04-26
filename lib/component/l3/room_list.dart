@@ -11,41 +11,44 @@ import '../l2/room_card.dart';
 import '../l2/room_search_tag_list.dart';
 
 class RoomList extends HookConsumerWidget {
-  RoomList({Key? key}) : super(key: key);
+  const RoomList({Key? key}) : super(key: key);
 
-  final PagingController<int, RoomEntity> _pagingController =
-      PagingController(firstPageKey: 0);
-
-  void Function(int) createFetchFunction(searchRoom) {
+  void Function(int) createFetchFunction(
+    PagingController<int, RoomEntity> pagingController,
+    RoomEntity searchRoom,
+  ) {
     return (int pageKey) {
       RoomModel().getList(pageKey, searchRoom).then((list) {
         if (list.length < ConstService.listStep) {
-          _pagingController.appendLastPage(list);
+          pagingController.appendLastPage(list);
         } else {
-          _pagingController.appendPage(list, pageKey + 1);
+          pagingController.appendPage(list, pageKey + 1);
         }
-      }).catchError((error) => _pagingController.error = error);
+      }).catchError((error) => pagingController.error = error);
     };
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final pagingState = useState<PagingController<int, RoomEntity>>(
+        PagingController(firstPageKey: 0));
+
     final searchRoom = ref.watch(roomSearchProvider);
-    final fetch = useState(createFetchFunction(searchRoom));
+    final fetch = useState(createFetchFunction(pagingState.value, searchRoom));
 
     useEffect(
       () {
-        _pagingController.removePageRequestListener(fetch.value);
-        fetch.value = createFetchFunction(searchRoom);
-        _pagingController.addPageRequestListener(fetch.value);
-        _pagingController.refresh();
+        pagingState.value.removePageRequestListener(fetch.value);
+        fetch.value = createFetchFunction(pagingState.value, searchRoom);
+        pagingState.value.addPageRequestListener(fetch.value);
+        pagingState.value.refresh();
         return null;
       },
       [searchRoom],
     );
 
     return PagedSliverList(
-        pagingController: _pagingController,
+        pagingController: pagingState.value,
         builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
             animateTransitions: true,
             firstPageErrorIndicatorBuilder: (context) => Column(children: [
