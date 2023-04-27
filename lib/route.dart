@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'component/page/analytics_tag_page.dart';
 import 'component/page/calendar_page.dart';
+import 'component/page/calendar_wait_page.dart';
 import 'component/page/main_page.dart';
 import 'component/page/notice_page.dart';
 import 'component/page/room_detail_page.dart';
@@ -18,6 +19,7 @@ enum PageNames {
   room('/room'),
   roomOffer('/room/offer'),
   calendar('/calendar'),
+  calendarWait('/calendar/wait'),
   analyticsTag('/analytics/tag'),
   notice('/notice'),
   ;
@@ -65,6 +67,8 @@ Route<dynamic> _transactionPage(
     builder = (_) => _roomOfferPageTransaction();
   } else if (path == PageNames.calendar.path) {
     builder = (_) => _calendarPageTransaction(queryParameters);
+  } else if (path == PageNames.calendarWait.path) {
+    builder = (_) => _calendarWaitPageTransaction(queryParameters);
   } else if (path == PageNames.analyticsTag.path) {
     builder = (_) => _analyticsTagPageTransaction(queryParameters);
   } else if (path == PageNames.notice.path) {
@@ -122,6 +126,10 @@ Widget _calendarPageTransaction(Map<String, String>? queryParameters) {
   }
 
   return CalendarPage(uid: queryParameters['uid']!);
+}
+
+Widget _calendarWaitPageTransaction(Map<String, String>? queryParameters) {
+  return const CalendarWaitPage();
 }
 
 Widget _analyticsTagPageTransaction(Map<String, String>? queryParameters) {

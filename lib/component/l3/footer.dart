@@ -59,8 +59,8 @@ class Footer extends StatelessWidget {
       FooterItem(
         icon: const Icon(Icons.person),
         label: '待ちリスト',
-        page: PageNames.roomOffer,
-        onTap: () => PageService().transitionRoomOffer(page),
+        page: PageNames.calendarWait,
+        onTap: () => PageService().transitionCalendarWait(page),
       ),
     ];
 

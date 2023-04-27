@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../entity/room_entity.dart';
 import '../../provider/login_user_provider.dart';
-import '../../provider/user_search_provider.dart';
+import '../../provider/wait_time_search_provider.dart';
 import '../../route.dart';
 import '../../service/room_service.dart';
 import '../../service/page_service.dart';
@@ -38,8 +38,8 @@ class RoomPageUser extends ConsumerWidget {
                 ? Button(
                     onTap: () {
                       ref
-                          .read(userSearchProvider.notifier)
-                          .setTime(room.startTime);
+                          .read(waitTimeSearchProvider.notifier)
+                          .setDay(room.startTime);
                       PageService().transition(PageNames.roomOffer, push: true);
                     },
                     text: '誰かを誘う')

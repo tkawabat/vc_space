@@ -2,6 +2,7 @@
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../service/time_service.dart';
 import 'converter/timestampz_converter.dart';
 
 part 'search_input_entity.freezed.dart';
@@ -21,6 +22,6 @@ class SearchInputEntity with _$SearchInputEntity {
 
 final searchInputDefault = SearchInputEntity(
   tags: [],
-  startTime: DateTime.now(),
-  endTime: DateTime.now(),
+  startTime: TimeService().getDay(DateTime.now()),
+  endTime: TimeService().getDay(DateTime.now()).copyWith(hour: 23, minute: 59),
 );

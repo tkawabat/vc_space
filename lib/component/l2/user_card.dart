@@ -10,7 +10,7 @@ import 'user_tag_list.dart';
 
 class UserCard extends StatelessWidget {
   final UserEntity user;
-  final void Function()? trailingOnTap;
+  final void Function(UserEntity user)? trailingOnTap;
   final String? trailingButtonText;
   final Widget? body;
 
@@ -51,7 +51,9 @@ class UserCard extends StatelessWidget {
               ? SizedBox(
                   width: 70,
                   child: Button(
-                    onTap: trailingOnTap,
+                    onTap: trailingOnTap == null
+                        ? null
+                        : () => trailingOnTap!(user),
                     text: trailingButtonText!,
                   ),
                 )

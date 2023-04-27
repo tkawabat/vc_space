@@ -58,7 +58,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       actionList.add(IconButton(
           tooltip: '待ちリスト',
           icon: const Icon(Icons.person, color: Colors.black54),
-          onPressed: () => PageService().transitionRoomOffer(page)));
+          onPressed: () => PageService().transitionCalendarWait(page)));
       actionList.add(Container(
         width: 32,
         height: 32,
@@ -67,7 +67,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           child: IconButton(
               tooltip: 'お知らせ',
               icon: const Icon(Icons.notifications, color: Colors.black54),
-              onPressed: () => PageService().transitionNotice(page)),
+              onPressed: () => PageService().transitionCalendarWait(page)),
         ),
       ));
     }

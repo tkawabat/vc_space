@@ -9,6 +9,7 @@ import '../component/dialog/wait_time_create_dialog.dart';
 import '../provider/login_user_provider.dart';
 import '../provider/room_list_join_provider.dart';
 import '../provider/wait_time_list_provider.dart';
+import '../provider/wait_time_search_provider.dart';
 import '../route.dart';
 import 'analytics_service.dart';
 import 'const_service.dart';
@@ -163,11 +164,12 @@ class PageService {
     PageService().transition(PageNames.analyticsTag);
   }
 
-  void transitionRoomOffer(PageNames current) {
-    if (current == PageNames.roomOffer) return;
+  void transitionCalendarWait(PageNames current) {
+    if (current == PageNames.calendarWait) return;
     if (ref == null) return;
 
-    PageService().transition(PageNames.roomOffer);
+    ref!.read(waitTimeSearchProvider.notifier).setDay(DateTime.now());
+    PageService().transition(PageNames.calendarWait);
   }
 
   void viewCreateWaitTimeDialog() {
