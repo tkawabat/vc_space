@@ -49,18 +49,24 @@ class RoomList extends HookConsumerWidget {
 
     return PagedSliverList(
         pagingController: pagingState.value,
+        shrinkWrapFirstPageIndicators: true,
         builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
             animateTransitions: true,
             firstPageErrorIndicatorBuilder: (context) => Column(children: [
                   RoomSearchTagList(),
-                  const SizedBox(height: 30),
-                  const Center(child: Text('データ取得エラー'))
+                  const SizedBox(height: 50),
+                  const Center(child: Text('データ取得エラー')),
+                  const SizedBox(height: 20),
                 ]),
             noItemsFoundIndicatorBuilder: (BuildContext context) =>
                 Column(children: [
                   RoomSearchTagList(),
-                  const SizedBox(height: 30),
-                  const Center(child: Text('条件に合う部屋が存在しません'))
+                  const SizedBox(height: 50),
+                  const Text(
+                    '条件に合う部屋がありません。\n部屋を作って、お誘いしましょう！',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 20),
                 ]),
             itemBuilder: (context, item, index) {
               if (index == 0) {

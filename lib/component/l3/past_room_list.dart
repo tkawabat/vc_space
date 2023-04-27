@@ -22,9 +22,11 @@ class PastRoomList extends HookConsumerWidget {
         ) {
           List<Widget> list = [const ListLabel('過去の部屋')];
           if (snapshot.hasError) {
+            list.add(const SizedBox(height: 20));
             list.add(const Center(child: Text('データ取得エラー')));
-          } else if (!snapshot.hasData) {
-            list.add(const Center(child: Text('条件に合う部屋が存在しません')));
+          } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            list.add(const SizedBox(height: 20));
+            list.add(const Center(child: Text('まだ部屋がありません。')));
           } else {
             for (final room in snapshot.data!) {
               list.add(RoomCard(room));
