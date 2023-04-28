@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../extension/time_of_day_extensions.dart';
 import '../../service/const_service.dart';
-import '../../service/time_service.dart';
 
 class TimeButton extends StatelessWidget {
   final TimeOfDay initialValue;
@@ -26,7 +26,7 @@ class TimeButton extends StatelessWidget {
     while (true) {
       items.add(DropdownMenuItem(
         value: time,
-        child: Text(TimeService().timeOfDayToString(time)),
+        child: Text(time.toTimeString()),
       ));
 
       final minute = time.minute + ConstService.stepTime;
@@ -39,7 +39,7 @@ class TimeButton extends StatelessWidget {
         const endTime = TimeOfDay(hour: 23, minute: 59);
         items.add(DropdownMenuItem(
           value: endTime,
-          child: Text(TimeService().timeOfDayToString(endTime)),
+          child: Text(endTime.toTimeString()),
         ));
         break;
       }

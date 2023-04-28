@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class TimeService {
   static final TimeService _instance = TimeService._internal();
 
@@ -47,7 +45,4 @@ class TimeService {
     if (diff.inMinutes > 0) return '${diff.inMinutes}分前';
     return '${diff.inSeconds}秒前';
   }
-
-  String timeOfDayToString(TimeOfDay time) =>
-      '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
 }

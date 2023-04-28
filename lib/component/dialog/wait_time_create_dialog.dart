@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../extension/time_of_day_extensions.dart';
 import '../../entity/user_entity.dart';
 import '../../provider/login_user_provider.dart';
 import '../../service/const_design.dart';
@@ -52,8 +53,14 @@ class WaitTimeCreateDialog extends HookConsumerWidget {
                     const SizedBox(width: 2),
                     TimeButton(
                       initialValue: startState.value,
+                      end: const TimeOfDay(hour: 23, minute: 30),
                       onChanged: (time) {
                         if (time == null) return;
+                        if (time.isAfter(endState.value)) {
+                          endState.value = time.canAdd(hours: 2)
+                              ? time.add(hours: 2)
+                              : const TimeOfDay(hour: 23, minute: 59);
+                        }
                         startState.value = time;
                       },
                     ),
