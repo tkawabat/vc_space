@@ -25,12 +25,11 @@ class CalendarWaitPage extends HookConsumerWidget {
     PageService().init(context, ref);
 
     final now = TimeService().today();
-    final firstDay = DateTime.now()
-        .add(const Duration(days: -1))
-        .copyWith(hour: 0, minute: 0);
+    final firstDay =
+        TimeService().getDay(DateTime.now().add(const Duration(days: -1)));
     final lastDay = DateTime.now()
         .add(const Duration(days: ConstService.calendarMax))
-        .copyWith(hour: 23, minute: 59);
+        .copyWith(hour: 23, minute: 59, second: 59);
 
     // ========= provider ===========
     final waitTimeSearch = ref.watch(waitTimeSearchProvider);
