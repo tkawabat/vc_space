@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:vc_space/entity/tag_count_entity.dart';
 
+import '../../entity/tag_count_entity.dart';
 import '../../model/function_model.dart';
 import '../../provider/wait_time_search_provider.dart';
 import '../../route.dart';
@@ -25,9 +25,12 @@ class CalendarWaitPage extends HookConsumerWidget {
     PageService().init(context, ref);
 
     final now = TimeService().today();
-    final firstDay = DateTime.now().add(const Duration(days: -1));
-    final lastDay =
-        DateTime.now().add(const Duration(days: ConstService.calendarMax));
+    final firstDay = DateTime.now()
+        .add(const Duration(days: -1))
+        .copyWith(hour: 0, minute: 0);
+    final lastDay = DateTime.now()
+        .add(const Duration(days: ConstService.calendarMax))
+        .copyWith(hour: 23, minute: 59);
 
     // ========= provider ===========
     final waitTimeSearch = ref.watch(waitTimeSearchProvider);
@@ -43,7 +46,7 @@ class CalendarWaitPage extends HookConsumerWidget {
           .selectWaitTimeCount(
         waitTimeSearch.tags,
         firstDay,
-        lastDay.copyWith(hour: 23, minute: 59),
+        lastDay,
       )
           .then((List<TagCountEntity> result) {
         final Map<DateTime, int> map = {};
