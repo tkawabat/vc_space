@@ -39,7 +39,11 @@ class UserModel extends ModelBase {
         .catchError(ErrorService().onError(null, '$tableName.getById'));
   }
 
-  Future<List<UserEntity>> getList(int page, SearchInputEntity searchInput) {
+  Future<List<UserEntity>> getList(
+    int page,
+    SearchInputEntity searchInput, {
+    List<String> excludeUidList = const [],
+  }) {
     final start = page * ConstService.listStep;
     final to = start + ConstService.listStep - 1;
 
@@ -47,6 +51,10 @@ class UserModel extends ModelBase {
 
     if (searchInput.tags.isNotEmpty) {
       query.contains('tags', searchInput.tags);
+    }
+
+    if (excludeUidList.isNotEmpty) {
+      query.not('uid', 'in', excludeUidList);
     }
 
     return query

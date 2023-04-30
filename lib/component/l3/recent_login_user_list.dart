@@ -6,6 +6,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../entity/search_input_entity.dart';
 import '../../entity/user_entity.dart';
 import '../../model/user_model.dart';
+import '../../provider/login_user_provider.dart';
 import '../../provider/wait_time_search_provider.dart';
 import '../../service/const_service.dart';
 import '../l1/list_label.dart';
@@ -21,9 +22,12 @@ class RecentLoginUserList extends HookConsumerWidget {
   void Function(int) createFetchFunction(
     PagingController<int, UserEntity> pagingController,
     SearchInputEntity searchInput,
+    List<String> excludeUidList,
   ) {
     return (int pageKey) {
-      UserModel().getList(pageKey, searchInput).then((list) {
+      UserModel()
+          .getList(pageKey, searchInput, excludeUidList: excludeUidList)
+          .then((list) {
         if (list.length < ConstService.listStep) {
           pagingController.appendLastPage(list);
         } else {
@@ -37,13 +41,19 @@ class RecentLoginUserList extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final pagingState = useState<PagingController<int, UserEntity>>(
         PagingController(firstPageKey: 0));
+    final loginUser = ref.watch(loginUserProvider);
     final searchInput = ref.watch(waitTimeSearchProvider);
-    final fetch = useState(createFetchFunction(pagingState.value, searchInput));
+
+    final List<String> excludeUidList = [];
+    if (loginUser != null) excludeUidList.add(loginUser.uid);
+    final fetch = useState(
+        createFetchFunction(pagingState.value, searchInput, excludeUidList));
 
     useEffect(
       () {
         pagingState.value.removePageRequestListener(fetch.value);
-        fetch.value = createFetchFunction(pagingState.value, searchInput);
+        fetch.value =
+            createFetchFunction(pagingState.value, searchInput, excludeUidList);
         pagingState.value.addPageRequestListener(fetch.value);
         pagingState.value.refresh();
         return null;
