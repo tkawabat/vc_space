@@ -67,7 +67,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
           child: IconButton(
               tooltip: 'お知らせ',
               icon: const Icon(Icons.notifications, color: Colors.black54),
-              onPressed: () => PageService().transitionCalendarWait(page)),
+              onPressed: () => PageService().transitionNotice(page)),
         ),
       ));
     }
