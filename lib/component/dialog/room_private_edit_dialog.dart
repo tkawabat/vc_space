@@ -76,7 +76,7 @@ class RoomPrivateEditDialog extends HookConsumerWidget {
       autovalidateMode: AutovalidateMode.onUserInteraction,
       validator: FormBuilderValidators.compose([
         FormBuilderValidators.url(),
-        FormBuilderValidators.maxLength(ConstService.roomPlaceUrlMax),
+        FormBuilderValidators.maxLength(ConstService.urlMax),
       ]),
       decoration: const InputDecoration(labelText: labelText),
     );

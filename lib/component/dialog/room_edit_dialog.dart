@@ -61,6 +61,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
+      publicUrl: fields['publicUrl'] ?? '',
       roomStatus: RoomStatus.open,
       updatedAt: now,
       users: [roomUserEmpty],
@@ -106,6 +107,7 @@ class RoomEditDialog extends HookConsumerWidget {
       tags: tags,
       enterType: fields['enterType'],
       password: password,
+      publicUrl: fields['publicUrl'] ?? '',
       roomStatus: room!.roomStatus,
       updatedAt: now,
       users: room!.users,
@@ -138,13 +140,14 @@ class RoomEditDialog extends HookConsumerWidget {
       maxNumberField(room?.maxNumber, roomNumberMin),
       enterTypeField(room?.enterType, enabledPassword),
       passwordField(enabledPassword),
+      publicUrlField(room?.publicUrl),
+      descriptionField(room?.description),
       TagField(
         key: tagKey,
         initialTags: room?.tags ?? [],
         samples: ConstService.sampleTagsRoom,
         maxTagNumber: ConstService.maxTagLength,
       ),
-      descriptionField(room?.description),
     ];
 
     final title = room == null ? '部屋を作る' : '部屋を修正する';
@@ -261,6 +264,21 @@ class RoomEditDialog extends HookConsumerWidget {
                 child: Text(placeType.displayName),
               ))
           .toList(),
+    );
+  }
+
+  FormBuilderField publicUrlField(String? initialValue) {
+    const labelText = 'リスナー向けURL';
+
+    return FormBuilderTextField(
+      name: 'publicUrl',
+      initialValue: initialValue,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
+      validator: FormBuilderValidators.compose([
+        FormBuilderValidators.url(),
+        FormBuilderValidators.maxLength(ConstService.urlMax),
+      ]),
+      decoration: const InputDecoration(labelText: labelText),
     );
   }
 

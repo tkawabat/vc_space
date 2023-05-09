@@ -103,6 +103,7 @@ class RoomEntity with _$RoomEntity {
     String? password,
     @PlaceTypeConverter() required PlaceType placeType,
     required List<String> tags,
+    String? publicUrl,
     @RoomStatusConverter() required RoomStatus roomStatus,
     @TimestampzConverter() required DateTime updatedAt,
     @JsonKey(name: 'room_user') required List<RoomUserEntity> users,

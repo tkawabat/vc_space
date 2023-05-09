@@ -9,9 +9,11 @@ import '../../entity/user_entity.dart';
 import '../../entity/user_private_entity.dart';
 import '../../provider/login_user_private_provider.dart';
 import '../../provider/login_user_provider.dart';
+import '../../service/const_design.dart';
 import '../../service/const_service.dart';
 import '../../service/page_service.dart';
 import '../../service/room_service.dart';
+import '../../service/url_service.dart';
 import '../l1/cancel_button.dart';
 import '../l1/room_user_number.dart';
 import '../l2/room_tag_list.dart';
@@ -47,6 +49,17 @@ class RoomDialog extends HookConsumerWidget {
     final description = room.description.isNotEmpty
         ? Text(room.description)
         : const Text('部屋説明無し', style: TextStyle(color: Colors.black54));
+
+    final urlWidgets = (room.publicUrl != null && room.publicUrl!.isNotEmpty)
+        ? [
+            const Divider(),
+            const Text('リスナー用URL', style: ConstDesign.h3),
+            InkWell(
+              onTap: () => UrlService().launchUri(room.publicUrl!),
+              child: Text(room.publicUrl!, style: ConstDesign.link),
+            )
+          ]
+        : [];
 
     final bool passwordEnabled = room.enterType == EnterType.password &&
         !RoomService().isJoined(room, loginUser?.uid ?? userNotFound.uid);
@@ -121,7 +134,6 @@ class RoomDialog extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // const Text('基本情報', style: titleStyle),
                 const SizedBox(height: 8),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -133,17 +145,22 @@ class RoomDialog extends HookConsumerWidget {
                 const SizedBox(height: 2),
                 Text('入室制限: ${room.enterType.displayName}'),
                 const SizedBox(height: 16),
-                // const Text('参加者', style: titleStyle),
+
                 const Divider(),
                 const SizedBox(height: 8),
                 RoomUserRow(room),
                 const SizedBox(height: 8),
-                // const Text('部屋説明', style: titleStyle),
+
+                // リスナー用URL
+                ...urlWidgets,
+
+                // 部屋説明
                 const Divider(),
                 const SizedBox(height: 8),
                 description,
                 const SizedBox(height: 8),
-                // const Text('タグ', style: titleStyle),
+
+                // タグ
                 const Divider(),
                 const SizedBox(height: 8),
                 RoomTagList(room),

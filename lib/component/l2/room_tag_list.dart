@@ -20,6 +20,7 @@ class RoomTagList extends ConsumerWidget {
 
     List<Widget> list = [];
 
+    // 募集終了
     if (room.roomStatus.value >= RoomStatus.close.value) {
       list.add(Tag(
         text: room.roomStatus.displayName,
@@ -31,6 +32,14 @@ class RoomTagList extends ConsumerWidget {
       text: room.placeType.displayName,
       tagColor: Colors.cyan.shade100,
     ));
+
+    // リスナー
+    if (room.publicUrl != null && room.publicUrl!.isNotEmpty) {
+      list.add(Tag(
+        text: 'リスナー募集',
+        tagColor: Colors.cyan.shade100,
+      ));
+    }
 
     for (final tag in room.tags) {
       list.add(Tag(

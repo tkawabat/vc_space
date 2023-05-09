@@ -1,4 +1,6 @@
 class ConstService {
+  static const urlMax = 512;
+
   static const roomSearchDefaultHour = -3;
 
   static const listStep = 20;
@@ -19,7 +21,6 @@ class ConstService {
   static const roomPasswordMax = 8;
   static const roomTagMax = 10;
   static const chatMaxNumber = 20;
-  static const roomPlaceUrlMax = 512;
 
   static const maxTagLength = 10;
 
