@@ -34,6 +34,7 @@ enum LogEventName {
   wait_time_delete,
 
   analytics_tag,
+  calendar_wait,
 
   database_error,
   view_error,
