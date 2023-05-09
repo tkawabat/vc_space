@@ -75,7 +75,7 @@ class RoomPagePublic extends HookConsumerWidget {
               ),
               const SizedBox(height: 2),
               Text('入室制限: ${room.enterType.displayName}'),
-              const SizedBox(height: 16),
+              const SizedBox(height: 8),
 
               // リスナー用URL
               ...urlWidgets,

@@ -130,7 +130,7 @@ class RoomDialog extends HookConsumerWidget {
         title: Text(room.title),
         content: SizedBox(
             width: 400,
-            height: 350,
+            height: 400,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -144,12 +144,12 @@ class RoomDialog extends HookConsumerWidget {
                 ),
                 const SizedBox(height: 2),
                 Text('入室制限: ${room.enterType.displayName}'),
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
 
                 const Divider(),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
                 RoomUserRow(room),
-                const SizedBox(height: 8),
+                const SizedBox(height: 4),
 
                 // リスナー用URL
                 ...urlWidgets,
