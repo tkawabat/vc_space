@@ -35,7 +35,7 @@ class UserPageNotice extends HookConsumerWidget {
             const SizedBox(height: 16),
             Button(
               alignment: Alignment.center,
-              onTap: isPwa
+              onTap: isPwa || true
                   ? () {
                       UserService().addFcmToken();
                     }

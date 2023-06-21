@@ -11,6 +11,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'firebase_options.dart';
 import 'route.dart';
+import 'service/audio_service.dart';
 
 Future main() async {
   const flavor = String.fromEnvironment('FLAVOR');
@@ -39,6 +40,26 @@ Future main() async {
         sound: true,
       );
     }));
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Got a message whilst in the foreground!');
+      AudioService().play();
+
+      if (message.notification != null) {
+        // print('onForegroundMessage Title: ${message.notification?.title}');
+        // print('onForegroundMessage Body: ${message.notification?.body}');
+      }
+    });
+
+    Future<void> _firebaseMessagingBackgroundHandler(
+        RemoteMessage message) async {
+      // await Firebase.initializeApp();
+      AudioService().play();
+      print("Handling a background message: ${message.messageId}");
+    }
+
+    print('hoge');
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     list.add(Supabase.initialize(
       url: dotenv.get('SUPABASE_URL'),

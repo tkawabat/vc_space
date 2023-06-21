@@ -63,6 +63,7 @@ dependencies:
   fl_chart: ^0.62.0
   firebase_messaging: ^14.3.0
   google_fonts: ^4.0.3
+  just_audio: ^0.9.34
 
 dev_dependencies:
   flutter_test:
@@ -96,6 +97,7 @@ flutter:
   assets:
   - assets/env.develop
   - assets/env.production
+  - assets/sound/teroren.mp3
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

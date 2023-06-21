@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import '../../model/room_model.dart';
 import '../../route.dart';
+import '../../service/audio_service.dart';
 import '../../service/page_service.dart';
 import '../dialog/room_dialog.dart';
 import '../dialog/room_edit_dialog.dart';
@@ -41,25 +42,26 @@ class MainPage extends HookConsumerWidget {
         slivers: [
           SliverList(
               delegate: SliverChildListDelegate([
-            // ElevatedButton(
-            //   onPressed: () {
-            //     FunctionModel().selectWaitTimeCount(
-            //       [],
-            //       DateTime(2023, 1, 1),
-            //       DateTime(2023, 4, 1, 23, 59),
-            //     ).then((value) => debugPrint(value.toString()));
+            ElevatedButton(
+              onPressed: () {
+                // FunctionModel().selectWaitTimeCount(
+                //   [],
+                //   DateTime(2023, 1, 1),
+                //   DateTime(2023, 4, 1, 23, 59),
+                // ).then((value) => debugPrint(value.toString()));
 
-            //     // RoomModel().hoge().then((value) {
-            //     //   debugPrint(value.length.toString());
-            //     //   for (var e in value) {
-            //     //     debugPrint('user: ${e.name}');
-            //     //   }
-            //     // }).catchError((error) {
-            //     //   debugPrint(error.toString());
-            //     // });
-            //   },
-            //   child: const Text("デバッグ"),
-            // ),
+                // RoomModel().hoge().then((value) {
+                //   debugPrint(value.length.toString());
+                //   for (var e in value) {
+                //     debugPrint('user: ${e.name}');
+                //   }
+                // }).catchError((error) {
+                //   debugPrint(error.toString());
+                // });
+                AudioService().play();
+              },
+              child: const Text("デバッグ1"),
+            ),
             if (information.isNotEmpty)
               CardBase(children: [
                 ListTile(
