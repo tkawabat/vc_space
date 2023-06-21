@@ -9,6 +9,7 @@ import '../../model/user_model.dart';
 import '../../provider/login_user_provider.dart';
 import '../../provider/wait_time_search_provider.dart';
 import '../../service/const_service.dart';
+import '../base/base_sliver_list.dart';
 import '../l1/list_label.dart';
 import '../l2/user_card.dart';
 
@@ -61,36 +62,15 @@ class RecentLoginUserList extends HookConsumerWidget {
       [searchInput],
     );
 
-    return PagedSliverList(
-        pagingController: pagingState.value,
-        shrinkWrapFirstPageIndicators: true,
-        builderDelegate: PagedChildBuilderDelegate<UserEntity>(
-            animateTransitions: true,
-            firstPageErrorIndicatorBuilder: (context) =>
-                const Column(children: [
-                  ListLabel('直近ログイン'),
-                  SizedBox(height: 30),
-                  Center(child: Text('データ取得エラー')),
-                  SizedBox(height: 20),
-                ]),
-            noItemsFoundIndicatorBuilder: (BuildContext context) =>
-                const Column(children: [
-                  ListLabel('直近ログイン'),
-                  SizedBox(height: 30),
-                  Center(child: Text('条件に合うユーザーがいません。')),
-                  SizedBox(height: 20),
-                ]),
-            itemBuilder: (context, user, index) {
-              final List<Widget> list = [];
-              if (index == 0) {
-                list.add(const ListLabel('直近ログイン'));
-              }
-              list.add(UserCard(
-                user,
-                trailingOnTap: trailingOnTap,
-                trailingButtonText: trailingButtonText,
-              ));
-              return Column(children: list);
-            }));
+    return BaseSliverList<UserEntity>(
+      pagingController: pagingState.value,
+      header: const ListLabel('直近ログイン'),
+      noDataText: '条件に合うユーザーがいません。',
+      rowBuilder: (UserEntity item) => UserCard(
+        item,
+        trailingOnTap: trailingOnTap,
+        trailingButtonText: trailingButtonText,
+      ),
+    );
   }
 }

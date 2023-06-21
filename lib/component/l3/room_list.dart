@@ -7,6 +7,7 @@ import '../../entity/room_entity.dart';
 import '../../model/room_model.dart';
 import '../../provider/room_search_provider.dart';
 import '../../service/const_service.dart';
+import '../base/base_sliver_list.dart';
 import '../l2/room_card.dart';
 import '../l2/room_search_tag_list.dart';
 
@@ -47,37 +48,11 @@ class RoomList extends HookConsumerWidget {
       [searchRoom],
     );
 
-    return PagedSliverList(
-        pagingController: pagingState.value,
-        shrinkWrapFirstPageIndicators: true,
-        builderDelegate: PagedChildBuilderDelegate<RoomEntity>(
-            animateTransitions: true,
-            firstPageErrorIndicatorBuilder: (context) => Column(children: [
-                  RoomSearchTagList(),
-                  const SizedBox(height: 50),
-                  const Center(child: Text('データ取得エラー')),
-                  const SizedBox(height: 20),
-                ]),
-            noItemsFoundIndicatorBuilder: (BuildContext context) =>
-                Column(children: [
-                  RoomSearchTagList(),
-                  const SizedBox(height: 50),
-                  const Text(
-                    '条件に合う部屋がありません。\n部屋を作って、お誘いしましょう！',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 20),
-                ]),
-            itemBuilder: (context, item, index) {
-              if (index == 0) {
-                return Column(children: [
-                  RoomSearchTagList(),
-                  const SizedBox(height: 2),
-                  RoomCard(item),
-                ]);
-              } else {
-                return RoomCard(item);
-              }
-            }));
+    return BaseSliverList<RoomEntity>(
+      pagingController: pagingState.value,
+      header: RoomSearchTagList(),
+      noDataText: '条件に合う部屋がありません。\n部屋を作って、お誘いしましょう！',
+      rowBuilder: (RoomEntity item) => RoomCard(item),
+    );
   }
 }
