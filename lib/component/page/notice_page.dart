@@ -9,7 +9,7 @@ import '../l3/header.dart';
 import '../l3/notice_list.dart';
 
 class NoticePage extends HookConsumerWidget {
-  const NoticePage({Key? key}) : super(key: key);
+  const NoticePage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -19,9 +19,9 @@ class NoticePage extends HookConsumerWidget {
       UserService().readNotice();
     });
 
-    return Scaffold(
-      appBar: const Header(PageNames.notice, 'お知らせ'),
-      bottomNavigationBar: const Footer(PageNames.notice),
+    return const Scaffold(
+      appBar: Header(PageNames.notice, 'お知らせ'),
+      bottomNavigationBar: Footer(PageNames.notice),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,

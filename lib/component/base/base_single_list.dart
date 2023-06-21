@@ -5,18 +5,16 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../service/const_service.dart';
 
-class BaseSliverList<T> extends HookConsumerWidget {
+class BaseSingleList<T> extends HookConsumerWidget {
   final Future<List<T>> Function(int) fetchFunction;
-  final Widget header;
   final String noDataText;
   final Widget Function(T) rowBuilder;
   final dynamic refresher;
 
-  const BaseSliverList({
+  const BaseSingleList({
     super.key,
     required this.fetchFunction,
     required this.rowBuilder,
-    required this.header,
     required this.noDataText,
     this.refresher,
   });
@@ -54,34 +52,23 @@ class BaseSliverList<T> extends HookConsumerWidget {
       [refresher],
     );
 
-    return PagedSliverList(
-        pagingController: pagingState.value,
-        shrinkWrapFirstPageIndicators: true,
-        builderDelegate: PagedChildBuilderDelegate<T>(
-            animateTransitions: true,
-            firstPageErrorIndicatorBuilder: (context) => Column(children: [
-                  header,
-                  const SizedBox(height: 30),
-                  const Text('データ取得エラー', textAlign: TextAlign.center),
-                  const SizedBox(height: 20),
-                ]),
-            noItemsFoundIndicatorBuilder: (BuildContext context) =>
-                Column(children: [
-                  header,
-                  const SizedBox(height: 30),
-                  Text(noDataText, textAlign: TextAlign.center),
-                  const SizedBox(height: 20),
-                ]),
-            itemBuilder: (context, item, index) {
-              if (index == 0) {
-                return Column(children: [
-                  header,
-                  const SizedBox(height: 2),
-                  rowBuilder(item),
-                ]);
-              } else {
-                return rowBuilder(item);
-              }
-            }));
+    return Flexible(
+      child: RefreshIndicator(
+          onRefresh: () => Future.sync(
+                () => pagingState.value.refresh(),
+              ),
+          child: PagedListView(
+              pagingController: pagingState.value,
+              builderDelegate: PagedChildBuilderDelegate<T>(
+                animateTransitions: true,
+                firstPageErrorIndicatorBuilder: (context) {
+                  return const Text('データ取得エラー', textAlign: TextAlign.center);
+                },
+                noItemsFoundIndicatorBuilder: (context) {
+                  return const Text('お知らせがありません', textAlign: TextAlign.center);
+                },
+                itemBuilder: (context, item, index) => rowBuilder(item),
+              ))),
+    );
   }
 }
