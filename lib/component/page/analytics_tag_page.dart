@@ -154,12 +154,12 @@ class AnalyticsTagPage extends HookConsumerWidget {
                           getTitlesWidget: (x, meta) =>
                               x % 6 == 0 ? Text('$x:00') : const SizedBox()),
                     ),
-                    topTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
-                    rightTitles:
-                        AxisTitles(sideTitles: SideTitles(showTitles: false)),
+                    topTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
+                    rightTitles: const AxisTitles(
+                        sideTitles: SideTitles(showTitles: false)),
                   ),
-                  gridData: FlGridData(show: false),
+                  gridData: const FlGridData(show: false),
                   borderData: FlBorderData(
                       border: const Border(
                     top: BorderSide.none,

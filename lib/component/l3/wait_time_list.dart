@@ -65,14 +65,14 @@ class WaitTimeList extends HookConsumerWidget {
         builderDelegate: PagedChildBuilderDelegate<WaitTimeEntity>(
             animateTransitions: true,
             firstPageErrorIndicatorBuilder: (context) =>
-                Column(children: const [
+                const Column(children: [
                   ListLabel('誘って！'),
                   SizedBox(height: 30),
                   Center(child: Text('データ取得エラー')),
                   SizedBox(height: 20),
                 ]),
             noItemsFoundIndicatorBuilder: (BuildContext context) =>
-                Column(children: const [
+                const Column(children: [
                   ListLabel('誘って！'),
                   SizedBox(height: 30),
                   Center(child: Text('誘って！　がありません')),

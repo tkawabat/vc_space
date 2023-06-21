@@ -10,9 +10,10 @@
 include: package:flutter_lints/flutter.yaml
 
 analyzer:
-  strong-mode:
-    implicit-casts: true
-    implicit-dynamic: true
+  language:
+    # strict-casts: true
+    # strict-inference: true
+    # strict-raw-types: true
   exclude:
     - "**/*.freezed.dart"
     - "**/*.g.dart"
