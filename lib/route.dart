@@ -12,12 +12,14 @@ import 'component/page/user_follow_page.dart';
 import 'component/page/user_follower_page.dart';
 import 'component/page/user_page.dart';
 import 'component/page/maintenance_page.dart';
+import 'component/page/user_past_room_page.dart';
 import 'service/analytics_service.dart';
 
 enum PageNames {
   none(''),
   home('/'),
   user('/user'),
+  userPastRoom('/user/pastRoom'),
   userFollow('/user/follow'),
   userFollower('/user/follower'),
   room('/room'),
@@ -65,6 +67,8 @@ Route<dynamic> _transactionPage(
     builder = (_) => _homePageTransaction(queryParameters);
   } else if (path == PageNames.user.path) {
     builder = (_) => _userPageTransaction();
+  } else if (path == PageNames.userPastRoom.path) {
+    builder = (_) => _userPastRoomPageTransaction(queryParameters);
   } else if (path == PageNames.userFollow.path) {
     builder = (_) => _userFollowPageTransaction(queryParameters);
   } else if (path == PageNames.userFollower.path) {
@@ -107,6 +111,17 @@ Widget _homePageTransaction(Map<String, String>? queryParameters) {
 }
 
 Widget _userPageTransaction() => UserPage();
+
+Widget _userPastRoomPageTransaction(Map<String, String>? queryParameters) {
+  if (queryParameters == null) {
+    return _homePageTransaction(null);
+  }
+  if (!queryParameters.containsKey('uid')) {
+    return _homePageTransaction(null);
+  }
+
+  return UserPastRoomPage(uid: queryParameters['uid']!);
+}
 
 Widget _userFollowPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {

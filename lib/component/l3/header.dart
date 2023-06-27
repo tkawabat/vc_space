@@ -73,6 +73,7 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
     }
 
     const canBackPages = [
+      PageNames.userPastRoom,
       PageNames.userFollow,
       PageNames.userFollower,
       PageNames.roomOffer,

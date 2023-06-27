@@ -148,6 +148,38 @@ class RoomModel extends ModelBase {
             .onError<List<RoomEntity>>([], '$tableName.getJoinList'));
   }
 
+  Future<List<RoomEntity>> getJoinPastList(
+    int page,
+    String uid,
+    RoomEntity? searchRoom,
+  ) async {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+    final startTime = DateTime.now()
+        .add(const Duration(hours: ConstService.roomSearchDefaultHour))
+        .toUtc()
+        .toIso8601String();
+
+    var query = supabase
+        .from(tableName)
+        .select('$columns, check:room_user!inner (uid)')
+        .in_('check.uid', [uid])
+        .lt('room_status', RoomStatus.deleted.value)
+        .lt('room_user.room_user_type', RoomUserType.kick.value)
+        .lt('start_time', startTime);
+
+    if (searchRoom != null && searchRoom.tags.isNotEmpty) {
+      query.contains('tags', searchRoom.tags);
+    }
+
+    return query
+        .order('start_time')
+        .range(start, to)
+        .then(_getEntityList)
+        .catchError(ErrorService()
+            .onError<List<RoomEntity>>([], '$tableName.getJoinPastList'));
+  }
+
   Future<int> insert(RoomEntity room) async {
     var json = room.toJson();
     json.remove('room_id');

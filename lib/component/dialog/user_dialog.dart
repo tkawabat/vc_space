@@ -31,7 +31,7 @@ class UserDialog extends HookConsumerWidget {
 
     UserEntity user = userList[uid] ?? userOnLoad;
     const double width = 400;
-    const double height = 300;
+    const double height = 350;
 
     if (userList[uid] == null) {
       return const AlertDialog(
@@ -113,13 +113,22 @@ class UserDialog extends HookConsumerWidget {
                   icon: const Icon(Icons.calendar_month),
                   label: const Text('予定表'),
                 ),
-                Button(
-                  // alignment: Alignment.bottomRight,
-                  onTap: followFunction,
-                  text: followText,
-                  color: followButtonColor,
+                TextButton(
+                  onPressed: () {
+                    PageService().transition(PageNames.userPastRoom,
+                        arguments: {'uid': uid}, push: true);
+                  },
+                  child:
+                      const Text('参加履歴', style: TextStyle(color: Colors.grey)),
                 ),
               ],
+            ),
+            const SizedBox(height: 16),
+            Button(
+              alignment: Alignment.bottomRight,
+              onTap: followFunction,
+              text: followText,
+              color: followButtonColor,
             ),
           ],
         ),
