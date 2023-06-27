@@ -87,27 +87,8 @@ class UserDialog extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    PageService().transition(PageNames.userFollow,
-                        arguments: {'uid': uid}, push: true);
-                  },
-                  child: Text('フォロー ${user.follows.length}'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    PageService().transition(PageNames.userFollower,
-                        arguments: {'uid': uid}, push: true);
-                  },
-                  child: Text('フォロワー ${user.followerNumber.toString()}'),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
+            followRow(user),
+            const SizedBox(height: 16),
             const Text('プロフィール', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text(user.greeting),
@@ -143,6 +124,48 @@ class UserDialog extends HookConsumerWidget {
           ],
         ),
       ),
+    );
+  }
+
+  // フォロー系の行Widget作成
+  Widget followRow(UserEntity user) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        TextButton(
+          onPressed: () {
+            PageService().transition(PageNames.userFollow,
+                arguments: {'uid': uid}, push: true);
+          },
+          child: Row(
+            children: [
+              Text(
+                user.follows.length.toString(),
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              const Text(' フォロー中', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            PageService().transition(PageNames.userFollower,
+                arguments: {'uid': uid}, push: true);
+          },
+          child: Row(
+            children: [
+              Text(
+                user.followerNumber.toString(),
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
+              ),
+              const Text(' フォロワー', style: TextStyle(color: Colors.grey)),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
