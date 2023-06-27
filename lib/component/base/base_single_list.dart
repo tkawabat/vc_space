@@ -65,7 +65,7 @@ class BaseSingleList<T> extends HookConsumerWidget {
                   return const Text('データ取得エラー', textAlign: TextAlign.center);
                 },
                 noItemsFoundIndicatorBuilder: (context) {
-                  return const Text('お知らせがありません', textAlign: TextAlign.center);
+                  return Text(noDataText, textAlign: TextAlign.center);
                 },
                 itemBuilder: (context, item, index) => rowBuilder(item),
               ))),
