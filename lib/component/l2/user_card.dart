@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
 import '../../entity/user_entity.dart';
-import '../dialog/user_dialog.dart';
 import '../../service/time_service.dart';
+import '../dialog/user_dialog.dart';
 import '../l1/button.dart';
 import '../l1/card_base.dart';
 import '../l1/user_icon.dart';
+import '../l1/user_notification_badge.dart';
 import 'user_tag_list.dart';
 
 class UserCard extends StatelessWidget {
@@ -43,12 +44,7 @@ class UserCard extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(user.name),
-              if (user.push)
-                Icon(
-                  Icons.notifications,
-                  size: 18,
-                  color: Colors.yellow[700],
-                ),
+              UserNotificationBadge(user),
               UserTagList(user),
             ],
           ),

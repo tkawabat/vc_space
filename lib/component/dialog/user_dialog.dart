@@ -13,6 +13,7 @@ import '../../service/user_service.dart';
 import '../l1/button.dart';
 import '../l1/loading.dart';
 import '../l1/user_icon.dart';
+import '../l1/user_notification_badge.dart';
 import '../l2/user_tag_list.dart';
 
 class UserDialog extends HookConsumerWidget {
@@ -73,12 +74,7 @@ class UserDialog extends HookConsumerWidget {
           crossAxisAlignment: WrapCrossAlignment.center,
           children: [
             Text(user.name),
-            if (user.push)
-              Icon(
-                Icons.notifications,
-                size: 18,
-                color: Colors.yellow[700],
-              ),
+            UserNotificationBadge(user),
           ],
         ),
         subtitle: Text(TimeService().getAgoString(user.updatedAt)),
