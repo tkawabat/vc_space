@@ -13,7 +13,7 @@ class NoticeBadge extends HookConsumerWidget {
   const NoticeBadge({
     Key? key,
     required this.child,
-    this.alignment = AlignmentDirectional.center,
+    this.alignment = AlignmentDirectional.topEnd,
   }) : super(key: key);
 
   @override

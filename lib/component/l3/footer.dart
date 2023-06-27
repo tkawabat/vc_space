@@ -36,10 +36,7 @@ class Footer extends StatelessWidget {
         onTap: () => PageService().transitionHome(page),
       ),
       FooterItem(
-        icon: const NoticeBadge(
-          alignment: AlignmentDirectional.topStart,
-          child: Icon(Icons.notifications),
-        ),
+        icon: const NoticeBadge(child: Icon(Icons.notifications)),
         label: 'お知らせ',
         page: PageNames.notice,
         onTap: () => PageService().transitionNotice(page),
