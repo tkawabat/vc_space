@@ -69,7 +69,18 @@ class UserDialog extends HookConsumerWidget {
     return AlertDialog(
       title: ListTile(
         leading: UserIcon(photo: user.photo),
-        title: Text(user.name),
+        title: Wrap(
+          crossAxisAlignment: WrapCrossAlignment.center,
+          children: [
+            Text(user.name),
+            if (user.push)
+              Icon(
+                Icons.notifications,
+                size: 18,
+                color: Colors.yellow[700],
+              ),
+          ],
+        ),
         subtitle: Text(TimeService().getAgoString(user.updatedAt)),
         trailing: PopupMenuButton(
           tooltip: 'メニューを表示',

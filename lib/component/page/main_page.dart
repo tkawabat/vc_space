@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import '../../model/function_model.dart';
 import '../../model/room_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';

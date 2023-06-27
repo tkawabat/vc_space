@@ -43,6 +43,12 @@ class UserCard extends StatelessWidget {
             crossAxisAlignment: WrapCrossAlignment.center,
             children: [
               Text(user.name),
+              if (user.push)
+                Icon(
+                  Icons.notifications,
+                  size: 18,
+                  color: Colors.yellow[700],
+                ),
               UserTagList(user),
             ],
           ),

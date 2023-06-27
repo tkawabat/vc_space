@@ -35,6 +35,7 @@ class UserPageBasic extends HookConsumerWidget {
         tags: tags,
         follows: user.follows,
         followerNumber: user.followerNumber,
+        push: false,
         updatedAt: DateTime.now());
 
     UserService().update(newUser);

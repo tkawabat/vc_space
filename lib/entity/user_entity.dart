@@ -19,6 +19,7 @@ class UserEntity with _$UserEntity {
     @JsonKey(defaultValue: []) required List<String> tags,
     required List<String> follows,
     required int followerNumber,
+    @JsonKey(defaultValue: false) required bool push,
     @TimestampzConverter() required DateTime updatedAt,
   }) = _UserEntity;
 
@@ -35,6 +36,7 @@ final userOnLoad = UserEntity(
   tags: [],
   follows: [],
   followerNumber: 0,
+  push: false,
   updatedAt: DateTime.now(),
 );
 
@@ -47,5 +49,6 @@ final userNotFound = UserEntity(
   tags: [],
   follows: [],
   followerNumber: 0,
+  push: false,
   updatedAt: DateTime.now(),
 );
