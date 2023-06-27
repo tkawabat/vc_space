@@ -74,6 +74,7 @@ class UserModel extends ModelBase {
     json.remove('name');
     json.remove('photo');
     json.remove('discord_name');
+    json.remove('follow_number');
 
     json = selectUpdateColumn(json, targetColumnList);
 
