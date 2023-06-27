@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import '../entity/tag_count_entity.dart';
+import '../entity/user_entity.dart';
+import '../service/const_service.dart';
 import '../service/error_service.dart';
 import 'model_base.dart';
 
@@ -51,5 +53,45 @@ class FunctionModel extends ModelBase {
       return result.map((e) => TagCountEntity.fromJson(e)).toList();
     }).catchError(ErrorService()
         .onError<List<TagCountEntity>>([], 'Function.selectWaitTimeCount'));
+  }
+
+  // follow一覧を取得
+  Future<List<UserEntity>> getFollows(int page, String uid) {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+
+    return supabase
+        .rpc('get_follows', params: {
+          'p_uid': uid,
+        })
+        .range(start, to)
+        .then((result) {
+          if (result == null) return [] as List<UserEntity>;
+          return result
+              .map<UserEntity>((e) => UserEntity.fromJson(e['user_data']))
+              .toList() as List<UserEntity>;
+        })
+        .catchError(ErrorService()
+            .onError<List<UserEntity>>([], 'Function.getFollower'));
+  }
+
+  // follower一覧を取得
+  Future<List<UserEntity>> getFollowers(int page, String uid) {
+    final start = page * ConstService.listStep;
+    final to = start + ConstService.listStep - 1;
+
+    return supabase
+        .rpc('get_followers', params: {
+          'p_uid': uid,
+        })
+        .range(start, to)
+        .then((result) {
+          if (result == null) return [] as List<UserEntity>;
+          return result
+              .map<UserEntity>((e) => UserEntity.fromJson(e['user_data']))
+              .toList() as List<UserEntity>;
+        })
+        .catchError(ErrorService()
+            .onError<List<UserEntity>>([], 'Function.getFollowee'));
   }
 }

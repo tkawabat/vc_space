@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import '../../model/function_model.dart';
 import '../../model/room_model.dart';
 import '../../route.dart';
 import '../../service/page_service.dart';
@@ -43,11 +44,9 @@ class MainPage extends HookConsumerWidget {
               delegate: SliverChildListDelegate([
             // ElevatedButton(
             //   onPressed: () {
-            //     FunctionModel().selectWaitTimeCount(
-            //       [],
-            //       DateTime(2023, 1, 1),
-            //       DateTime(2023, 4, 1, 23, 59),
-            //     ).then((value) => debugPrint(value.toString()));
+            //     FunctionModel()
+            //         .getFollows(0, '5fdcbb10-31fd-4e9a-9db6-a2541a96d43b')
+            //         .then((value) => debugPrint(value.toString()));
 
             //     // RoomModel().hoge().then((value) {
             //     //   debugPrint(value.length.toString());

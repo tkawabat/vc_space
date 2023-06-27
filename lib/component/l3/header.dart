@@ -72,10 +72,16 @@ class Header extends HookConsumerWidget implements PreferredSizeWidget {
       ));
     }
 
+    const canBackPages = [
+      PageNames.userFollow,
+      PageNames.userFollower,
+      PageNames.roomOffer,
+    ];
+
     return AppBar(
       centerTitle: false,
       // フォローボタンの押下、クエリパラメータ付きアクセスで予期せぬcanBack()=trueが発生する
-      leading: PageService().canBack() && [PageNames.roomOffer].contains(page)
+      leading: PageService().canBack() && canBackPages.contains(page)
           ? IconButton(
               icon: const Icon(Icons.arrow_back_ios, color: Colors.black54),
               onPressed: () {

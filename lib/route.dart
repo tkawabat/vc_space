@@ -8,6 +8,8 @@ import 'component/page/main_page.dart';
 import 'component/page/notice_page.dart';
 import 'component/page/room_detail_page.dart';
 import 'component/page/room_offer_page.dart';
+import 'component/page/user_follow_page.dart';
+import 'component/page/user_follower_page.dart';
 import 'component/page/user_page.dart';
 import 'component/page/maintenance_page.dart';
 import 'service/analytics_service.dart';
@@ -16,6 +18,8 @@ enum PageNames {
   none(''),
   home('/'),
   user('/user'),
+  userFollow('/user/follow'),
+  userFollower('/user/follower'),
   room('/room'),
   roomOffer('/room/offer'),
   calendar('/calendar'),
@@ -61,6 +65,10 @@ Route<dynamic> _transactionPage(
     builder = (_) => _homePageTransaction(queryParameters);
   } else if (path == PageNames.user.path) {
     builder = (_) => _userPageTransaction();
+  } else if (path == PageNames.userFollow.path) {
+    builder = (_) => _userFollowPageTransaction(queryParameters);
+  } else if (path == PageNames.userFollower.path) {
+    builder = (_) => _userFollowerPageTransaction(queryParameters);
   } else if (path == PageNames.room.path) {
     builder = (_) => _roomPageTransaction(queryParameters);
   } else if (path == PageNames.roomOffer.path) {
@@ -99,6 +107,28 @@ Widget _homePageTransaction(Map<String, String>? queryParameters) {
 }
 
 Widget _userPageTransaction() => UserPage();
+
+Widget _userFollowPageTransaction(Map<String, String>? queryParameters) {
+  if (queryParameters == null) {
+    return _homePageTransaction(null);
+  }
+  if (!queryParameters.containsKey('uid')) {
+    return _homePageTransaction(null);
+  }
+
+  return UserFollowPage(uid: queryParameters['uid']!);
+}
+
+Widget _userFollowerPageTransaction(Map<String, String>? queryParameters) {
+  if (queryParameters == null) {
+    return _homePageTransaction(null);
+  }
+  if (!queryParameters.containsKey('uid')) {
+    return _homePageTransaction(null);
+  }
+
+  return UserFollowerPage(uid: queryParameters['uid']!);
+}
 
 Widget _roomPageTransaction(Map<String, String>? queryParameters) {
   if (queryParameters == null) {

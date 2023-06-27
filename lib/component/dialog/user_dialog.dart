@@ -87,6 +87,27 @@ class UserDialog extends HookConsumerWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                TextButton(
+                  onPressed: () {
+                    PageService().transition(PageNames.userFollow,
+                        arguments: {'uid': uid}, push: true);
+                  },
+                  child: Text('フォロー ${user.follows.length}'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    PageService().transition(PageNames.userFollower,
+                        arguments: {'uid': uid}, push: true);
+                  },
+                  child: Text('フォロワー ${user.followerNumber.toString()}'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             const Text('プロフィール', style: TextStyle(fontWeight: FontWeight.bold)),
             const SizedBox(height: 8),
             Text(user.greeting),
